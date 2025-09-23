@@ -1,2 +1,9 @@
 /.quarto/
 _site/
+*.knit.md
+*_files/
+
+.ipynb_checkpoints/
+.Rhistory
+.DS_Store
+.Rproj.user

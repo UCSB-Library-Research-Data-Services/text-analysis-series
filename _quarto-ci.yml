@@ -1,0 +1,4 @@
+execute:
+  enabled: true
+  freeze: auto
+  cache: true

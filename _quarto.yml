@@ -1,5 +1,11 @@
 project:
   type: website
+  output-dir: _site
+
+execute: 
+  enabled: false
+  freeze: auto
+  cache: true
 
 website:
   title: "Text Analysis"
@@ -7,6 +13,12 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: chapters/1.Preprocessing/introduction.qmd
+        text: Preprocessing
+      - href: chapters/2.TextAnalysis/introduction.qmd
+        text: Text Analysis
+      - href: chapters/3.SentimentAnalysis/introduction.qmd
+        text: Sentiment Analysis
       - about.qmd
 
 format:
