@@ -4,13 +4,29 @@
     "href": "index.html",
     "title": "Text Analysis",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n\"Hello, world!\"\n\n[1] \"Hello, world!\""
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n\nCode\n\"Hello, world!\"\n\n\n[1] \"Hello, world!\"",
+    "crumbs": [
+      "Home"
+    ]
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "About RDS",
     "section": "",
-    "text": "About this site"
+    "text": "Research Data Services (RDS) helps UCSB researchers manage and preserve their research data in a more effective and reproducible way through:\n\nConsultations\nLong-term engagements\nInstructional workshops.\n\nOur team offers support across the research data lifecycle, from pre-project planning to post-project archival, connecting researchers with both locally- and externally-provided resources, data management systems and curation services. Our goal is to ensure that all research data is well-described, FAIR (Findable, Accessible, Interoperable, Reusable), as well as sustainable and preservable, and that researchers receive scholarly credit for sharing and publishing their data.\nWe recommend you explore the Research Computing and Data website (https://rcd.ucsb.edu ) maintained by our department for campus-wide tools, recommendations, events, communities and learning resources.\nContact us if you have any questions: rds@library.ucsb.edu",
+    "crumbs": [
+      "About RDS"
+    ]
+  },
+  {
+    "objectID": "about.html#ways-we-can-help-you",
+    "href": "about.html#ways-we-can-help-you",
+    "title": "About RDS",
+    "section": "",
+    "text": "Research Data Services (RDS) helps UCSB researchers manage and preserve their research data in a more effective and reproducible way through:\n\nConsultations\nLong-term engagements\nInstructional workshops.\n\nOur team offers support across the research data lifecycle, from pre-project planning to post-project archival, connecting researchers with both locally- and externally-provided resources, data management systems and curation services. Our goal is to ensure that all research data is well-described, FAIR (Findable, Accessible, Interoperable, Reusable), as well as sustainable and preservable, and that researchers receive scholarly credit for sharing and publishing their data.\nWe recommend you explore the Research Computing and Data website (https://rcd.ucsb.edu ) maintained by our department for campus-wide tools, recommendations, events, communities and learning resources.\nContact us if you have any questions: rds@library.ucsb.edu",
+    "crumbs": [
+      "About RDS"
+    ]
   }
 ]
