@@ -38,8 +38,8 @@ website:
         text: Sentiment Analysis
       - about.qmd
 
-page-footer:
-    background: blue
+  page-footer:
+    background: "#003660" # UCSB blue
     center: >
       This website is built with [Quarto](https://quarto.org/), [RStudio/Posit](https://posit.co/),
       and [webexercises R package](https://cran.r-project.org/web/packages/webexercises/index.html).
