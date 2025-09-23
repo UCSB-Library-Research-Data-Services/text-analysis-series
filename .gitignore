@@ -2,6 +2,7 @@
 _site/
 *.knit.md
 *_files/
+*_cache/
 
 .ipynb_checkpoints/
 .Rhistory

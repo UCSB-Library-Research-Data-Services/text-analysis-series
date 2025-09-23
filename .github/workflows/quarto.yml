@@ -14,6 +14,17 @@ jobs:
 
     steps:
         - uses: actions/checkout@v4
+        
+        #Guardrail: blocks PRs that touch _freeze/ or _site/ directories
+        - name: Guardrail - disallow changes to _freeze/ and _site/ in PRs
+          if: github.event_name == 'pull_request'
+          run: |
+            CHANGED=$(git diff --name-only origin/main...HEAD | grep -E '^(_freeze/|_site/)' || true)
+            if [ -n "$CHANGED" ]; then
+              echo "Error: Changes to _freeze/ or _site/ directories are not allowed in this PR:"
+              echo "$CHANGED"
+              exit 1
+            fi
 
         - uses: quarto-dev/quarto-actions/setup@v2
 
