@@ -8,9 +8,26 @@ execute:
   cache: true
 
 website:
-  title: "Text Analysis"
+  title: "Introduction to Text Analysis in R"
+  search:
+    location: navbar
   navbar:
-    left:
+    tools:
+      - text: "About RDS"
+        href: about.qmd
+      - icon: github
+        menu:
+          - text: "Source Code"
+            url: https://github.com/UCSB-Library-Research-Data-Services/text-analysis-series
+            target: _blank
+          - text: "Report a Bug"
+            url: https://github.com/UCSB-Library-Research-Data-Services/text-analysis-series/issues/new?title=Bug%20Report%3A%20%5BDescribe%20the%20issue%20briefly%5D&body=**Description%20of%20the%20issue%3A**%0A%0A**Steps%20to%20reproduce%3A**%0A1.%20%0A2.%20%0A3.%20%0A%0A**Expected%20behavior%3A**%0A%0A**Actual%20behavior%3A**%0A%0A**Additional%20context%3A**
+            target: _blank
+  sidebar:
+    style: docked
+    border: true
+    collapse-level: 1
+    contents:
       - href: index.qmd
         text: Home
       - href: chapters/1.Preprocessing/introduction.qmd
@@ -21,11 +38,24 @@ website:
         text: Sentiment Analysis
       - about.qmd
 
+page-footer:
+    background: blue
+    center: >
+      This website is built with [Quarto](https://quarto.org/), [RStudio/Posit](https://posit.co/),
+      and [webexercises R package](https://cran.r-project.org/web/packages/webexercises/index.html).
+      UCSB Library Research Data Services. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)
+    left: |
+      <img src="_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"/>
+
+
 format:
   html:
-    theme: cosmo
-    css: _static/styles.css
+    css: _static/adapt-meds-website-styles.scss
     toc: true
+    page-layout: full
+    code-line-numbers: false
+    code-fold: true
+    code-tools: true
 
 
 
