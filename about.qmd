@@ -14,5 +14,5 @@ Our team offers support across the research data lifecycle, from pre-project pla
 
 We recommend you explore the **Research Computing and Data** website ([https://rcd.ucsb.edu](https://rcd.ucsb.edu){target='_blank'} ) maintained by our department for campus-wide tools, recommendations, events, communities and learning resources.
 
-Contact us if you have any questions: [rds\@library.ucsb.edu](mailto:rds@library.ucsb.edu){.email}
+Contact us if you have any questions: [rds@library.ucsb.edu](mailto:rds@library.ucsb.edu){.email}
 
