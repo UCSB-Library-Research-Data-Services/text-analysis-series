@@ -54,7 +54,7 @@ format:
     toc: true
     page-layout: full
     code-line-numbers: false
-    code-fold: true
+    code-fold: false
     code-tools: true
 
 
