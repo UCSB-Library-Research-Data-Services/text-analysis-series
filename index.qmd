@@ -13,8 +13,8 @@ TODO: Add summary
 
 These lessons are hands-on and are designed to be followed with **R** and **RStudio** open. Before starting, please ensure you have the following software installed:
 
-- **R**: We recommend R version 4.3 or newer. Download from [CRAN](https://cran.r-project.org/).
-- **RStudio**: We recommend RStudio version 2023.12 or newer. Download from [Posit's website](https://posit.co/download/rstudio-desktop/).
+- **R**: We recommend R version 4.3 or newer. Download from [CRAN](https://cran.r-project.org/){target='_blank'}.
+- **RStudio**: We recommend RStudio version 2023.12 or newer. Download from [Posit's website](https://posit.co/download/rstudio-desktop/){target='_blank'}.
 
 ::: {.callout-note title="How to update R and RStudio" collapse="true"}
 
@@ -33,12 +33,12 @@ R.version.string
 
 **Update R**
 
-1. Go to [CRAN](https://cran.r-project.org/) and download the latest version for your operating system.
+1. Go to [CRAN](https://cran.r-project.org/){target='_blank'} and download the latest version for your operating system.
 2. Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)
 
 **Update RStudio**
 
-1. Go to [Posit’s download page](https://posit.co/download/rstudio-desktop/).
+1. Go to [Posit’s download page](https://posit.co/download/rstudio-desktop/){target='_blank'}.
 2. Download and install the newest version for your operating system.
 
 That’s it! After updating, restart your computer to make sure RStudio finds the latest R.
@@ -47,8 +47,13 @@ That’s it! After updating, restart your computer to make sure RStudio finds th
 
 ## Access to Data
 
-For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/) (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.
+For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/){target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.
 
-The dataset is available for download from this link: [Severance Dataset](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv). You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).
+The dataset is available for download from this link: [Severance Dataset](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv){target='_blank'}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).
 
 Please download the file `comments.csv` and save it in your RStudio project folder.
+
+## R Skill Level
+
+This level assumes a basic familiarity with `R` and `RStudio`. If you are new to R, we recommend you check out the [Introduction to Data Analysis with R](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/){target='_blank'}, particularly the [Introduction to R and RStudio](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html) section.
+
