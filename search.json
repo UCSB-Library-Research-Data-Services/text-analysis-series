@@ -2,9 +2,39 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Text Analysis",
+    "title": "Text Analysis with R",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n\nCode\n\"Hello, world!\"\n\n\n[1] \"Hello, world!\"",
+    "text": "Authors: Renata Curty  and Jairo Melo \nTODO: Add summary\n\n\nThese lessons are hands-on and are designed to be followed with R and RStudio open. Before starting, please ensure you have the following software installed:\n\nR: We recommend R version 4.3 or newer. Download from CRAN.\nRStudio: We recommend RStudio version 2023.12 or newer. Download from Posit’s website.\n\n\n\n\n\n\n\nNoteHow to update R and RStudio\n\n\n\n\n\nCheck your versions\n\nRStudio:\n\nOn Mac: Go to RStudio -&gt; About RStudio.\nOn Windows: Go to Help -&gt; About RStudio.\n\nR: In the R console, run:\n\n\nR.version.string\n\nUpdate R\n\nGo to CRAN and download the latest version for your operating system.\nRun the installer. (You don’t need to uninstall older versions—R will install alongside them.)\n\nUpdate RStudio\n\nGo to Posit’s download page.\nDownload and install the newest version for your operating system.\n\nThat’s it! After updating, restart your computer to make sure RStudio finds the latest R.\n\n\n\n\n\n\nFor this lesson we will analyze a dataset of social media posts related to the Apple TV series Severance. The dataset was collected using Brandwatch (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.\nThe dataset is available for download from this link: Severance Dataset. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).\nPlease download the file comments.csv and save it in your RStudio project folder.\n\n\n\nThis level assumes a basic familiarity with R and RStudio. If you are new to R, we recommend you check out the Introduction to Data Analysis with R, particularly the Introduction to R and RStudio section.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Text Analysis with R",
+    "section": "",
+    "text": "These lessons are hands-on and are designed to be followed with R and RStudio open. Before starting, please ensure you have the following software installed:\n\nR: We recommend R version 4.3 or newer. Download from CRAN.\nRStudio: We recommend RStudio version 2023.12 or newer. Download from Posit’s website.\n\n\n\n\n\n\n\nNoteHow to update R and RStudio\n\n\n\n\n\nCheck your versions\n\nRStudio:\n\nOn Mac: Go to RStudio -&gt; About RStudio.\nOn Windows: Go to Help -&gt; About RStudio.\n\nR: In the R console, run:\n\n\nR.version.string\n\nUpdate R\n\nGo to CRAN and download the latest version for your operating system.\nRun the installer. (You don’t need to uninstall older versions—R will install alongside them.)\n\nUpdate RStudio\n\nGo to Posit’s download page.\nDownload and install the newest version for your operating system.\n\nThat’s it! After updating, restart your computer to make sure RStudio finds the latest R.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#access-to-data",
+    "href": "index.html#access-to-data",
+    "title": "Text Analysis with R",
+    "section": "",
+    "text": "For this lesson we will analyze a dataset of social media posts related to the Apple TV series Severance. The dataset was collected using Brandwatch (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.\nThe dataset is available for download from this link: Severance Dataset. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).\nPlease download the file comments.csv and save it in your RStudio project folder.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#r-skill-level",
+    "href": "index.html#r-skill-level",
+    "title": "Text Analysis with R",
+    "section": "",
+    "text": "This level assumes a basic familiarity with R and RStudio. If you are new to R, we recommend you check out the Introduction to Data Analysis with R, particularly the Introduction to R and RStudio section.",
     "crumbs": [
       "Home"
     ]
