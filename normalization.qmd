@@ -3,6 +3,8 @@ title: "Normalization & Noise Reduction"
 editor: visual
 ---
 
+### Why does it matter?
+
 To perform accurate and reliable analysis, we need to "take out the garbage" first by preprocessing the text to clean, standardize, and structure the input data. This reduces noise and improves the model's accuracy.
 
 Below we use another analogy to represent the impact of noise in the data analysis outcome. Below we use another analogy to illustrate the impact of noise on data analysis outcomes. Imagine a tree that is slowly dying. On the surface, its leaves may still appear green, but closer inspection reveals branches that are brittle, bark that is cracking, and roots that are struggling to find nourishment. If we only focus on the healthy-looking leaves, we might draw a misleading conclusion about the tree’s overall condition. Similarly, in text analysis, raw data often contains “noise,” such as irrelevant words, inconsistent formatting, or errors, which can obscure meaningful patterns. If we feed this noisy data directly into an analysis, the results can be skewed, incomplete, or misleading, just as judging the tree’s health by its leaves alone would be.
@@ -156,7 +158,13 @@ The punctuation regular expression:
 
 Together, `(.)\\1{2,}` matches any character repeated three or more times in a row and `str_replace_all` replaces the repeated sequence with just one occurrence of the character.
 
-We have created multiple intermediate columns to facilitate the inspection of each step, but we could have streamlined the pipeline with a more slim approach, like the one below:
+::: callout-tip
+## Get Help with Regex
+
+Testing regular expressions is essential for accuracy and reliability, since complex patterns often produce unexpected results. Careful testing ensures your regex matches the intended text, rejects invalid inputs, and performs efficiently, while also revealing potential bugs before they impact your system. To make testing more effective, use tools like [Regex101](https://regex101.com/) or the [Coder Pad cheatsheet](https://coderpad.io/regular-expression-cheat-sheet) or and be sure to check tricky border cases that might otherwise slip through.
+:::
+
+We have created multiple intermediate columns to facilitate the inspection of each step we performed, but we could have streamlined the pipeline with a more slim approach, like the one below:
 
 ``` r
 comments <- comments %>%
