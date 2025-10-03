@@ -1,0 +1,62 @@
+---
+title: "Stop Words Removal"
+editor: visual
+---
+
+Stop words are commonly occurring words that are usually filtered out during natural language processing, as they carry minimal semantic weight and are not as useful for feature [extraction](https://www.byteplus.com/en/what-is/feature-extraction?utm_source=website_topic&utm_medium=website&utm_campaign=BytePlus+ModelArk&utm_content=Stop+Words&utm_term=The+origins+of+stop+words&product=BytePlus+ModelArk).
+
+Examples include articles (i.e., a, an, the), prepositions (e.g., in, on, at), conjunctions (and, but, or), and pronouns (they, she, he), but the list goes on. While they appear often in text, they usually don't add significant meaning to a sentence or search query.
+
+By ignoring stop words, search engines, databases, chatbots and virtual assistants can improve the speed of crawling and indexing and help deliver faster, more efficient results. Similar posistive effects applies to other NLP tasks and models performance, including sentiment analysis.
+
+For this workshop, we will be using the package `stopwords` ([more info](https://cran.r-project.org/web/packages/stopwords/readme/README.html)) which is considered a "on-stop stopping" for R users. For English language, the package relies on the [Snowball](http://snowball.tartarus.org/algorithms/english/stop.txt) list. But, before we turn to our worksheet to see how that process looks like and how it will apply to our data, let's have a little challenge!
+
+::: {.callout-note icon="false"}
+# 🧠 Knowledge Check
+
+How many stop words can you spot in each of the following sentences:
+
+1.  The cat was sitting on the mat near the window.
+
+2.  She is going to the store because she needs some milk.
+
+3.  I will be there in the morning if it doesn’t rain.
+
+4.  They have been working on the project for several days.
+
+5.  Although he was tired, he continued to walk until he reached the house.
+
+::: {.callout-note icon="false" collapse="true"}
+## Solution
+
+1\. `The` cat `was` sitting `on` `the` mat `near` `the` window.
+
+2\. `She` `is` `going` `to` `the` store `because` `she` `needs` `some` milk.
+
+3\. `I` `will` `be` `there` `in` `the` morning, if it `does` `not` rain.
+
+4\. `They` `have` `been` working `on` `the` project `for` several days.
+
+5\. `Although` `he` `was` `very` tired, `he` continued `to` walk `until` `he` reached `the` house.
+:::
+:::
+
+**FIXME: You might be wondering: *Wait... why are words like "very" and "not" excluded? Aren’t they important for sentiment analysis?* The answer is: YES, they are! While these words are included in many stop word lists provided by standard NLP packages, we can customize the list to retain specific words we consider crucial for our analysis.**
+
+Now, let’s return to the worksheet and see how we can put that into practice.
+
+``` r
+# Remove stopwords
+tokens_nostop <- tokens %>%
+  filter(!word %in% stopwords("en"))
+```
+
+Awesome! This step should bring our token count down to 72,309 by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.
+
+::: {.callout-note icon="false"}
+# 📑 **Suggested Reading**
+
+Check out this blog post for a summary of the history of stop words, discussion on its applications and some perspectives on developments in the age of AI.
+
+Gaviraj, K. (2025, April 24). *The origins of stop words*. BytePlus. <https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words>
+:::

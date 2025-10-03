@@ -70,9 +70,7 @@ In text preprocessing, **the order of steps matters** because each transformatio
 
 ## 1. Handling Apostrophes
 
-The gsub() function is part of base R and stands for global substitute and is used to search for patterns in text and replace them with something else. Its basic form is gsub(pattern, replacement, x), where pattern is the regular expression you want to match, replacement is the text you want to insert, and x is the character vector you’re applying it to. In this case, the pattern "\[’‘ʼ\]" looks for several different kinds of apostrophes and backticks—like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('\`).
-
-This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Apllying it to the `text` column in our `comments` dataset should look like.
+This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Apllying it to the `text` column in our `comments` dataset should look like. In this case, the pattern "\[’‘ʼ\]" looks for several different kinds of apostrophes and backticks—like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('\`).
 
 ``` r
 comments <- comments %>%

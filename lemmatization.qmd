@@ -1,0 +1,67 @@
+---
+title: "Lemmatization"
+editor: visual
+---
+
+Also known as word reduction, lemmatization is the process of transforming words into their base or dictionary form (*lemma*) to identify similarities in meaning and usage across different contexts. Take the word "run" as an example. It can appear in various forms like "ran", "runs", "running", and "runner". But the variations don’t stop there, as it includes complex forms like "outrun", "overrun", or "underrun". These variations make it challenging for computers to process natural language effectively unless they can recognize that these words are related. That’s where lemmatization comes in; it helps machines group related words together by reducing them to a common root present in the dictionary, enabling better understanding and analysis of text.
+
+You might be wondering: what about stemming? ***Stemming*** is a simpler but more aggressive process that removes prefixes and suffixes to reduce words to their root forms. It is generally considered less precise than lemmatization because it can sometimes produce meaningless words. For example, while "ran" and "runs" would correctly stem to "run," the word "running" would be reduced to "runn."
+
+For this reason, we will stick with lemmatization and skip stemming in our analysis. That said, if you need to process very large volumes of text and want a faster, more efficient approach, stemming could be a reasonable alternative.
+
+An important thing to consider is that we look into words as separate units (tokens) as we saw in the previous episode. For example, think about the word "leaves". That could both represent the plural of the noun "leaf" or the verb in third person for the word "leave". That is a good reminder of always remember to apply part of speech (POS) because lemmatization algorithms utilize a lexicon with linguistic rules based on pre-determined tags to avoid misinterpretation.
+
+::: {.callout-note icon="false"}
+## 🧠 Knowledge Check
+
+In pairs or groups of three, apply **lemmatization** to the following sentence. Identify the base forms (lemmas) of each word:
+
+*Cats chasing mice running quickly across gardens.*
+
+::: {.callout-note icon="false" collapse="true"}
+## Solution
+
+How many words did you successfully lemmatize? Bingo if you have identified all key lemmas!
+
+After applying lemmatization, the sentence should look like:
+
+*cat chase mouse run quickly across garden*
+
+*Note*: Adverbs and prepositions usually remain unchanged because they are already in their simplest dictionary form and do not have a more basic lemma.
+:::
+:::
+
+Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our dataset for analysis.
+
+``` r
+# Lemmatize
+tokens_nostop <- tokens_nostop %>%
+  mutate(word_lemmatized = lemmatize_words(word))
+
+# Remove single-character words
+tokens_nostop <- tokens_nostop %>%
+  filter(str_length(word_lemmatized) > 1)
+
+# Reconstruct cleaned text per ID 
+# (ensure all IDs are preserved, even if empty)
+preprocessed <- data %>%
+  select(id) %>%
+  left_join(
+    tokens_nostop %>%
+      group_by(id) %>%
+      summarise(text_ready = paste(word_lemmatized, collapse = " "), .groups = "drop"),
+    by = "id"
+  ) %>%
+  mutate(text_ready = replace_na(text_ready, ""))
+```
+
+Did you notice the new column added to the `tokens_nostop` data frame? If you haven’t yet, take a moment to check it out. It shows how some words have been converted to their dictionary or base forms.
+
+![](chapters/1.Preprocessing/images/lemma-results.png)
+
+With that done, we can finally move on to the next chapter. But first, as a last step, we will save the file:
+
+``` r
+# Save to CSV
+write_csv(preprocessed, "preprocessed.csv")
+```

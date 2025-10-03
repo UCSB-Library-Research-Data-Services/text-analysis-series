@@ -2,9 +2,9 @@
 title: "Introduction to Text Preprocessing"
 ---
 
-### Understanding the terms
+### Understanding the terms and their relationships
 
-**Text analysis** is about digging into written words to find meaning—spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.
+**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.
 
 **Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.
 
@@ -28,4 +28,4 @@ Key text preprocessing steps include normalization (noise reduction), stop words
 
 Source: Data Literacy Series <https://perma.cc/L8U5-ZEXD>
 
-In the next episodes, we'll dive deeper into this pipeline to prepare the data further analysis.
+In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis.
