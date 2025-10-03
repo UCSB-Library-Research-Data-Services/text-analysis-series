@@ -7,7 +7,7 @@ Also known as word reduction, lemmatization is the process of transforming words
 
 You might be wondering: what about stemming? ***Stemming*** is a simpler but more aggressive process that removes prefixes and suffixes to reduce words to their root forms. It is generally considered less precise than lemmatization because it can sometimes produce meaningless words. For example, while "ran" and "runs" would correctly stem to "run," the word "running" would be reduced to "runn."
 
-For this reason, we will stick with lemmatization and skip stemming in our analysis. That said, if you need to process very large volumes of text and want a faster, more efficient approach, stemming could be a reasonable alternative.
+For this reason, we will stick with lemmatization and skip stemming in our pipeline. That said, if you need to process very large volumes of text and want a faster, more efficient approach, stemming could be a reasonable alternative.
 
 An important thing to consider is that we look into words as separate units (tokens) as we saw in the previous episode. For example, think about the word "leaves". That could both represent the plural of the noun "leaf" or the verb in third person for the word "leave". That is a good reminder of always remember to apply part of speech (POS) because lemmatization algorithms utilize a lexicon with linguistic rules based on pre-determined tags to avoid misinterpretation.
 

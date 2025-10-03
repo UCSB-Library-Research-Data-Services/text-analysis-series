@@ -86,7 +86,7 @@ comments <- comments %>%
   mutate(text_expand = replace_contraction(text))
 ```
 
-## 3. Convert to Lowercase
+## 3. Converting to Lowercase
 
 Having all text converted to lowercase will be our next step, using the mutate function we will add the following code which will create a new `text_lower` column:
 
@@ -95,7 +95,7 @@ comments <- comments %>%
   mutate(text_lower = tolower(text_expand))
 ```
 
-## 4. Remove URLs
+## 4. Removing URLs
 
 We have a few URLs in our dataset and because they vary in format (e.g., <http://,> <https://,> or www.), we need to provide a regular expression that can take care of these variations and save it as `text_nourl`.
 
@@ -114,7 +114,7 @@ Breaking it down:
 
 -   `www\\.[^\\s,]+` : Matches URLs that start with www. and continue until a space or comma.
 
-## 5. Remove Mentions & Handling Extra Space
+## 5. Removing Mentions & Handling Extra Space
 
 Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded by an \@ symbol.
 
@@ -124,7 +124,7 @@ comments <- comments %>%
     text_nomention = str_replace_all(text_nourl, "@[A-Za-z0-9_]+", ""), 
 ```
 
-## 6. Remove Punctuation, Numbers, Repeated Letters and Extra Spaces
+## 6. Cleaning Punctuation, Numbers, Elongation and Extra Spaces and Hidden Characters
 
 Alright, time to remove punctuation, numbers and repeated letters used for emphasis, that might affect our analysis (e.g. "Amaaaazing", "Loooove") and take care of some extra spaces.
 
