@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Normalization &amp; Noise Reduction – Introduction to Text Analysis in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../_static/adapt-meds-website-styles.scss">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Introduction to Text Analysis in R</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="../../about.html" title="About RDS" class="quarto-navigation-tool px-1" aria-label="About RDS"><i class="bi bi-"></i></a>
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/UCSB-Library-Research-Data-Services/text-analysis-series" target="_blank">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/UCSB-Library-Research-Data-Services/text-analysis-series/issues/new?title=Bug%20Report%3A%20%5BDescribe%20the%20issue%20briefly%5D&amp;body=**Description%20of%20the%20issue%3A**%0A%0A**Steps%20to%20reproduce%3A**%0A1.%20%0A2.%20%0A3.%20%0A%0A**Expected%20behavior%3A**%0A%0A**Actual%20behavior%3A**%0A%0A**Additional%20context%3A**" target="_blank">
+            Report a Bug
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/1.Preprocessing/02_normalization.html">Normalization &amp; Noise Reduction</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/01_introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to Text Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/02_normalization.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Normalization &amp; Noise Reduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/03_tokenization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Word Tokenization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/04_stopwords.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Stop Words Removal</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/05_lemmatization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lemmatization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/06_conclusion.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Text Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sentiment Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About RDS</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-does-it-matter" id="toc-why-does-it-matter" class="nav-link active" data-scroll-target="#why-does-it-matter">Why does it matter?</a></li>
+  <li><a href="#dealing-with-contractions" id="toc-dealing-with-contractions" class="nav-link" data-scroll-target="#dealing-with-contractions">Dealing with Contractions</a></li>
+  <li><a href="#handling-apostrophes" id="toc-handling-apostrophes" class="nav-link" data-scroll-target="#handling-apostrophes">1. Handling Apostrophes</a></li>
+  <li><a href="#expanding-contractions" id="toc-expanding-contractions" class="nav-link" data-scroll-target="#expanding-contractions">2. Expanding Contractions</a></li>
+  <li><a href="#converting-to-lowercase" id="toc-converting-to-lowercase" class="nav-link" data-scroll-target="#converting-to-lowercase">3. Converting to Lowercase</a></li>
+  <li><a href="#removing-urls" id="toc-removing-urls" class="nav-link" data-scroll-target="#removing-urls">4. Removing URLs</a></li>
+  <li><a href="#removing-mentions-handling-extra-space" id="toc-removing-mentions-handling-extra-space" class="nav-link" data-scroll-target="#removing-mentions-handling-extra-space">5. Removing Mentions &amp; Handling Extra Space</a></li>
+  <li><a href="#cleaning-punctuation-numbers-elongation-and-extra-spaces-and-hidden-characters" id="toc-cleaning-punctuation-numbers-elongation-and-extra-spaces-and-hidden-characters" class="nav-link" data-scroll-target="#cleaning-punctuation-numbers-elongation-and-extra-spaces-and-hidden-characters">6. Cleaning Punctuation, Numbers, Elongation and Extra Spaces and Hidden Characters</a></li>
+  <li><a href="#convert-emojis-to-text" id="toc-convert-emojis-to-text" class="nav-link" data-scroll-target="#convert-emojis-to-text">7. Convert Emojis to Text</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Normalization &amp; Noise Reduction</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta column-body">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="why-does-it-matter" class="level3">
+<h3 class="anchored" data-anchor-id="why-does-it-matter">Why does it matter?</h3>
+<p>To perform accurate and reliable analysis, we need to “take out the garbage” first by preprocessing the text to clean, standardize, and structure the input data. This reduces noise and improves the model’s accuracy.</p>
+<p>Below we use another analogy to represent the impact of noise in the data analysis outcome. Below we use another analogy to illustrate the impact of noise on data analysis outcomes. Imagine a tree that is slowly dying. On the surface, its leaves may still appear green, but closer inspection reveals branches that are brittle, bark that is cracking, and roots that are struggling to find nourishment. If we only focus on the healthy-looking leaves, we might draw a misleading conclusion about the tree’s overall condition. Similarly, in text analysis, raw data often contains “noise,” such as irrelevant words, inconsistent formatting, or errors, which can obscure meaningful patterns. If we feed this noisy data directly into an analysis, the results can be skewed, incomplete, or misleading, just as judging the tree’s health by its leaves alone would be.</p>
+<p>Just as a gardener would prune dead branches, enrich the soil, and care for the roots to revive the tree, data analysts perform preprocessing steps to clean, standardize, and structure the text. By removing noise and focusing on the core content, we give the analysis the best chance to reveal true insights, uncover trends, and support reliable conclusions. In short, the quality of our “data garden” directly determines the health of the insights it produces.</p>
+<p><img src="images/noise.png" class="img-fluid"></p>
+<p>As we’ve seen, the main goal of normalization is to remove irrelevant punctuation and content, and to standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Why it matters?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Remove URLs</td>
+<td>URLs often contain irrelevant noise and don’t contribute meaningful content for analysis.</td>
+</tr>
+<tr class="even">
+<td>Remove Punctuation &amp; Symbols</td>
+<td>Punctuation marks and other symbols including those extensively used in social media for mentioning (@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.</td>
+</tr>
+<tr class="odd">
+<td>Remove Numbers</td>
+<td>Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don’t contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g.&nbsp;&lt;NUMBER&gt;), or even converting them into their written form (e.g, 100 becomes one hundred).</td>
+</tr>
+<tr class="even">
+<td>Normalize Whitespaces</td>
+<td>Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis.</td>
+</tr>
+<tr class="odd">
+<td>Convert to Lowercase</td>
+<td>Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ “APPLETV” ≠ “appleTV” ≠ “appletv”), improving model consistency.</td>
+</tr>
+<tr class="even">
+<td>Convert Emojis to Text</td>
+<td>Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🧠 Knowledge Check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In pairs or groups of three, identify the techniques you would consider using to normalize and reduce noise in the following sentence:</p>
+<p>“OMG!! 😱 I can’t believe it… This is CRAZY!!! #unreal 🤯”</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>How many techniques could you identify? Bingo if you have spotted all four!</p>
+<p>After applying them the sentence should look like:</p>
+<p><em>omg [face scream in fear] I can not believe it this is crazy unreal [exploding head]</em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>A caveat when working with emojis is that they are figurative and highly contextual. Also, there may be important generational and cultural variability in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.</p>
+<p>You might have noticed based on the example above that emojis are converted to their equivalent CLDR (common, human-readable name) based on this <a href="https://www.unicode.org/emoji/charts/full-emoji-list.html">emoji unicode list</a>, which are not as nuanced and always helpful to detect sentiment. While not always perfect, that is a required step to normalize the data.</p>
+</section>
+<section id="dealing-with-contractions" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-contractions">Dealing with Contractions</h2>
+<p>Another important step is to properly handle contractions. In everyday language, we often shorten words: <em>can’t</em>, <em>don’t</em>, <em>it’s</em>. These make speech and writing flow more easily, but they can cause confusion for Natural Language Processing (NLP) models. Expanding contractions, such as changing <em>can’t</em> to <em>cannot</em> or <em>it’s</em> to <em>it is</em>, helps bring clarity and consistency to the text because NLP models treat <em>don’t</em> and <em>do not</em> as completely different words, even though they mean the same thing. Also, words like <em>cant</em>, <em>doesnt</em>, and <em>whats</em> lose their meaning. Expanding contractions reduces this inconsistency and ensures that both forms are recognized as the same concept. Expanding it to <em>is not happy</em> makes the negative sentiment explicit, which is especially important in tasks like sentiment analysis.</p>
+<p>So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It’s not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe (’). Such inconsistencies are very common and can disrupt contraction expansion.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Character</th>
+<th>Unicode</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>'</code></td>
+<td>U+0027</td>
+<td>Standard straight apostrophe, used in most dictionaries</td>
+</tr>
+<tr class="even">
+<td><code>’</code></td>
+<td>U+2019</td>
+<td>Right single quotation mark (curly apostrophe)</td>
+</tr>
+<tr class="odd">
+<td><code>‘</code></td>
+<td>U+2018</td>
+<td>Left single quotation mark</td>
+</tr>
+<tr class="even">
+<td><code>ʼ</code></td>
+<td>U+02BC</td>
+<td>Modifier letter apostrophe</td>
+</tr>
+<tr class="odd">
+<td><code>`</code></td>
+<td>U+0060</td>
+<td>Grave accent (sometimes typed by mistake)</td>
+</tr>
+</tbody>
+</table>
+<p>Alright, let’s go back to our worksheet to get our hands “dirty” with some cleaning and normalization, helping us make it more normalized, consistent, and ready for analysis.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>The Order Matters!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When performing text normalization and noise reduction, <strong>the order of steps matters</strong> because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we <strong>remove punctuation before expanding contractions</strong>, <code>"can't"</code> might turn into <code>"cant"</code> instead of <code>"cannot"</code>, losing the correct meaning.</p>
+</div>
+</div>
+</section>
+<section id="handling-apostrophes" class="level2">
+<h2 class="anchored" data-anchor-id="handling-apostrophes">1. Handling Apostrophes</h2>
+<p>This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Apllying it to the <code>text</code> column in our <code>comments</code> dataset should look like. In this case, the pattern “[’‘ʼ]” looks for several different kinds of apostrophes and backticks—like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe (’`).</p>
+</section>
+<section id="expanding-contractions" class="level2">
+<h2 class="anchored" data-anchor-id="expanding-contractions">2. Expanding Contractions</h2>
+<p>Let’s first make sure that words like “don’t” become “do not”.</p>
+</section>
+<section id="converting-to-lowercase" class="level2">
+<h2 class="anchored" data-anchor-id="converting-to-lowercase">3. Converting to Lowercase</h2>
+<p>Having all text converted to lowercase will be our next step, using the mutate function we will add the following code which will create a new <code>text_lower</code> column:</p>
+</section>
+<section id="removing-urls" class="level2">
+<h2 class="anchored" data-anchor-id="removing-urls">4. Removing URLs</h2>
+<p>We have a few URLs in our dataset and because they vary in format (e.g., <a href="http://," class="uri">http://,</a> <a href="https://," class="uri">https://,</a> or www.), we need to provide a regular expression that can take care of these variations and save it as <code>text_nourl</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ENTER NEW CODE AND CHECK CORRESPONDENT EXPLANATION BELOW</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Breaking it down:</p>
+<ul>
+<li><p><code>http[s]?://</code> : Matches http:// or <a href="https://," class="uri">https://,</a> where <code>[s]?</code>: means optional “s” (so it matches both http and https).</p></li>
+<li><p><code>[^\\s,]+</code>: where [^…] is a negated character class, meaning “match anything not in here”, <code>\\s</code> refers to whitespace (space, tab, newline), and <code>,</code> to match one or more characters that are not spaces or commas, that in combination with the above, matches the entire URL up to a space or comma.</p></li>
+<li><p><code>|</code> : Means OR in regex. So it matches either the first pattern or the second.</p></li>
+<li><p><code>www\\.[^\\s,]+</code> : Matches URLs that start with www. and continue until a space or comma.</p></li>
+</ul>
+</section>
+<section id="removing-mentions-handling-extra-space" class="level2">
+<h2 class="anchored" data-anchor-id="removing-mentions-handling-extra-space">5. Removing Mentions &amp; Handling Extra Space</h2>
+<p>Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded by an @ symbol.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ENTER NEW CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="cleaning-punctuation-numbers-elongation-and-extra-spaces-and-hidden-characters" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-punctuation-numbers-elongation-and-extra-spaces-and-hidden-characters">6. Cleaning Punctuation, Numbers, Elongation and Extra Spaces and Hidden Characters</h2>
+<p>Alright, time to remove punctuation, numbers and repeated letters used for emphasis, that might affect our analysis (e.g.&nbsp;“Amaaaazing”, “Loooove”) and take care of some extra spaces.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FIXME<span class="sc">:</span> ENTER NEW CODE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The punctuation regular expression:</p>
+<ul>
+<li><p><code>[:punct:]</code>: matches all standard punctuation characters (e.g., ! ” # $ % &amp; ’ ( ) * + , - . / : ; &lt; = &gt; ? @ [ &nbsp;] ^ _ { | } ~).</p></li>
+<li><p><code>“”‘’–—…</code> : matches special Unicode punctuation, like curly quotes, en-dash, em-dash, ellipsis.</p></li>
+<li><p><code>|</code>: matches the literal pipe symbol.</p></li>
+<li><p><code>[:digit:]</code>: matches any digit (0–9).</p></li>
+<li><p>For the collapsing part, <code>(.)</code>: captures any single character and stores it in a capture group.</p></li>
+<li><p><code>\\1</code>: refers back to the first captured character.</p></li>
+<li><p><code>{2,}</code>: matches 2 or more consecutive occurrences of that character.</p></li>
+</ul>
+<p>Together, <code>(.)\\1{2,}</code> matches any character repeated three or more times in a row and <code>str_replace_all</code> replaces the repeated sequence with just one occurrence of the character.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Get Help with Regex
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Testing regular expressions is essential for accuracy and reliability, since complex patterns often produce unexpected results. Careful testing ensures your regex matches the intended text, rejects invalid inputs, and performs efficiently, while also revealing potential bugs before they impact your system. To make testing more effective, use tools like <a href="https://regex101.com/">Regex101</a> or the <a href="https://coderpad.io/regular-expression-cheat-sheet">Coder Pad cheatsheet</a> or and be sure to check tricky border cases that might otherwise slip through.</p>
+</div>
+</div>
+<p>We have created multiple intermediate columns to facilitate the inspection of each step we performed, but we could have streamlined the pipeline with a more slim approach, like the one below:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>FIXME: ADD OUTPUT SCREENSHOT</p>
+</section>
+<section id="convert-emojis-to-text" class="level2">
+<h2 class="anchored" data-anchor-id="convert-emojis-to-text">7. Convert Emojis to Text</h2>
+<p>Okay, now we’ll convert emojis into their text descriptions to make them machine-readable, using the emoji package to help with this step:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the emoji dictionary</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Have you had a chance to look at the emoji dictionary we loaded into our RStudio environment? It’s packed with more emojis and some surprising meanings than you might expect.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to replace emojis in text with their corresponding names.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>FIXME<span class="sc">:</span> ENTER NEW CODE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>With emojis taken care of, we can now move on to the next preprocessing step: tokenization.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>📑 Suggested Readings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bai, Q., Dan, Q., Mu, Z., &amp; Yang, M. (2019). A systematic review of emoji: Current research and future perspectives. <em>Frontiers in psychology</em>, <em>10</em>, <a href="https://doi.org/10.3389/fpsyg.2019.02221" class="uri">https://doi.org/10.3389/fpsyg.2019.02221</a></p>
+<p>Graham, P. V. (2024). Emojis: An Approach to Interpretation. <em>UC L. SF Commc’n and Ent. J.</em>, <em>46</em>, 123. <a href="https://repository.uclawsf.edu/cgi/viewcontent.cgi?article=1850&amp;context=hastings_comm_ent_law_journal" class="uri">https://repository.uclawsf.edu/cgi/viewcontent.cgi?article=1850&amp;context=hastings_comm_ent_law_journal</a></p>
+</div>
+</div>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Normalization &amp; Noise Reduction"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">### Why does it matter?</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>To perform accurate and reliable analysis, we need to "take out the garbage" first by preprocessing the text to clean, standardize, and structure the input data. This reduces noise and improves the model's accuracy.</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>Below we use another analogy to represent the impact of noise in the data analysis outcome. Below we use another analogy to illustrate the impact of noise on data analysis outcomes. Imagine a tree that is slowly dying. On the surface, its leaves may still appear green, but closer inspection reveals branches that are brittle, bark that is cracking, and roots that are struggling to find nourishment. If we only focus on the healthy-looking leaves, we might draw a misleading conclusion about the tree’s overall condition. Similarly, in text analysis, raw data often contains “noise,” such as irrelevant words, inconsistent formatting, or errors, which can obscure meaningful patterns. If we feed this noisy data directly into an analysis, the results can be skewed, incomplete, or misleading, just as judging the tree’s health by its leaves alone would be.</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>Just as a gardener would prune dead branches, enrich the soil, and care for the roots to revive the tree, data analysts perform preprocessing steps to clean, standardize, and structure the text. By removing noise and focusing on the core content, we give the analysis the best chance to reveal true insights, uncover trends, and support reliable conclusions. In short, the quality of our “data garden” directly determines the health of the insights it produces.</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/noise.png)</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>As we've seen, the main goal of normalization is to remove irrelevant punctuation and content, and to standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Action                       <span class="pp">|</span> Why it matters?                                                                                                                                                                                                                                                                                                                                                         <span class="pp">|</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|-----------------------------------------------------------|</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove URLs                  <span class="pp">|</span> URLs often contain irrelevant noise and don't contribute meaningful content for analysis.                                                                                                                                                                                                                                                                               <span class="pp">|</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove Punctuation &amp; Symbols <span class="pp">|</span> Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.                                                                                                                           <span class="pp">|</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove Numbers               <span class="pp">|</span> Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. <span class="sc">\&lt;</span>NUMBER<span class="sc">\&gt;</span>), or even converting them into their written form (e.g, 100 becomes one hundred). <span class="pp">|</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Normalize Whitespaces        <span class="pp">|</span> Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis.                                                                                                                                                                                                                                                                         <span class="pp">|</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Convert to Lowercase         <span class="pp">|</span> Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ "APPLETV" ≠ “appleTV” ≠ “appletv”), improving model consistency.                                                                                                                                                                                                         <span class="pp">|</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Convert Emojis to Text       <span class="pp">|</span> Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions.                                                                                                                                                                                                 <span class="pp">|</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🧠 Knowledge Check</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>In pairs or groups of three, identify the techniques you would consider using to normalize and reduce noise in the following sentence:</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>"OMG!! 😱 I can't believe it... This is CRAZY!!! #unreal 🤯"</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false" collapse="true"}</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## Solution</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>How many techniques could you identify? Bingo if you have spotted all four!</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>After applying them the sentence should look like:</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>*omg \[face scream in fear\] I can not believe it this is crazy unreal \[exploding head\]*</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>A caveat when working with emojis is that they are figurative and highly contextual. Also, there may be important generational and cultural variability in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>You might have noticed based on the example above that emojis are converted to their equivalent CLDR (common, human-readable name) based on this <span class="co">[</span><span class="ot">emoji unicode list</span><span class="co">](https://www.unicode.org/emoji/charts/full-emoji-list.html)</span>, which are not as nuanced and always helpful to detect sentiment. While not always perfect, that is a required step to normalize the data.</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dealing with Contractions</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>Another important step is to properly handle contractions. In everyday language, we often shorten words: *can’t*, *don’t*, *it’s*. These make speech and writing flow more easily, but they can cause confusion for Natural Language Processing (NLP) models. Expanding contractions, such as changing *can’t* to *cannot* or *it’s* to *it is*, helps bring clarity and consistency to the text because NLP models treat *don’t* and *do not* as completely different words, even though they mean the same thing. Also, words like *cant*, *doesnt*, and *whats* lose their meaning. Expanding contractions reduces this inconsistency and ensures that both forms are recognized as the same concept. Expanding it to *is not happy* makes the negative sentiment explicit, which is especially important in tasks like sentiment analysis.</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Character <span class="pp">|</span> Unicode <span class="pp">|</span> Notes                                                   <span class="pp">|</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|-------------|----------------------------------------------|</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`'`</span>       <span class="pp">|</span> U+0027  <span class="pp">|</span> Standard straight apostrophe, used in most dictionaries <span class="pp">|</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`’`</span>       <span class="pp">|</span> U+2019  <span class="pp">|</span> Right single quotation mark (curly apostrophe)          <span class="pp">|</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`‘`</span>       <span class="pp">|</span> U+2018  <span class="pp">|</span> Left single quotation mark                              <span class="pp">|</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`ʼ`</span>       <span class="pp">|</span> U+02BC  <span class="pp">|</span> Modifier letter apostrophe                              <span class="pp">|</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`` ` ``</span>   <span class="pp">|</span> U+0060  <span class="pp">|</span> Grave accent (sometimes typed by mistake)               <span class="pp">|</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>Alright, let's go back to our worksheet to get our hands "dirty" with some cleaning and normalization, helping us make it more normalized, consistent, and ready for analysis.</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Order Matters!</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>When performing text normalization and noise reduction, **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, <span class="in">`"can't"`</span> might turn into <span class="in">`"cant"`</span> instead of <span class="in">`"cannot"`</span>, losing the correct meaning.</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Handling Apostrophes</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Apllying it to the <span class="in">`text`</span> column in our <span class="in">`comments`</span> dataset should look like. In this case, the pattern "<span class="sc">\[</span>’‘ʼ<span class="sc">\]</span>" looks for several different kinds of apostrophes and backticks—like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('<span class="sc">\`</span>).</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Expanding Contractions</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>Let's first make sure that words like "don't" become "do not".</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Converting to Lowercase</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>Having all text converted to lowercase will be our next step, using the mutate function we will add the following code which will create a new <span class="in">`text_lower`</span> column:</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Removing URLs</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>We have a few URLs in our dataset and because they vary in format (e.g., <span class="ot">&lt;http://,&gt;</span> <span class="ot">&lt;https://,&gt;</span> or www.), we need to provide a regular expression that can take care of these variations and save it as <span class="in">`text_nourl`</span>.</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ENTER NEW CODE AND CHECK CORRESPONDENT EXPLANATION BELOW</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>Breaking it down:</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`http[s]?://`</span> : Matches http:// or <span class="ot">&lt;https://,&gt;</span> where <span class="in">`[s]?`</span>: means optional "s" (so it matches both http and https).</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`[^\\s,]+`</span>: where <span class="sc">\[</span>\^...<span class="sc">\]</span> is a negated character class, meaning "match anything not in here", <span class="in">`\\s`</span> refers to whitespace (space, tab, newline), and <span class="in">`,`</span> to match one or more characters that are not spaces or commas, that in combination with the above, matches the entire URL up to a space or comma.</span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`|`</span> : Means OR in regex. So it matches either the first pattern or the second.</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`www\\.[^\\s,]+`</span> : Matches URLs that start with www. and continue until a space or comma.</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Removing Mentions &amp; Handling Extra Space</span></span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded by an \@ symbol.</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ENTER NEW CODE</span></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Cleaning Punctuation, Numbers, Elongation and Extra Spaces and Hidden Characters</span></span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>Alright, time to remove punctuation, numbers and repeated letters used for emphasis, that might affect our analysis (e.g. "Amaaaazing", "Loooove") and take care of some extra spaces.</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>FIXME<span class="sc">:</span> ENTER NEW CODE</span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>The punctuation regular expression:</span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`[:punct:]`</span>: matches all standard punctuation characters (e.g., ! " <span class="sc">\#</span> \$ % &amp; ' ( ) <span class="sc">\*</span> + , - . / : ; <span class="sc">\&lt;</span> = <span class="sc">\&gt;</span> ? \@ <span class="sc">\[</span> &nbsp;<span class="sc">\]</span> \^ <span class="sc">\_</span> { <span class="sc">\|</span> } \~).</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`“”‘’–—…`</span> : matches special Unicode punctuation, like curly quotes, en-dash, em-dash, ellipsis.</span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`|`</span>: matches the literal pipe symbol.</span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`[:digit:]`</span>: matches any digit (0–9).</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>For the collapsing part, <span class="in">`(.)`</span>: captures any single character and stores it in a capture group.</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`\\1`</span>: refers back to the first captured character.</span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`{2,}`</span>: matches 2 or more consecutive occurrences of that character.</span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>Together, <span class="in">`(.)\\1{2,}`</span> matches any character repeated three or more times in a row and <span class="in">`str_replace_all`</span> replaces the repeated sequence with just one occurrence of the character.</span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a><span class="fu">## Get Help with Regex</span></span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>Testing regular expressions is essential for accuracy and reliability, since complex patterns often produce unexpected results. Careful testing ensures your regex matches the intended text, rejects invalid inputs, and performs efficiently, while also revealing potential bugs before they impact your system. To make testing more effective, use tools like <span class="co">[</span><span class="ot">Regex101</span><span class="co">](https://regex101.com/)</span> or the <span class="co">[</span><span class="ot">Coder Pad cheatsheet</span><span class="co">](https://coderpad.io/regular-expression-cheat-sheet)</span> or and be sure to check tricky border cases that might otherwise slip through.</span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>We have created multiple intermediate columns to facilitate the inspection of each step we performed, but we could have streamlined the pipeline with a more slim approach, like the one below:</span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>FIXME: ADD OUTPUT SCREENSHOT</span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. Convert Emojis to Text</span></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>Okay, now we’ll convert emojis into their text descriptions to make them machine-readable, using the emoji package to help with this step:</span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the emoji dictionary</span></span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>Have you had a chance to look at the emoji dictionary we loaded into our RStudio environment? It’s packed with more emojis and some surprising meanings than you might expect.</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to replace emojis in text with their corresponding names.</span></span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>FIXME<span class="sc">:</span> ENTER NEW CODE</span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>With emojis taken care of, we can now move on to the next preprocessing step: tokenization.</span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📑 Suggested Readings</span></span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a>Bai, Q., Dan, Q., Mu, Z., &amp; Yang, M. (2019). A systematic review of emoji: Current research and future perspectives. *Frontiers in psychology*, *10*, <span class="ot">&lt;https://doi.org/10.3389/fpsyg.2019.02221&gt;</span></span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>Graham, P. V. (2024). Emojis: An Approach to Interpretation. *UC L. SF Commc'n and Ent. J.*, *46*, 123. <span class="ot">&lt;https://repository.uclawsf.edu/cgi/viewcontent.cgi?article=1850&amp;context=hastings_comm_ent_law_journal&gt;</span></span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><img src="_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"></p>
+</div>   
+    <div class="nav-footer-center">
+<p>This website is built with <a href="https://quarto.org/">Quarto</a>, <a href="https://posit.co/">RStudio/Posit</a>, and <a href="https://cran.r-project.org/web/packages/webexercises/index.html">webexercises R package</a>. UCSB Library Research Data Services. <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

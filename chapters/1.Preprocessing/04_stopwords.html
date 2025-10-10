@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Text Preprocessing – Introduction to Text Analysis in R</title>
+<title>Stop Words Removal – Introduction to Text Analysis in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/1.Preprocessing/introduction.html">Preprocessing</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/1.Preprocessing/04_stopwords.html">Stop Words Removal</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -170,8 +170,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/1.Preprocessing/introduction.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Preprocessing</span></a>
+  <a href="../../chapters/1.Preprocessing/01_introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to Text Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/02_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Normalization &amp; Noise Reduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/03_tokenization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Word Tokenization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/04_stopwords.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Stop Words Removal</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/05_lemmatization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lemmatization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/1.Preprocessing/06_conclusion.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -205,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Introduction to Text Preprocessing</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Stop Words Removal</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -222,6 +252,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Stop words are commonly occurring words that are usually filtered out during natural language processing, as they carry minimal semantic weight and are not as useful for feature <a href="https://www.byteplus.com/en/what-is/feature-extraction?utm_source=website_topic&amp;utm_medium=website&amp;utm_campaign=BytePlus+ModelArk&amp;utm_content=Stop+Words&amp;utm_term=The+origins+of+stop+words&amp;product=BytePlus+ModelArk">extraction</a>.</p>
+<p>Examples include articles (i.e., a, an, the), prepositions (e.g., in, on, at), conjunctions (and, but, or), and pronouns (they, she, he), but the list goes on. While they appear often in text, they usually don’t add significant meaning to a sentence or search query.</p>
+<p>By ignoring stop words, search engines, databases, chatbots and virtual assistants can improve the speed of crawling and indexing and help deliver faster, more efficient results. Similar posistive effects applies to other NLP tasks and models performance, including sentiment analysis.</p>
+<p>For this workshop, we will be using the package <code>stopwords</code> (<a href="https://cran.r-project.org/web/packages/stopwords/readme/README.html">more info</a>) which is considered a “on-stop stopping” for R users. For English language, the package relies on the <a href="http://snowball.tartarus.org/algorithms/english/stop.txt">Snowball</a> list. But, before we turn to our worksheet to see how that process looks like and how it will apply to our data, let’s have a little challenge!</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🧠 Knowledge Check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How many stop words can you spot in each of the following sentences:</p>
+<ol type="1">
+<li><p>The cat was sitting on the mat near the window.</p></li>
+<li><p>She is going to the store because she needs some milk.</p></li>
+<li><p>I will be there in the morning if it doesn’t rain.</p></li>
+<li><p>They have been working on the project for several days.</p></li>
+<li><p>Although he was tired, he continued to walk until he reached the house.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>1. <code>The</code> cat <code>was</code> sitting <code>on</code> <code>the</code> mat <code>near</code> <code>the</code> window.</p>
+<p>2. <code>She</code> <code>is</code> <code>going</code> <code>to</code> <code>the</code> store <code>because</code> <code>she</code> <code>needs</code> <code>some</code> milk.</p>
+<p>3. <code>I</code> <code>will</code> <code>be</code> <code>there</code> <code>in</code> <code>the</code> morning, if it <code>does</code> <code>not</code> rain.</p>
+<p>4. <code>They</code> <code>have</code> <code>been</code> working <code>on</code> <code>the</code> project <code>for</code> several days.</p>
+<p>5. <code>Although</code> <code>he</code> <code>was</code> <code>very</code> tired, <code>he</code> continued <code>to</code> walk <code>until</code> <code>he</code> reached <code>the</code> house.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Now, let’s return to the worksheet and see how we can put that into practice.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stop words</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Awesome! This step should bring our token count down to <strong>72,309 (FIXME-CHECK)</strong> by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>📑 <strong>Suggested Reading</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check out this blog post for a summary of the history of stop words, discussion on its applications and some perspectives on developments in the age of AI.</p>
+<p>Gaviraj, K. (2025, April 24). <em>The origins of stop words</em>. BytePlus. <a href="https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words" class="uri">https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words</a></p>
+</div>
+</div>
 
 
 <!-- -->
@@ -679,9 +771,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Preprocessing"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Stop Words Removal"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Stop words are commonly occurring words that are usually filtered out during natural language processing, as they carry minimal semantic weight and are not as useful for feature <span class="co">[</span><span class="ot">extraction</span><span class="co">](https://www.byteplus.com/en/what-is/feature-extraction?utm_source=website_topic&amp;utm_medium=website&amp;utm_campaign=BytePlus+ModelArk&amp;utm_content=Stop+Words&amp;utm_term=The+origins+of+stop+words&amp;product=BytePlus+ModelArk)</span>.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Examples include articles (i.e., a, an, the), prepositions (e.g., in, on, at), conjunctions (and, but, or), and pronouns (they, she, he), but the list goes on. While they appear often in text, they usually don't add significant meaning to a sentence or search query.</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>By ignoring stop words, search engines, databases, chatbots and virtual assistants can improve the speed of crawling and indexing and help deliver faster, more efficient results. Similar posistive effects applies to other NLP tasks and models performance, including sentiment analysis.</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>For this workshop, we will be using the package <span class="in">`stopwords`</span> (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/stopwords/readme/README.html)</span>) which is considered a "on-stop stopping" for R users. For English language, the package relies on the <span class="co">[</span><span class="ot">Snowball</span><span class="co">](http://snowball.tartarus.org/algorithms/english/stop.txt)</span> list. But, before we turn to our worksheet to see how that process looks like and how it will apply to our data, let's have a little challenge!</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># 🧠 Knowledge Check</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>How many stop words can you spot in each of the following sentences:</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>The cat was sitting on the mat near the window.</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>She is going to the store because she needs some milk.</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>I will be there in the morning if it doesn’t rain.</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>They have been working on the project for several days.</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Although he was tired, he continued to walk until he reached the house.</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false" collapse="true"}</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Solution</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>1<span class="sc">\.</span> <span class="in">`The`</span> cat <span class="in">`was`</span> sitting <span class="in">`on`</span> <span class="in">`the`</span> mat <span class="in">`near`</span> <span class="in">`the`</span> window.</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>2<span class="sc">\.</span> <span class="in">`She`</span> <span class="in">`is`</span> <span class="in">`going`</span> <span class="in">`to`</span> <span class="in">`the`</span> store <span class="in">`because`</span> <span class="in">`she`</span> <span class="in">`needs`</span> <span class="in">`some`</span> milk.</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>3<span class="sc">\.</span> <span class="in">`I`</span> <span class="in">`will`</span> <span class="in">`be`</span> <span class="in">`there`</span> <span class="in">`in`</span> <span class="in">`the`</span> morning, if it <span class="in">`does`</span> <span class="in">`not`</span> rain.</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>4<span class="sc">\.</span> <span class="in">`They`</span> <span class="in">`have`</span> <span class="in">`been`</span> working <span class="in">`on`</span> <span class="in">`the`</span> project <span class="in">`for`</span> several days.</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>5<span class="sc">\.</span> <span class="in">`Although`</span> <span class="in">`he`</span> <span class="in">`was`</span> <span class="in">`very`</span> tired, <span class="in">`he`</span> continued <span class="in">`to`</span> walk <span class="in">`until`</span> <span class="in">`he`</span> reached <span class="in">`the`</span> house.</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>Now, let’s return to the worksheet and see how we can put that into practice.</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stop words</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME: ADD NEW CODE</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>Awesome! This step should bring our token count down to **72,309 (FIXME-CHECK)** by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="fu"># 📑 **Suggested Reading**</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>Check out this blog post for a summary of the history of stop words, discussion on its applications and some perspectives on developments in the age of AI.</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>Gaviraj, K. (2025, April 24). *The origins of stop words*. BytePlus. <span class="ot">&lt;https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words&gt;</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
