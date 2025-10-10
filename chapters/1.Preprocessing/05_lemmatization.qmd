@@ -35,31 +35,12 @@ Alright, back to our pipeline, we will now convert words to their dictionary for
 
 ``` r
 # Lemmatize
-tokens_nostop <- tokens_nostop %>%
-  mutate(word_lemmatized = lemmatize_words(word))
-
-# Remove single-character words
-tokens_nostop <- tokens_nostop %>%
-  filter(str_length(word_lemmatized) > 1)
-
-# Reconstruct cleaned text per ID 
-# (ensure all IDs are preserved, even if empty)
-preprocessed <- data %>%
-  select(id) %>%
-  left_join(
-    tokens_nostop %>%
-      group_by(id) %>%
-      summarise(text_ready = paste(word_lemmatized, collapse = " "), .groups = "drop"),
-    by = "id"
-  ) %>%
-  mutate(text_ready = replace_na(text_ready, ""))
+fixme enter new code
 ```
 
-Did you notice the new column added to the `tokens_nostop` data frame? If you haven’t yet, take a moment to check it out. It shows how some words have been converted to their dictionary or base forms.
+**\<FIXME: ENTER OUTPUT\>**
 
-![](chapters/1.Preprocessing/images/lemma-results.png)
-
-With that done, we can finally move on to the next chapter. But first, as a last step, we will save the file:
+Did you notice the new column added to the `tokens_nostop` data frame? If you haven’t yet, take a moment to check it out. It shows how some words have been converted to their dictionary or base forms.fixme: enter With that done, we can finally move on to the next chapter. But first, as a last step, we will save the file:
 
 ``` r
 # Save to CSV

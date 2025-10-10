@@ -30,8 +30,16 @@ website:
     contents:
       - href: index.qmd
         text: Home
-      - href: chapters/1.Preprocessing/introduction.qmd
-        text: Preprocessing
+      - href: chapters/1.Preprocessing/01_introduction.qmd
+        text: Introduction to Text Preprocessing
+      - href: chapters/1.Preprocessing/02_normalization.qmd
+        text: Normalization & Noise Reduction
+      - href: chapters/1.Preprocessing/03_tokenization.qmd
+        text: Word Tokenization
+      - href: chapters/1.Preprocessing/04_stopwords.qmd
+        text: Stop Words Removal
+      - href: chapters/1.Preprocessing/05_lemmatization.qmd
+        text: Lemmatization
       - href: chapters/2.TextAnalysis/introduction.qmd
         text: Text Analysis
       - href: chapters/3.SentimentAnalysis/introduction.qmd

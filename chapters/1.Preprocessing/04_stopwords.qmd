@@ -41,17 +41,14 @@ How many stop words can you spot in each of the following sentences:
 :::
 :::
 
-**FIXME: You might be wondering: *Wait... why are words like "very" and "not" excluded? Aren’t they important for sentiment analysis?* The answer is: YES, they are! While these words are included in many stop word lists provided by standard NLP packages, we can customize the list to retain specific words we consider crucial for our analysis.**
-
 Now, let’s return to the worksheet and see how we can put that into practice.
 
 ``` r
-# Remove stopwords
-tokens_nostop <- tokens %>%
-  filter(!word %in% stopwords("en"))
+# Remove stop words
+#FIXME: ADD NEW CODE
 ```
 
-Awesome! This step should bring our token count down to 72,309 by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.
+Awesome! This step should bring our token count down to **72,309 (FIXME-CHECK)** by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.
 
 ::: {.callout-note icon="false"}
 # 📑 **Suggested Reading**
