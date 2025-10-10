@@ -1,0 +1,31 @@
+---
+title: "Introduction to Text Preprocessing"
+---
+
+### Understanding the terms and their relationships
+
+**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.
+
+**Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.
+
+**Natural Language Processing (NLP)** provides the computational methods that make text analysis possible. It is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language. NLP techniques include part-of-speech tagging, named entity recognition, sentiment detection, topic modeling, and transforming words into numerical representations for analysis.
+
+These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text
+
+Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.
+
+### Garbage in, Garbage out
+
+You've probably heard the phrase *"garbage in, garbage out"*, right? It's a core principle in computing: the quality of the output heavily depends on the quality of the input.
+
+This concept holds especially true text analysis tasks because human language is naturally messy, inconsistent, and often ambiguous.
+
+Key text preprocessing steps include normalization (noise reduction), stop words removal, tokenization and lemmatization, which are depicted and explained in the handout below:
+
+<iframe width="50%" height="600" src="https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf">
+
+</iframe>
+
+Source: Data Literacy Series <https://perma.cc/L8U5-ZEXD>
+
+In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis.
