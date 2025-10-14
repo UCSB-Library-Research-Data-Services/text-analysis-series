@@ -47,11 +47,11 @@ That’s it! After updating, restart your computer to make sure RStudio finds th
 
 ## Access to Data
 
-For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/){target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.
+For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/){target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.
 
 The dataset is available for download from this link: [Severance Dataset](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv){target='_blank'}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).
 
-Please download the file `comments.csv` and save it in your RStudio project folder.
+Please download the file `comments_variables.csv` and save it in your RStudio project folder.  *(FIXME - SHOULD WE PROVIDE THE FOLDER WITH RENV?)*
 
 ## R Skill Level
 

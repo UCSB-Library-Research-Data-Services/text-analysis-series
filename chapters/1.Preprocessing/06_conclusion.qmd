@@ -1,0 +1,12 @@
+---
+title: "Conclusion"
+editor: visual
+---
+
+In this workshop, we navigated the challenges of preprocessing of social media data, highlighting how messy, inconsistent, and noisy real-world datasets can be. One key takeaway is the importance of thoroughly assessing the data in the context of your project goals before diving into processing.
+
+Not all cleaning or transformation steps are universally beneficial; decisions should be guided by what is meaningful for your analysis or model objectives. Emojis, for example, can convey sentiment, irony, or context that may be essential for analysis, so decisions on whether to remove, convert, or retain them should be goal-driven. Similarly, numbers such as dates, prices, or statisticscan carry meaningful information, but they can also introduce noise if misinterpreted or inconsistently formatted. Thoughtful handling of these elements ensures that preprocessing enhances the dataset’s usefulness rather than stripping away valuable signals.
+
+Overly aggressive text cleaning removes content that is vital to the context, meaning, or nuance of a text and can damage the performance of natural language processing (NLP) models. The specific steps that lead to this problem depend on the end goal of your NLP task. 
+
+By critically evaluating the data and aligning preprocessing strategies with the end goals, we can ensure that the cleaned dataset not only becomes more manageable but also more valuable for deriving actionable insights. Ultimately, thoughtful data assessment is just as important as the technical preprocessing steps themselves.

@@ -42,10 +42,10 @@ website:
         text: Lemmatization
       - href: chapters/1.Preprocessing/06_conclusion.qmd
         text: Conclusion
-      - href: chapters/2.TextAnalysis/introduction.qmd
-        text: Text Analysis
-      - href: chapters/3.SentimentAnalysis/introduction.qmd
-        text: Sentiment Analysis
+      #- href: chapters/2.TextAnalysis/introduction.qmd
+        #text: Text Analysis
+      #- href: chapters/3.SentimentAnalysis/introduction.qmd
+        #text: Sentiment Analysis
       - about.qmd
 
   page-footer:
