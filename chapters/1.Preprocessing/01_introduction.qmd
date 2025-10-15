@@ -28,4 +28,27 @@ Key text preprocessing steps include normalization (noise reduction), stop words
 
 Source: Data Literacy Series <https://perma.cc/L8U5-ZEXD>
 
-In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis.
+In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis, but before, let's take a quick look at the data so we can have a better grasp of the challenge at hand.
+
+## Getting Things Started
+
+The data we pulled for this exercise comes from real social media posts, meaning they are inherently messy, and we know that even before going in. Because it is derived from natural language, this kind of data is unstructured, often filled with inconsistencies and irregularities.
+
+Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.
+
+
+Time to launch RStudio and our example!
+Open the `worksheet.qmd`. Let's install the required packages (via the console) and load them (run the code chunk). Next, let's inspect the `comments.csv` file and take a quick look at it! (FIXME: RENV AND PROJECT FOLDER?)
+
+``` r
+# Inspecting the data
+
+comments <- read_csv("comments.csv")
+head(comments$text)
+```
+
+::: {.callout-note icon="false"}
+# 💬 Discussion
+
+Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?
+:::
