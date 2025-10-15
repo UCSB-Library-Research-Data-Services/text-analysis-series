@@ -200,20 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/06_conclusion.qmd" class="sidebar-item-text sidebar-link">
+  <a href="./chapters/1.Preprocessing/06_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusion</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Text Analysis</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Sentiment Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -315,9 +303,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="access-to-data" class="level2">
 <h2 class="anchored" data-anchor-id="access-to-data">Access to Data</h2>
-<p>For this lesson we will analyze a dataset of social media posts related to the Apple TV series <em>Severance</em>. The dataset was collected using <a href="https://www.brandwatch.com/" target="_blank">Brandwatch</a> (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.</p>
+<p>For this lesson we will analyze a dataset of social media posts related to the Apple TV series <em>Severance</em>. The dataset was collected using <a href="https://www.brandwatch.com/" target="_blank">Brandwatch</a> (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</p>
 <p>The dataset is available for download from this link: <a href="https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv" target="_blank">Severance Dataset</a>. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</p>
-<p>Please download the file <code>comments.csv</code> and save it in your RStudio project folder.</p>
+<p>Please download the file <code>comments_variables.csv</code> and save it in your RStudio project folder. <em>(FIXME - SHOULD WE PROVIDE THE FOLDER WITH RENV?)</em></p>
 </section>
 <section id="r-skill-level" class="level2">
 <h2 class="anchored" data-anchor-id="r-skill-level">R Skill Level</h2>
@@ -830,11 +818,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Access to Data</span></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using <span class="co">[</span><span class="ot">Brandwatch</span><span class="co">](https://www.brandwatch.com/)</span>{target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains ~9,000 posts stored in a CSV file.</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using <span class="co">[</span><span class="ot">Brandwatch</span><span class="co">](https://www.brandwatch.com/)</span>{target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>The dataset is available for download from this link: <span class="co">[</span><span class="ot">Severance Dataset</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span>{target='_blank'}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</span>
 <span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>Please download the file <span class="in">`comments.csv`</span> and save it in your RStudio project folder.</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>Please download the file <span class="in">`comments_variables.csv`</span> and save it in your RStudio project folder.  *(FIXME - SHOULD WE PROVIDE THE FOLDER WITH RENV?)*</span>
 <span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Skill Level</span></span>
 <span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>

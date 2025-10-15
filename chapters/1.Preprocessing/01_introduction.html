@@ -200,20 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/1.Preprocessing/06_conclusion.qmd" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/06_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusion</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Text Analysis</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Sentiment Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -234,6 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#understanding-the-terms-and-their-relationships" id="toc-understanding-the-terms-and-their-relationships" class="nav-link active" data-scroll-target="#understanding-the-terms-and-their-relationships">Understanding the terms and their relationships</a></li>
   <li><a href="#garbage-in-garbage-out" id="toc-garbage-in-garbage-out" class="nav-link" data-scroll-target="#garbage-in-garbage-out">Garbage in, Garbage out</a></li>
+  <li><a href="#getting-things-started" id="toc-getting-things-started" class="nav-link" data-scroll-target="#getting-things-started">Getting Things Started</a></li>
   </ul>
 </nav>
     </div>
@@ -275,7 +264,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <iframe width="50%" height="600" src="https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf">
 </iframe>
 <p>Source: Data Literacy Series <a href="https://perma.cc/L8U5-ZEXD" class="uri">https://perma.cc/L8U5-ZEXD</a></p>
-<p>In the next chapters, we’ll dive deeper into this pipeline to prepare the data further analysis.</p>
+<p>In the next chapters, we’ll dive deeper into this pipeline to prepare the data further analysis, but before, let’s take a quick look at the data so we can have a better grasp of the challenge at hand.</p>
+</section>
+<section id="getting-things-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-things-started">Getting Things Started</h2>
+<p>The data we pulled for this exercise comes from real social media posts, meaning they are inherently messy, and we know that even before going in. Because it is derived from natural language, this kind of data is unstructured, often filled with inconsistencies and irregularities.</p>
+<p>Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.</p>
+<p>Time to launch RStudio and our example! Open the <code>worksheet.qmd</code>. Let’s install the required packages (via the console) and load them (run the code chunk). Next, let’s inspect the <code>comments.csv</code> file and take a quick look at it! (FIXME: RENV AND PROJECT FOLDER?)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"comments.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(comments<span class="sc">$</span>text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>💬 Discussion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?</p>
+</div>
+</div>
 
 
 <!-- -->
@@ -734,37 +746,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Preprocessing"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Understanding the terms and their relationships</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>**Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>**Natural Language Processing (NLP)** provides the computational methods that make text analysis possible. It is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language. NLP techniques include part-of-speech tagging, named entity recognition, sentiment detection, topic modeling, and transforming words into numerical representations for analysis.</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">### Garbage in, Garbage out</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>You've probably heard the phrase *"garbage in, garbage out"*, right? It's a core principle in computing: the quality of the output heavily depends on the quality of the input.</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>This concept holds especially true text analysis tasks because human language is naturally messy, inconsistent, and often ambiguous.</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>Key text preprocessing steps include normalization (noise reduction), stop words removal, tokenization and lemmatization, which are depicted and explained in the handout below:</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> width</span><span class="op">=</span><span class="st">"50%"</span><span class="ot"> height</span><span class="op">=</span><span class="st">"600"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf"</span><span class="dt">&gt;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Source: Data Literacy Series <span class="ot">&lt;https://perma.cc/L8U5-ZEXD&gt;</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Preprocessing"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Understanding the terms and their relationships</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>**Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>**Natural Language Processing (NLP)** provides the computational methods that make text analysis possible. It is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language. NLP techniques include part-of-speech tagging, named entity recognition, sentiment detection, topic modeling, and transforming words into numerical representations for analysis.</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">### Garbage in, Garbage out</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>You've probably heard the phrase *"garbage in, garbage out"*, right? It's a core principle in computing: the quality of the output heavily depends on the quality of the input.</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>This concept holds especially true text analysis tasks because human language is naturally messy, inconsistent, and often ambiguous.</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>Key text preprocessing steps include normalization (noise reduction), stop words removal, tokenization and lemmatization, which are depicted and explained in the handout below:</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> width</span><span class="op">=</span><span class="st">"50%"</span><span class="ot"> height</span><span class="op">=</span><span class="st">"600"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf"</span><span class="dt">&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>Source: Data Literacy Series <span class="ot">&lt;https://perma.cc/L8U5-ZEXD&gt;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis, but before, let's take a quick look at the data so we can have a better grasp of the challenge at hand.</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Getting Things Started</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>The data we pulled for this exercise comes from real social media posts, meaning they are inherently messy, and we know that even before going in. Because it is derived from natural language, this kind of data is unstructured, often filled with inconsistencies and irregularities.</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>Time to launch RStudio and our example!</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>Open the <span class="in">`worksheet.qmd`</span>. Let's install the required packages (via the console) and load them (run the code chunk). Next, let's inspect the <span class="in">`comments.csv`</span> file and take a quick look at it! (FIXME: RENV AND PROJECT FOLDER?)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"comments.csv"</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(comments<span class="sc">$</span>text)</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># 💬 Discussion</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

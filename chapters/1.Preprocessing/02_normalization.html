@@ -200,20 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/1.Preprocessing/06_conclusion.qmd" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/06_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusion</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Text Analysis</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Sentiment Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -275,8 +263,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As we’ve seen, the main goal of normalization is to remove irrelevant punctuation and content, and to standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 18%">
-<col style="width: 81%">
+<col style="width: 7%">
+<col style="width: 92%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -352,9 +340,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It’s not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe (’). Such inconsistencies are very common and can disrupt contraction expansion.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 18%">
-<col style="width: 18%">
-<col style="width: 63%">
+<col style="width: 14%">
+<col style="width: 11%">
+<col style="width: 74%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -966,7 +954,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>As we've seen, the main goal of normalization is to remove irrelevant punctuation and content, and to standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:</span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Action                       <span class="pp">|</span> Why it matters?                                                                                                                                                                                                                                                                                                                                                         <span class="pp">|</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|-----------------------------------------------------------|</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|</span></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove URLs                  <span class="pp">|</span> URLs often contain irrelevant noise and don't contribute meaningful content for analysis.                                                                                                                                                                                                                                                                               <span class="pp">|</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove Punctuation &amp; Symbols <span class="pp">|</span> Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.                                                                                                                           <span class="pp">|</span></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Remove Numbers               <span class="pp">|</span> Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. <span class="sc">\&lt;</span>NUMBER<span class="sc">\&gt;</span>), or even converting them into their written form (e.g, 100 becomes one hundred). <span class="pp">|</span></span>
@@ -1003,7 +991,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.</span>
 <span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Character <span class="pp">|</span> Unicode <span class="pp">|</span> Notes                                                   <span class="pp">|</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|-------------|----------------------------------------------|</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------|---------|---------------------------------------------------------|</span></span>
 <span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`'`</span>       <span class="pp">|</span> U+0027  <span class="pp">|</span> Standard straight apostrophe, used in most dictionaries <span class="pp">|</span></span>
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`’`</span>       <span class="pp">|</span> U+2019  <span class="pp">|</span> Right single quotation mark (curly apostrophe)          <span class="pp">|</span></span>
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`‘`</span>       <span class="pp">|</span> U+2018  <span class="pp">|</span> Left single quotation mark                              <span class="pp">|</span></span>
