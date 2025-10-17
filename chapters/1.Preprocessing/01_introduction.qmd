@@ -38,9 +38,26 @@ The data we pulled for this exercise comes from real social media posts, meaning
 
 Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.
 
-## Getting Files and Launching RStudio
+### Getting Files and Launching RStudio
 
 Time to launch RStudio and our example! Click on this [link](add%20link) to download the `tdm-workshop.Rproj` file, which includes a `comments.csv` dataset, a quarto (learn more about [Quarto](https://quarto.org/)) `worksheet.qmd` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
+
+### Loading Packages & Inspecting the Data
+
+Open the `worksheet.qmd` file and let's start by loading all the required packages that are pre-installed in the project:
+
+``` r
+library(tidyverse)    # general data manipulation and visualization
+library(tidytext)     # tokenization and tidy text processing
+library(stringr)      # string manipulation (punctuation, whitespaces, etc.)
+library(stringi)      # emoji handling
+library(dplyr)        # data wrangling
+library(textclean)    # Expand contractions, remove URLs/punctuation
+library(emo)          # Detect, extract, or replace emojis in text
+library(textstem)     # lemmatization; reduce words to dictionary form
+```
+
+Alright! With all the necessary packages loaded, let's take a look at the dataset we’ll be working with:
 
 ``` r
 # Inspecting the data
@@ -48,6 +65,8 @@ Time to launch RStudio and our example! Click on this [link](add%20link) to down
 comments <- read_csv("comments.csv")
 head(comments$text)
 ```
+
+You’ll notice that we’ve pre-populated a code chunk with Patterns to save you from the tedious task of typing out regular expressions (regex for short). Don’t worry about them for now, we’ll come back to it shortly.
 
 ::: {.callout-note icon="false"}
 # 💬 Discussion
