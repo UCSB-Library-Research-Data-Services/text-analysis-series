@@ -12,7 +12,9 @@ title: "Introduction to Text Preprocessing"
 
 These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text
 
-Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.
+Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. Before text can be analyzed computationally, it needs to be standardized. Computers see “Happy,” “happy,” and “HAPPY!!!” as different words — preprocessing fixes that.
+
+It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.
 
 ### Garbage in, Garbage out
 
@@ -36,9 +38,9 @@ The data we pulled for this exercise comes from real social media posts, meaning
 
 Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.
 
+## Getting Files and Launching RStudio
 
-Time to launch RStudio and our example!
-Open the `worksheet.qmd`. Let's install the required packages (via the console) and load them (run the code chunk). Next, let's inspect the `comments.csv` file and take a quick look at it! (FIXME: RENV AND PROJECT FOLDER?)
+Time to launch RStudio and our example! Click on this [link](add%20link) to download the `tdm-workshop.Rproj` file, which includes a `comments.csv` dataset, a quarto (learn more about [Quarto](https://quarto.org/)) `worksheet.qmd` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
 
 ``` r
 # Inspecting the data
