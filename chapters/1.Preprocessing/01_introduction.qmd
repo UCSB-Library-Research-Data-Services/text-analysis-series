@@ -47,12 +47,12 @@ Time to launch RStudio and our example! Click on this [link](add%20link) to down
 Open the `worksheet.qmd` file and let's start by loading all the required packages that are pre-installed in the project:
 
 ``` r
-library(tidyverse)    # general data manipulation and visualization
-library(tidytext)     # tokenization and tidy text processing
+library(tidyverse)    # general data manipulation
+library(tidytext)     # tokenization and text processing
 library(stringr)      # string manipulation (punctuation, whitespaces, etc.)
 library(stringi)      # emoji handling
 library(dplyr)        # data wrangling
-library(textclean)    # Expand contractions, remove URLs/punctuation
+library(textclean)    # expand contractions
 library(emo)          # Detect, extract, or replace emojis in text
 library(textstem)     # lemmatization; reduce words to dictionary form
 ```
