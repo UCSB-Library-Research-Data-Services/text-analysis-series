@@ -227,20 +227,6 @@ str_replace_all(repeated_chars, "\1") %>%
 
 Can you guess what `"\1"` does? It uses the character we captured earlier, keeping it in the text.
 
-::: callout-tip
-## Validate Cleaning
-
-As a sanity checking approach we might also perform some additional validation for the different patterns we used:
-
-`# Validate text cleaning for different patterns`
-
-`validate_pattern_replacement(comments_clean, url_pattern)`
-
-`validate_pattern_replacement(comments_clean, mentions_pattern)`
-
-`validate_pattern_replacement(comments_clean, apostrophes_pattern)`
-:::
-
 ## 10. Convert Emojis to Text
 
 Okay, now we’ll convert emojis into their text descriptions to make them machine-readable, using the emoji package to help with this step:
