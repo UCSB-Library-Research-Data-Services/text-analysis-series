@@ -265,7 +265,7 @@ replace_emojis <- function(text, emoji_dict) {
 }
 ```
 
-Wait, we are not done yet, since we need to add the replace_emojis function, based on our loaded dictionary, into our code chunk. This will replace the emojis with their corresponding text:
+Wait, we are not done yet! We still have to add the `replace_emojis` function, based on our loaded dictionary, into our code chunk. This will replace the emojis with their corresponding text on our dataset:
 
 ```{r}
 replace_emojis(emoji_dict)
@@ -276,14 +276,14 @@ Our normalization and noise reduction code chunk is complete, but don't forget t
 
 \[FIXME ADD IMAGES\]
 
-Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this wasn't included in the dictionary we used, we can still add it to it for automatic handling:
+Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
 
 ```{emoji_dict <- emo::jis[, c("emoji", "name")]}
 emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
 emoji_dict
 ```
 
-Neat! Let's re-run the code and check it once again.
+Neat! Let's re-run the code chunk and check it once again.
 
 With emojis taken care of, we can now move on to the next preprocessing step: tokenization.
 
