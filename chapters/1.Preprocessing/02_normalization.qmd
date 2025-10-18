@@ -72,7 +72,7 @@ Alright, let's return to our worksheet to dive into cleaning and normalization. 
 
 The first step would be to create a new data frame called `comments_clean` and adding a `clean_text` column to it:
 
-```{r}
+``` r
 comments_clean <- comments %>%
   mutate(
     clean_text = text %>%
