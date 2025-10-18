@@ -8,7 +8,7 @@ Tokenization in NLP differs from applications in security and blockchain. It cor
 Text can be tokenized into sentences, word, subwords or even characters, depending on project goals and analysis plan. Here is a summary of these approaches:
 
 | **Type**                   | **Description**                                                                                                                 | **Example**                                                                | **Common Use Cases**                                                                                  |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+|------------------|--------------------|------------------|------------------|
 | **Sentence Tokenization**  | Splits text into individual sentences                                                                                           | `"I love NLP. It's fascinating!"` → `["I love NLP.", "It's fascinating!"]` | Ideal for tasks like summarization, machine translation, and sentiment analysis at the sentence level |
 | **Word Tokenization**      | Divides text into individual words                                                                                              | `"I love NLP"` → `["I", "love", "NLP"]`                                    | Works well for languages with clear word boundaries, such as English                                  |
 | **Character Tokenization** | Breaks text down into individual characters                                                                                     | `"NLP"` → `["N", "L", "P"]`                                                | Useful for languages without explicit word boundaries or for very fine-grained text analysis          |
@@ -22,12 +22,14 @@ Although this issue has been resolved in later versions of the model, it was ori
 
 While this is beyond the scope of the workshop, it's important to note that some advanced AI models use neural networks to dynamically determine token segmentation. Rather than relying on fixed rules, these models can adapt based on the contextual cues within the text. However, tokenization remains inherently limited by the irregular, organic, and often unpredictable nature of human language.
 
-Let's go back to our dataset and apply tokenization:
+Let's go back to our dataset and apply tokenization. We will use the tidytext function `unnest_tokens()`, which splits the text in a specified column into individual tokens (here, words), creating one row per token while keeping other data intact. The first argument (`word`) names the new column for tokens, and the second (`clean_text`) specifies the text column to tokenize. In short, it turns each word from `clean_text` into its own row in a new column called `word`.
 
 ``` r
-#FIXME: ADD NEW CODE
+# Tokenization
+comments_tokens <- comments_clean %>%
+  unnest_tokens(word, clean_text)
 ```
 
-We’ve just tokenized each comment (or row of text) in our dataset into individual tokens, giving us a total of 124,864 tokens!
+Great! We’ve just tokenized each comment (or row of text) in our dataset into individual tokens, giving us a total of 124,864 **(FIXME)** tokens!
 
 If you’ve looked at the token output, you may have noticed that some of these tokens are common but less meaningful words, like *the*, *a*, or *of*. Don’t worry; we’ll take care of those in the next step.

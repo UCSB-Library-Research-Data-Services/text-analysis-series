@@ -31,18 +31,21 @@ After applying lemmatization, the sentence should look like:
 :::
 :::
 
-Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our dataset for analysis.
+Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.
+
+We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
 
 ``` r
-# Lemmatize
-fixme enter new code
+# Convert to lemmas
+comments_clean <- mutate(comments_clean,
+                         word_lemmatized = lemmatize_words(word))
 ```
 
 **\<FIXME: ENTER OUTPUT\>**
 
-Did you notice the new column added to the `tokens_nostop` data frame? If you haven’t yet, take a moment to check it out. It shows how some words have been converted to their dictionary or base forms.fixme: enter With that done, we can finally move on to the next chapter. But first, as a last step, we will save the file:
+That concludes our preprocessing of the severance comments datast. But before we go let's save it as a new file named `preprocessed_comments`:
 
 ``` r
 # Save to CSV
-write_csv(preprocessed, "preprocessed.csv")
+write_csv(preprocessed, "preprocessed_comments.csv")
 ```

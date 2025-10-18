@@ -41,11 +41,13 @@ How many stop words can you spot in each of the following sentences:
 :::
 :::
 
-Now, let’s return to the worksheet and see how we can put that into practice.
+Now, let’s return to the worksheet and see how we can put that into practice. We will call `data("stop_words")` to load a built-in dataset from the tidytext package containing common stop words—words like “the”, “and”, and “is” that add little meaning in text analysis. In the next line, `comments_tokens %>% anti_join(stop_words, by = "word")`, will remove any rows in comments_tokens where the word column matches a stop word.
 
 ``` r
 # Remove stop words
-#FIXME: ADD NEW CODE
+data("stop_words")
+comments_tokens <- comments_tokens %>%
+  anti_join(stop_words, by = "word")
 ```
 
 Awesome! This step should bring our token count down to **72,309 (FIXME-CHECK)** by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.

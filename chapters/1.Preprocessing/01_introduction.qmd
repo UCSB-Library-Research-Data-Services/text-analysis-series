@@ -54,7 +54,7 @@ library(stringi)      # emoji handling
 library(dplyr)        # data wrangling
 library(textclean)    # expand contractions
 library(emo)          # Detect, extract, or replace emojis in text
-library(textstem)     # lemmatization; reduce words to dictionary form
+library(textstem)     # lemmatization
 ```
 
 Alright! With all the necessary packages loaded, let's take a look at the dataset we’ll be working with:
