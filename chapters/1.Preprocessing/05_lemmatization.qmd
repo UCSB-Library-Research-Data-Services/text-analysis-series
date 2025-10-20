@@ -36,16 +36,38 @@ Alright, back to our pipeline, we will now convert words to their dictionary for
 We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
 
 ``` r
-# Convert to lemmas
-comments_clean <- mutate(comments_clean,
-                         word_lemmatized = lemmatize_words(word))
+lemmatized <- nonstopwords %>%
+  mutate(word = lemmatize_words(word))
 ```
 
-**\<FIXME: ENTER OUTPUT\>**
+Great! Let's take a look at the lemmatized data frame. For example, captivating was converted into captivate.
 
-That concludes our preprocessing of the severance comments datast. But before we go let's save it as a new file named `preprocessed_comments`:
+## Rebuilding Sentences
+
+But we’re not done yet. After tokenization, our data consists of individual words. We still need to reconstruct full sentences from these lemmatized words so that each row represents a complete piece of text. To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.
 
 ``` r
-# Save to CSV
-write_csv(preprocessed, "preprocessed_comments.csv")
+# Reconstruct sentences from lemmatized words
+preprocessed <- lemmatized %>%
+  group_by(id, text) %>%
+  summarise(text_preprocessed = paste(word, collapse = " "), .groups = "drop")
 ```
+
+After you use `group_by(id, text)`, each group contains all the lemmatized words that belong to the same original text. The `summarise()` function then takes each group and creates one summary row per group.
+
+Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words.
+
+## Saving your Work for Analysis
+
+let's save it as a new file named `comments_preprocessed`:
+
+``` r
+# Select only important columns
+output <- preprocessed %>%
+  select(id, text_preprocessed)
+
+# Save to CSV
+write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
+```
+
+Well done! Let's now cover some important considerations for future projects.
