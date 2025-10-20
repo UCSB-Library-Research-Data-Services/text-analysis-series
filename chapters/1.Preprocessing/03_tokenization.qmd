@@ -30,6 +30,6 @@ tokenized <- comments %>%
   unnest_tokens(word, text_cleaned)
 ```
 
-Great! We’ve just tokenized each comment (or row of text) in our dataset into individual tokens, giving us a total of 128,396 tokens in the tokenized dataframe!
+Great! We’ve just tokenized each individual comment (text string) in our dataset into individual words, giving us a total of 128,396 tokens in the tokenized dataframe!
 
 If you’ve looked at the token output, you may have noticed that some of these tokens are common but less meaningful words, like to, *it*, and *is*. Don’t worry; we’ll take care of those in the next step: stop word removal.
