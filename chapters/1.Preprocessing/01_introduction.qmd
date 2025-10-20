@@ -44,6 +44,12 @@ Time to launch RStudio and our example! Click on this [link](https://ucsb.box.co
 
 After downloading this subfolder, double click on the project file `text-preprocessing.Rproj` to launch Rstudio. Look for and open the file `preprocessing-workbook.qmd` on your Rstudio environment.
 
+Next, we will need to install the package \`renv\` so you can setup the working environment correctly with all the packages and dependencies we will need. On the console, type:
+
+``` r
+install.packages("renv")
+```
+
 ### Loading Packages & Inspecting the Data
 
 Let's start by loading all the required packages that are pre-installed in the project:
