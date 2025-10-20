@@ -31,18 +31,43 @@ After applying lemmatization, the sentence should look like:
 :::
 :::
 
-Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our dataset for analysis.
+Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.
+
+We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
 
 ``` r
-# Lemmatize
-fixme enter new code
+lemmatized <- nonstopwords %>%
+  mutate(word = lemmatize_words(word))
 ```
 
-**\<FIXME: ENTER OUTPUT\>**
+Great! Let's take a look at the lemmatized data frame. For example, captivating was converted into captivate.
 
-Did you notice the new column added to the `tokens_nostop` data frame? If you haven’t yet, take a moment to check it out. It shows how some words have been converted to their dictionary or base forms.fixme: enter With that done, we can finally move on to the next chapter. But first, as a last step, we will save the file:
+## Rebuilding Sentences
+
+But we’re not done yet. After tokenization, our data consists of individual words. We still need to reconstruct full sentences from these lemmatized words so that each row represents a complete piece of text. To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.
 
 ``` r
+# Reconstruct sentences from lemmatized words
+preprocessed <- lemmatized %>%
+  group_by(id, text) %>%
+  summarise(text_preprocessed = paste(word, collapse = " "), .groups = "drop")
+```
+
+After you use `group_by(id, text)`, each group contains all the lemmatized words that belong to the same original text. The `summarise()` function then takes each group and creates one summary row per group.
+
+Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words.
+
+## Saving your Work for Analysis
+
+let's save it as a new file named `comments_preprocessed`:
+
+``` r
+# Select only important columns
+output <- preprocessed %>%
+  select(id, text_preprocessed)
+
 # Save to CSV
-write_csv(preprocessed, "preprocessed.csv")
+write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
 ```
+
+Well done! Let's now cover some important considerations for future projects.

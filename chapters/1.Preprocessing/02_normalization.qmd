@@ -5,26 +5,26 @@ editor: visual
 
 ### Why does it matter?
 
-To perform accurate and reliable analysis, we need to "take out the garbage" first by preprocessing the text to clean, standardize, and structure the input data. This reduces noise and improves the model's accuracy.
+As previously mentioned, in order to perform accurate and reliable analysis, we need to "take out the garbage" first by preprocessing the text to clean, standardize, and structure the input data. These steps help reduce noise and improve the model's accuracy.
 
-Below we use another analogy to represent the impact of noise in the data analysis outcome. Below we use another analogy to illustrate the impact of noise on data analysis outcomes. Imagine a tree that is slowly dying. On the surface, its leaves may still appear green, but closer inspection reveals branches that are brittle, bark that is cracking, and roots that are struggling to find nourishment. If we only focus on the healthy-looking leaves, we might draw a misleading conclusion about the tree’s overall condition. Similarly, in text analysis, raw data often contains “noise,” such as irrelevant words, inconsistent formatting, or errors, which can obscure meaningful patterns. If we feed this noisy data directly into an analysis, the results can be skewed, incomplete, or misleading, just as judging the tree’s health by its leaves alone would be.
+Below we use another analogy to illustrate the impact of noise on data analysis outcomes. Imagine a tree that is slowly dying. On the surface, its leaves may still appear green, but closer inspection reveals branches that are brittle, bark that is cracking, and roots that are struggling to find nourishment. If we only focus on the healthy-looking leaves, we might draw a misleading conclusion about the tree’s overall condition. Similarly, in text analysis, raw data often contains “noise,” such as irrelevant words, inconsistent formatting, or errors, which can obscure meaningful patterns. If we feed this noisy data directly into an analysis, the results can be skewed, incomplete, or misleading, just as judging the tree’s health by its leaves alone would be.
 
 Just as a gardener would prune dead branches, enrich the soil, and care for the roots to revive the tree, data analysts perform preprocessing steps to clean, standardize, and structure the text. By removing noise and focusing on the core content, we give the analysis the best chance to reveal true insights, uncover trends, and support reliable conclusions. In short, the quality of our “data garden” directly determines the health of the insights it produces.
 
 ![](images/noise.png)
 
-As we've seen, the main goal of normalization is to remove irrelevant punctuation and content, and to standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:
+The main goal of normalization is to remove irrelevant content and standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:
 
-| Action                       | Why it matters?                                                                                                                                                                                                                                                                                                                                                         |
-|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Remove URLs                  | URLs often contain irrelevant noise and don't contribute meaningful content for analysis.                                                                                                                                                                                                                                                                               |
-| Remove Punctuation & Symbols | Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.                                                                                                                           |
-| Remove Numbers               | Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. \<NUMBER\>), or even converting them into their written form (e.g, 100 becomes one hundred). |
-| Normalize Whitespaces        | Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis.                                                                                                                                                                                                                                                                         |
-| Convert to Lowercase         | Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ "APPLETV" ≠ “appleTV” ≠ “appletv”), improving model consistency.                                                                                                                                                                                                         |
-| Convert Emojis to Text       | Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions.                                                                                                                                                                                                 |
+| Action | Why it matters? |
+|-------------|-----------------------------------------------------------|
+| Remove URLs | URLs often contain irrelevant noise and don't contribute meaningful content for analysis. |
+| Remove Punctuation & Symbols | Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching. |
+| Remove Numbers | Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. \<NUMBER\>), or even converting them into their written form (e.g, 100 becomes one hundred). |
+| Normalize Whitespaces | Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis. |
+| Convert to Lowercase | Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ "APPLETV" ≠ “appleTV” ≠ “appletv”), improving model consistency. |
+| Convert Emojis to Text | Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions. |
 
-::: {.callout-note icon="false"}
+:::: {.callout-note icon="false"}
 ## 🧠 Knowledge Check
 
 In pairs or groups of three, identify the techniques you would consider using to normalize and reduce noise in the following sentence:
@@ -40,97 +40,30 @@ After applying them the sentence should look like:
 
 *omg \[face scream in fear\] I can not believe it this is crazy unreal \[exploding head\]*
 :::
-:::
+::::
 
 A caveat when working with emojis is that they are figurative and highly contextual. Also, there may be important generational and cultural variability in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.
 
-You might have noticed based on the example above that emojis are converted to their equivalent CLDR (common, human-readable name) based on this [emoji unicode list](https://www.unicode.org/emoji/charts/full-emoji-list.html), which are not as nuanced and always helpful to detect sentiment. While not always perfect, that is a required step to normalize the data.
+You might have noticed based on the example above that emojis are converted to their equivalent CLDR (common, human-readable name) based on this [emoji unicode list](https://www.unicode.org/emoji/charts/full-emoji-list.html), which are not as nuanced and always helpful to detect sentiment. While not always perfect, that is an important step to normalize the data and we will see how this process looks like later on this episode.
 
-## Dealing with Contractions
+## The Role of Regular Expressions
 
-Another important step is to properly handle contractions. In everyday language, we often shorten words: *can’t*, *don’t*, *it’s*. These make speech and writing flow more easily, but they can cause confusion for Natural Language Processing (NLP) models. Expanding contractions, such as changing *can’t* to *cannot* or *it’s* to *it is*, helps bring clarity and consistency to the text because NLP models treat *don’t* and *do not* as completely different words, even though they mean the same thing. Also, words like *cant*, *doesnt*, and *whats* lose their meaning. Expanding contractions reduces this inconsistency and ensures that both forms are recognized as the same concept. Expanding it to *is not happy* makes the negative sentiment explicit, which is especially important in tasks like sentiment analysis.
+Regular expressions (regex) are powerful tools for pattern matching and text manipulation. They allow you to identify, extract, or replace specific sequences of characters in text, such as email addresses, URLs, hashtags, or user mentions. In text cleaning, regex is essential for reducing noise by removing unwanted elements like punctuation, special symbols, or repeated whitespace, which can interfere with analysis. By systematically filtering out irrelevant or inconsistent text, regex helps create cleaner, more structured data, improving the accuracy of downstream tasks like sentiment analysis, topic modeling, or machine learning. Essentially, regex transforms messy raw text into a manageable, analyzable format.
 
-So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.
+We won’t have time to cover regular expressions in detail during this workshop, but it’s important to know that they are a fundamental tool for working with text data. Regex allows you to identify, extract, and manipulate patterns in text, such as emails, hashtags, or special characters, which is essential for cleaning and preparing data for analysis. Even though we won’t dive into the syntax or practice exercises here, being aware of regex and its capabilities can help you understand how text preprocessing works behind the scenes and guide you toward resources to learn it on your own.
 
-| Character | Unicode | Notes                                                   |
-|-----------|---------|---------------------------------------------------------|
-| `'`       | U+0027  | Standard straight apostrophe, used in most dictionaries |
-| `’`       | U+2019  | Right single quotation mark (curly apostrophe)          |
-| `‘`       | U+2018  | Left single quotation mark                              |
-| `ʼ`       | U+02BC  | Modifier letter apostrophe                              |
-| `` ` ``   | U+0060  | Grave accent (sometimes typed by mistake)               |
-
-Alright, let's go back to our worksheet to get our hands "dirty" with some cleaning and normalization, helping us make it more normalized, consistent, and ready for analysis.
-
-::: callout-caution
-## The Order Matters!
-
-When performing text normalization and noise reduction, **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, `"can't"` might turn into `"cant"` instead of `"cannot"`, losing the correct meaning.
-:::
-
-## 1. Handling Apostrophes
-
-This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Apllying it to the `text` column in our `comments` dataset should look like. In this case, the pattern "\[’‘ʼ\]" looks for several different kinds of apostrophes and backticks—like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('\`).
-
-## 2. Expanding Contractions
-
-Let's first make sure that words like "don't" become "do not".
-
-## 3. Converting to Lowercase
-
-Having all text converted to lowercase will be our next step, using the mutate function we will add the following code which will create a new `text_lower` column:
-
-## 4. Removing URLs
-
-We have a few URLs in our dataset and because they vary in format (e.g., <http://,> <https://,> or www.), we need to provide a regular expression that can take care of these variations and save it as `text_nourl`.
+Working with regular expressions might require some trial and error, especially when you are working with a large and highly messy corpus. To make things easier and make the lesson less typing-intensive, we’ve pre-populated the worksheet with regex patterns noted below and will provide a clear explanation of how they are expected to function, so you can follow along confidently.
 
 ``` r
-#FIXME: ENTER NEW CODE AND CHECK CORRESPONDENT EXPLANATION BELOW
+url_pattern <- "http[s]?://[^\\s,]+|www\\.[^\\s,]+"
+hidden_characters <- "[\u00A0\u2066\u2067\u2068\u2069]"
+apostrophes <- ("[‘’‛ʼ❛❜＇`´′]")
+hashtag_splitter <- "(?<![#@])([a-z])([A-Z])"
+mentions <- "@[A-Za-z0-9_]+"
+punctuation <- "[[:punct:]“”‘’–—…|+]"
+numbers <- "[[:digit:]]"
+repeated_chars <- "(.)\\1{2,}"
 ```
-
-Breaking it down:
-
--   `http[s]?://` : Matches http:// or <https://,> where `[s]?`: means optional "s" (so it matches both http and https).
-
--   `[^\\s,]+`: where \[\^...\] is a negated character class, meaning "match anything not in here", `\\s` refers to whitespace (space, tab, newline), and `,` to match one or more characters that are not spaces or commas, that in combination with the above, matches the entire URL up to a space or comma.
-
--   `|` : Means OR in regex. So it matches either the first pattern or the second.
-
--   `www\\.[^\\s,]+` : Matches URLs that start with www. and continue until a space or comma.
-
-## 5. Removing Mentions & Handling Extra Space
-
-Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded by an \@ symbol.
-
-``` r
-#FIXME: ENTER NEW CODE
-```
-
-## 6. Cleaning Punctuation, Numbers, Elongation and Extra Spaces and Hidden Characters
-
-Alright, time to remove punctuation, numbers and repeated letters used for emphasis, that might affect our analysis (e.g. "Amaaaazing", "Loooove") and take care of some extra spaces.
-
-``` r
-FIXME: ENTER NEW CODE
-```
-
-The punctuation regular expression:
-
--   `[:punct:]`: matches all standard punctuation characters (e.g., ! " \# \$ % & ' ( ) \* + , - . / : ; \< = \> ? \@ \[  \] \^ \_ { \| } \~).
-
--   `“”‘’–—…` : matches special Unicode punctuation, like curly quotes, en-dash, em-dash, ellipsis.
-
--   `|`: matches the literal pipe symbol.
-
--   `[:digit:]`: matches any digit (0–9).
-
--   For the collapsing part, `(.)`: captures any single character and stores it in a capture group.
-
--   `\\1`: refers back to the first captured character.
-
--   `{2,}`: matches 2 or more consecutive occurrences of that character.
-
-Together, `(.)\\1{2,}` matches any character repeated three or more times in a row and `str_replace_all` replaces the repeated sequence with just one occurrence of the character.
 
 ::: callout-tip
 ## Get Help with Regex
@@ -138,31 +71,261 @@ Together, `(.)\\1{2,}` matches any character repeated three or more times in a r
 Testing regular expressions is essential for accuracy and reliability, since complex patterns often produce unexpected results. Careful testing ensures your regex matches the intended text, rejects invalid inputs, and performs efficiently, while also revealing potential bugs before they impact your system. To make testing more effective, use tools like [Regex101](https://regex101.com/) or the [Coder Pad cheatsheet](https://coderpad.io/regular-expression-cheat-sheet) or and be sure to check tricky border cases that might otherwise slip through.
 :::
 
-We have created multiple intermediate columns to facilitate the inspection of each step we performed, but we could have streamlined the pipeline with a more slim approach, like the one below:
+::: callout-caution
+## The Order Matters!
+
+When performing text normalization and noise reduction, **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, `"can't"` might turn into `"cant"` instead of `"cannot"`, losing the correct meaning.
+:::
+
+Alright, let's return to our worksheet to dive into cleaning and normalization. The order in which we apply these steps matters, each transformation builds on the previous one to make the data more consistent, structured, and analysis-ready. Keep in mind, however, that the pipeline we’ll use here is unlikely to perfectly fit every type of textual data; the best approach always depends on your specific dataset and project goals.
+
+## 0. Creating a New Data Frame
+
+The first step would be to create a new data frame called `comments_clean` and adding a `clean_text` column to it:
 
 ``` r
-#FIXME: ADD NEW CODE
+comments_clean <- comments %>%
+  mutate(
+    clean_text = text %>%
 ```
 
-FIXME: ADD OUTPUT SCREENSHOT
+Don't forget the pipe operator \`%\` since we want to pass the result of this function as an input to the next, as we continue working on the code chunk.
 
-## 7. Convert Emojis to Text
+## 1. Removing URLs
+
+This comes first because URLs can contain other characters (like punctuation or digits) that you’ll handle later, so removing them early prevents interference. Because we have a great variation in format (e.g., http://, https://, or www.) we had to define a regex pattern, where:
+
+-   http\[s\]?:// → matches "http://" or "https://"
+-   \[\^\\\\s,\]+ → matches one or more characters that are not spaces or commas (the rest of the URL)
+-   \| → OR operator; matches either the left or right pattern
+-   www\\.\[\^\\\\s,\]+ → matches URLs starting with "www." followed by non-space/non-comma characters
+
+Since we already have the URL pattern, we can use `str_replace_all()` from the `stringr` package to replace all matching URLs with an empty string in our text.
+
+``` r
+str_replace_all(url_pattern, "") %>%
+```
+
+## 2. Hidden Characters
+
+Hidden characters are one of the trickiest challenges in text preprocessing. These are characters that aren’t immediately visible when you view text, but they can interfere with analysis, parsing, or modeling. Hidden characters include things like non-breaking spaces, zero-width spaces, invisible control characters (like carriage returns `\r`, line feeds `\n`, tabs `\t`), Unicode invisible formatting characters, and even special symbols copied from PDFs or web pages.
+
+In practice, these characters can cause subtle errors. For example, they can make two strings appear different even though they look identical, break tokenization, or create issues when matching patterns with regular expressions. In natural language processing (NLP), they can inflate vocabulary size unnecessarily, confuse word embeddings, or lead to inaccurate frequency counts.
+
+To ensure they won't cause us future problems, we have included a regex pattern that matches certain hidden or invisible Unicode characters in text. Here’s a breakdown:
+
+-   `[]` → This denotes a character class in regex, meaning it will match any single character listed inside.
+
+-   `\u00A0` → This is a non-breaking space. Unlike a normal space, it doesn’t allow line breaks. It often appears when copying text from websites or PDFs.
+
+-   `\u2066`, `\u2067`, `\u2068`, `\u2069` → These are Unicode “isolate” control characters used for bidirectional text handling (like in right-to-left languages). They are invisible and generally unnecessary for text analysis.
+
+Let's now call that variable and enter some code to address that:
+
+``` r
+str_replace_all(hidden_characters, " ") %>%
+```
+
+## 3. Handling Apostrophes
+
+This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Applying it to the `text` column in our `comments` dataset should look like. In this case, the pattern "\[’‘ʼ\]" looks for several different kinds of apostrophes and backticks; like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('\`) when we apply the function below:
+
+``` r
+str_replace_all(apostrophes, "'") %>%
+```
+
+Note that once again, we are calling the stored variable with the regex containing different forms of apostrophes, especially from social media, PDFs, or copy-pasted content.
+
+## 4. Expanding Contractions
+
+Now that we have normalized variations of apostrophes, we can properly handle contractions. In everyday language, we often shorten words: *can’t*, *don’t*, *it’s*. These make speech and writing flow more easily, but they can cause confusion for Natural Language Processing (NLP) models. Expanding contractions, such as changing *can’t* to *cannot* or *it’s* to *it is*, helps bring clarity and consistency to the text because NLP models treat *don’t* and *do not* as completely different words, even though they mean the same thing. Also, words like *cant*, *doesnt*, and *whats* lose their meaning. Expanding contractions reduces this inconsistency and ensures that both forms are recognized as the same concept. Expanding it to *is not happy* makes the negative sentiment explicit, which is especially important in tasks like sentiment analysis.
+
+So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.
+
+| Character | Unicode | Notes                                                   |
+|-------------|-------------|----------------------------------------------|
+| `'`       | U+0027  | Standard straight apostrophe, used in most dictionaries |
+| `’`       | U+2019  | Right single quotation mark (curly apostrophe)          |
+| `‘`       | U+2018  | Left single quotation mark                              |
+| `ʼ`       | U+02BC  | Modifier letter apostrophe                              |
+| `` ` ``   | U+0060  | Grave accent (sometimes typed by mistake)               |
+
+Let's make sure that words like "don't" become "do not", by adding the following line to our code chunk:
+
+``` r
+replace_contraction() %>%
+```
+
+## 5. Splitting Hashtags
+
+Hashtags are a powerful tool in social media and online communication, serving as a way to categorize content, highlight topics, and increase visibility. By prefixing a word or phrase with `#`, users can link their posts to a broader conversation, making it easier for others to discover and engage with content on that topic. Hashtags also act as a keyword system, allowing researchers and analysts to track trends, measure sentiment, or analyze public discussions around specific themes. In text analysis, properly handling hashtags ensures that the meaningful content within them is captured, improving tokenization, searchability, and overall insights from the data. They effectively turn user-generated text into a structured source of topical information that can be leveraged for both social and analytical purposes.
+
+Hashtags are often written as one long string with no spaces, e.g., `#SeveranceIsFire`. Splitting them into separate words not only makes it human-readable and easier to understand, but also ensure meaningful tokes and improves text analysis accuracy.
+
+While some researchers might want to separate them from the text for further analysis, we can also split concatenated words in hashtags or camelCase text by inserting a space between them. In our regex pattern hashtag_splitter, we have:
+
+-   `(?<![#@])`: negative lookbehind to avoid splitting right after `#` or `@`, preserving hashtags and mentions.
+
+-   `([a-z])([A-Z])`: captures lowercase followed by uppercase letters, identifying camelCase word boundaries.
+
+We can call that pattern and use the string replacement function to adds the space between words while keeping the letters themselves intact, by adding the following to our code chunk:
+
+``` r
+str_replace_all(hashtag_splitter, "\\1 \\2") %>%
+```
+
+In simple terms, the `"\1 \2"` inserts the first captured piece, adds a space, and then inserts the second captured piece.
+
+You might be asking, "wait a minute but what about the hastag (#) itself?". It is a valid question, but not to worry, we will take care of that later when handling symbols.
+
+## 6. Converting to Lowercase
+
+Having all text converted to lowercase will be our next step, by adding the following line to our code chunk:
+
+``` r
+str_to_lower() %>%
+```
+
+## 7. Removing Mentions
+
+Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded. Since we have pre-populated the regular expression and stored it in the variable "mentions", `mentions <- "@[A-Za-z0-9_]+"` we will only need to add that we want to replace it with an empty string and remove them.
+
+``` r
+str_replace_all(mentions, "") %>%
+```
+
+## 8. Cleaning Punctuation, Symbols and Numbers
+
+Alright, time to remove punctuation and symbols, and then numbers.
+
+But first, last break it down, the punctuation regex pattern, where **`[[:punct:]]`** is character class in regex that matches any standard punctuation character, including: ! " \# \$ % & ' ( ) \* + , - . / : ; \< = \> ? \@ \[  \] \^ \_ \` { \| } \~. To be safe and because our dataset is really messy, we added extra characters (`“”‘’–—…|+`) to catch some special quotes, dashes, ellipsis, and symbols that `[[:punct:]]` might miss. Calling that variable, we can remove them by adding to our code:
+
+``` r
+str_replace_all(punctuation, " ") %>%
+```
+
+Next, last clear some numbers by adding `[[:digit:]]+`. This is the regex pattern matches any single digit (0–9) and `+` means one or more digits in a row. So it matches sequences like `7`, `42`, `2025`, etc:
+
+``` r
+str_replace_all("[[:digit:]]+", " ") %>%
+```
+
+## 9. Handling Elongation
+
+In user-generated content, it’s common to see repeated letters used for emphasis (e.g., “Amaaaazing,” “Loooove”). For that, we have the regex pattern `repeated_chars <- "(.)\1{2,}"`, where:
+
+-   `(.)`: captures group that matches any single character (except line breaks, depending on regex flavor). The `.` is a wildcard. The parentheses `()` capture whatever character matched for later reference.
+
+-   `\\1`: refers to “whatever was matched by the first capturing group.” In other words, it matches the same character again.
+
+-   `{2,}`: means “repeat the previous element at least 2 times.”
+
+Putting it together `(.)\\1{2,}` matches any character that repeats 3 or more times consecutively. Why 3? Because the first occurrence is matched by `(.)` and `{2,}` requires at least 2 more repetitions, so total = 3+.
+
+Because the pattern is already in our workbook, we can simply add:
+
+``` r
+str_replace_all(repeated_chars, "\1") %>%
+```
+
+Can you guess what `"\1"` does? It uses the character we captured earlier, keeping it in the text.
+
+## 10. Convert Emojis to Text
 
 Okay, now we’ll convert emojis into their text descriptions to make them machine-readable, using the emoji package to help with this step:
 
 ``` r
 # Load the emoji dictionary
-#FIXME: ADD NEW CODE
+emoji_dict <- emo::jis[, c("emoji", "name")]
+emoji_dict
 ```
 
-Have you had a chance to look at the emoji dictionary we loaded into our RStudio environment? It’s packed with more emojis and some surprising meanings than you might expect.
+Take a look at the emoji dictionary we loaded into our RStudio environment. It’s packed with more emojis and some surprising meanings than you might expect. We will then write a separate function to deal with those emojis:
 
 ``` r
-# Define a function to replace emojis in text with their corresponding names.
-FIXME: ENTER NEW CODE
+# Function to replace emojis in text with their corresponding names
+replace_emojis <- function(text, emoji_dict) {
+  stri_replace_all_fixed(
+    str = text,                  # The text to process
+    pattern = emoji_dict$emoji,  # The emojis to find
+    replacement = paste0(emoji_dict$name, " "), # Their corresponding names
+    vectorize_all = FALSE        # element-wise replacement in a same string
+  )
+}
 ```
 
-With emojis taken care of, we can now move on to the next preprocessing step: tokenization.
+Wait, we are not done yet! We still have to add the `replace_emojis` function, based on our loaded dictionary, into our code chunk. This will replace the emojis with their corresponding text on our dataset:
+
+``` r
+replace_emojis(emoji_dict) %>%
+```
+
+\[FIXME ADD IMAGES\]
+
+Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the next and final normalization and noise reduction step.
+
+## 11. Dealing with Extraspaces
+
+After completing several normalization steps, we should also account for any extra spaces at the beginning or end of the text. These often come from inconsistent user input, copy-pasting, or formatting issues on different platforms. Let’s clean up these spaces before moving on to the next episode.
+
+``` r
+str_squish())
+```
+
+Putting every step together we should have the following code:
+
+``` r
+#Create a new column for the output clean text
+comments <- comments %>%
+  mutate(
+    text_cleaned = text %>%
+      # Remove URLs first
+      str_replace_all(url_pattern, "") %>%
+      # Replace hidden/special characters with space
+      str_replace_all(hidden_characters, " ") %>%
+      # Standardize apostrophes
+      str_replace_all(apostrophes, "'") %>%
+      # Expand contractions (e.g., "don't" → "do not")
+      replace_contraction() %>%
+      # Split camelCase hashtags (optional)
+      str_replace_all(hashtag_splitter, "\\1 \\2") %>%
+      # Convert to lowercase
+      str_to_lower() %>%
+      # Remove mentions (@username)
+      str_replace_all(mentions, "") %>%
+      # Remove punctuation
+      str_replace_all(punctuation, " ") %>%
+      # Remove digits
+      str_replace_all("[[:digit:]]+", " ") %>%
+      # Normalize repeated characters (e.g., loooove → love)
+      str_replace_all(repeated_chars, "\\1") %>%
+      # Replace emojis with textual description (function - see above)
+      replace_emojis(emoji_dict) %>%
+      # Remove extra whitespaces
+      str_squish()
+  )
+```
+
+Neat! Our normalization and noise reduction code chunk is complete, but don't forget to close the parentheses before running it! Let's see and compare the original "text column" compares to "text_cleaned".
+
+## One more thing
+
+Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
+
+```{emoji_dict <- emo::jis[, c("emoji", "name")]}
+emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
+emoji_dict
+```
+
+::: callout-note
+## 🦾 Challenge (FIXME)
+
+Identify any remaining emoji that wasn’t converted and add it to the emoji dictionary.
+
+add_row(emoji = "🥹", name = "pleading face"
+:::
+
+Let's re-run the code chunk and check how those emojis were taken care of. With normalization and noise reduction completed, we are now ready to move to the next preprocessing step: tokenization.
 
 ::: {.callout-note icon="false"}
 ## 📑 Suggested Readings
