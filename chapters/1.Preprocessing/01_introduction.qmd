@@ -44,9 +44,11 @@ Time to launch RStudio and our example! Click on this [link](https://ucsb.box.co
 
 After downloading this subfolder, double click on the project file `text-preprocessing.Rproj` to launch Rstudio. Look for and open the file `preprocessing_worksheet` on your Rstudio environment.
 
+In your R Console, type `renv::restore()` to read the renv.lock file and installs the specific package versions used in the project, recreating the environment setup for this workshop.
+
 ### Loading Packages & Inspecting the Data
 
- Let's start by loading all the required packages that are pre-installed in the project:
+Let's start by loading all the required packages that are pre-installed in the project:
 
 ``` r
 library(tidyverse)    # general data manipulation
