@@ -26,7 +26,7 @@ These lessons are hands-on and are designed to be followed with **R** and **RStu
 
 - **R**: In the R console, run:
 
-```{r}
+``` r
 #| eval: false
 R.version.string
 ```
