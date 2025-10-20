@@ -262,6 +262,14 @@ emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
 emoji_dict
 ```
 
+::: {.callout-note icon="false"}
+## 🦾 Challenge (FIXME)
+
+Identify any remaining emoji that wasn’t converted and add it to the emoji dictionary.
+
+add_row(emoji = "🥹", name = "pleading face")
+:::
+
 Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the last normalization step
 
 ### 11. Dealing with Extraspaces
