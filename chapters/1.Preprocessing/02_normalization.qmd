@@ -145,8 +145,6 @@ Let's make sure that words like "don't" become "do not", by adding the following
 replace_contraction() %>%
 ```
 
-**FIXME: Consider keeping only sringr and avoid textclean package with: str_replace_all(contractions) instead.**
-
 ## 5. Splitting Hashtags
 
 Hashtags are a powerful tool in social media and online communication, serving as a way to categorize content, highlight topics, and increase visibility. By prefixing a word or phrase with `#`, users can link their posts to a broader conversation, making it easier for others to discover and engage with content on that topic. Hashtags also act as a keyword system, allowing researchers and analysts to track trends, measure sentiment, or analyze public discussions around specific themes. In text analysis, properly handling hashtags ensures that the meaningful content within them is captured, improving tokenization, searchability, and overall insights from the data. They effectively turn user-generated text into a structured source of topical information that can be leveraged for both social and analytical purposes.
@@ -251,9 +249,53 @@ Wait, we are not done yet! We still have to add the `replace_emojis` function, b
 replace_emojis(emoji_dict) %>%
 ```
 
-Our normalization and noise reduction code chunk is complete, but don't forget to close the parentheses before running it! Let's see and compare the original comments with their cleaned versions.
-
 \[FIXME ADD IMAGES\]
+
+Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the next and final normalization and noise reduction step.
+
+### 11. Dealing with Extraspaces
+
+After completing several normalization steps, we should also account for any extra spaces at the beginning or end of the text. These often come from inconsistent user input, copy-pasting, or formatting issues on different platforms. Let’s clean up these spaces before moving on to the next episode.
+
+``` r
+str_squish())
+```
+
+Putting every step together we should have the following code:
+
+``` r
+#Create a new column for the output clean text
+comments <- comments %>%
+  mutate(
+    text_cleaned = text %>%
+      # Remove URLs first
+      str_replace_all(url_pattern, "") %>%
+      # Replace hidden/special characters with space
+      str_replace_all(hidden_characters, " ") %>%
+      # Standardize apostrophes
+      str_replace_all(apostrophes, "'") %>%
+      # Expand contractions (e.g., "don't" → "do not")
+      replace_contraction() %>%
+      # Split camelCase hashtags (optional)
+      str_replace_all(hashtag_splitter, "\\1 \\2") %>%
+      # Convert to lowercase
+      str_to_lower() %>%
+      # Remove mentions (@username)
+      str_replace_all(mentions, "") %>%
+      # Remove punctuation
+      str_replace_all(punctuation, " ") %>%
+      # Remove digits
+      str_replace_all("[[:digit:]]+", " ") %>%
+      # Normalize repeated characters (e.g., loooove → love)
+      str_replace_all(repeated_chars, "\\1") %>%
+      # Replace emojis with textual description (function - see above)
+      replace_emojis(emoji_dict) %>%
+      # Remove extra whitespaces
+      str_squish()
+  )
+```
+
+Neat! Our normalization and noise reduction code chunk is complete, but don't forget to close the parentheses before running it! Let's see and compare the original "text column" compares to "text_cleaned".
 
 Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
 
@@ -262,23 +304,15 @@ emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
 emoji_dict
 ```
 
-::: {.callout-note icon="false"}
+::: callout-note
 ## 🦾 Challenge (FIXME)
 
 Identify any remaining emoji that wasn’t converted and add it to the emoji dictionary.
 
-add_row(emoji = "🥹", name = "pleading face")
+add_row(emoji = "🥹", name = "pleading face"
 :::
 
-Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the last normalization step
-
-### 11. Dealing with Extraspaces
-
-After completing several normalization steps, we should also account for any extra spaces at the beginning or end of the text. These often come from inconsistent user input, copy-pasting, or formatting issues on different platforms. Let’s clean up these spaces before moving on to the next preprocessing step: tokenization.
-
-``` r
-str_squish())
-```
+Let's re-run the code chunk and check how those emojis were taken care of. With normalization and noise reduction completed, we are now ready to move to the next preprocessing step: tokenization.
 
 ::: {.callout-note icon="false"}
 ## 📑 Suggested Readings
