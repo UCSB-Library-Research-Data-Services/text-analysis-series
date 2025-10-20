@@ -67,5 +67,8 @@ format:
     code-fold: false
     code-tools: true
 
+execute:
+  echo: true      
+  eval: false
 
 
