@@ -52,7 +52,7 @@ Regular expressions (regex) are powerful tools for pattern matching and text man
 
 We won’t have time to cover regular expressions in detail during this workshop, but it’s important to know that they are a fundamental tool for working with text data. Regex allows you to identify, extract, and manipulate patterns in text, such as emails, hashtags, or special characters, which is essential for cleaning and preparing data for analysis. Even though we won’t dive into the syntax or practice exercises here, being aware of regex and its capabilities can help you understand how text preprocessing works behind the scenes and guide you toward resources to learn it on your own.
 
-Working with regular expressions might require some trial and error, especially when you are working with a large and highly messy corpus. To make things easier and make the lesson less typing-intensive, we’ve pre-populated the worksheet with regex examples noted below and will provide a clear explanation of how they are expected to function, so you can follow along confidently.
+Working with regular expressions might require some trial and error, especially when you are working with a large and highly messy corpus. To make things easier and make the lesson less typing-intensive, we’ve pre-populated the worksheet with regex patterns noted below and will provide a clear explanation of how they are expected to function, so you can follow along confidently.
 
 ``` r
 url_pattern <- "http[s]?://[^\\s,]+|www\\.[^\\s,]+"
