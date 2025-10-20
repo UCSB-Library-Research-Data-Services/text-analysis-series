@@ -15,16 +15,16 @@ Just as a gardener would prune dead branches, enrich the soil, and care for the 
 
 The main goal of normalization is to remove irrelevant content and standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:
 
-| Action                       | Why it matters?                                                                                                                                                                                                                                                                                                                                                         |
-|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Remove URLs                  | URLs often contain irrelevant noise and don't contribute meaningful content for analysis.                                                                                                                                                                                                                                                                               |
-| Remove Punctuation & Symbols | Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.                                                                                                                           |
-| Remove Numbers               | Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. \<NUMBER\>), or even converting them into their written form (e.g, 100 becomes one hundred). |
-| Normalize Whitespaces        | Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis.                                                                                                                                                                                                                                                                         |
-| Convert to Lowercase         | Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ "APPLETV" ≠ “appleTV” ≠ “appletv”), improving model consistency.                                                                                                                                                                                                         |
-| Convert Emojis to Text       | Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions.                                                                                                                                                                                                 |
+| Action | Why it matters? |
+|-------------|-----------------------------------------------------------|
+| Remove URLs | URLs often contain irrelevant noise and don't contribute meaningful content for analysis. |
+| Remove Punctuation & Symbols | Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching. |
+| Remove Numbers | Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. \<NUMBER\>), or even converting them into their written form (e.g, 100 becomes one hundred). |
+| Normalize Whitespaces | Ensures consistent word boundaries and avoids issues during tokenization or frequency analysis. |
+| Convert to Lowercase | Prevents case sensitivity from splitting word counts due to case variations (e.g., “AppleTV” ≠ "APPLETV" ≠ “appleTV” ≠ “appletv”), improving model consistency. |
+| Convert Emojis to Text | Emojis play a unique role in text analysis, as they often convey sentiment. Rather than removing them, we will convert them into their corresponding text descriptions. |
 
-::: {.callout-note icon="false"}
+:::: {.callout-note icon="false"}
 ## 🧠 Knowledge Check
 
 In pairs or groups of three, identify the techniques you would consider using to normalize and reduce noise in the following sentence:
@@ -40,7 +40,7 @@ After applying them the sentence should look like:
 
 *omg \[face scream in fear\] I can not believe it this is crazy unreal \[exploding head\]*
 :::
-:::
+::::
 
 A caveat when working with emojis is that they are figurative and highly contextual. Also, there may be important generational and cultural variability in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.
 
@@ -143,7 +143,7 @@ Now that we have normalized variations of apostrophes, we can properly handle co
 So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.
 
 | Character | Unicode | Notes                                                   |
-|-----------|---------|---------------------------------------------------------|
+|-------------|-------------|----------------------------------------------|
 | `'`       | U+0027  | Standard straight apostrophe, used in most dictionaries |
 | `’`       | U+2019  | Right single quotation mark (curly apostrophe)          |
 | `‘`       | U+2018  | Left single quotation mark                              |
@@ -256,7 +256,7 @@ replace_emojis <- function(text, emoji_dict) {
 
 Wait, we are not done yet! We still have to add the `replace_emojis` function, based on our loaded dictionary, into our code chunk. This will replace the emojis with their corresponding text on our dataset:
 
-```{r}
+``` r
 replace_emojis(emoji_dict) %>%
 ```
 
