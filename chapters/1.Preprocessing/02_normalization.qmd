@@ -253,7 +253,7 @@ replace_emojis(emoji_dict) %>%
 
 Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the next and final normalization and noise reduction step.
 
-### 11. Dealing with Extraspaces
+## 11. Dealing with Extraspaces
 
 After completing several normalization steps, we should also account for any extra spaces at the beginning or end of the text. These often come from inconsistent user input, copy-pasting, or formatting issues on different platforms. Let’s clean up these spaces before moving on to the next episode.
 
