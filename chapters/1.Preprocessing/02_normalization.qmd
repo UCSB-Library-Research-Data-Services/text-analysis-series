@@ -308,6 +308,8 @@ comments <- comments %>%
 
 Neat! Our normalization and noise reduction code chunk is complete, but don't forget to close the parentheses before running it! Let's see and compare the original "text column" compares to "text_cleaned".
 
+## One more thing
+
 Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
 
 ```{emoji_dict <- emo::jis[, c("emoji", "name")]}
