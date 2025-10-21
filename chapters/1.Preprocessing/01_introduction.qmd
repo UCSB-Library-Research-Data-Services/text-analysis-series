@@ -88,7 +88,7 @@ Alright! With all the necessary packages loaded, let's take a look at the datase
 comments <- readr::read_csv("./data/raw/comments.csv")
 ```
 
-You’ll notice that we’ve pre-populated a code chunk with Patterns to save you from the tedious task of typing out regular expressions (regex for short). Don’t worry about them for now, we’ll come back to it shortly.
+You’ll notice that we’ve pre-populated some chunks to save you from the tedious typing . Don’t worry about them for now, we’ll come back to them shortly.
 
 ::: {.callout-note icon="false"}
 # 💬 Discussion
