@@ -73,4 +73,10 @@ output <- preprocessed %>%
 write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
 ```
 
-Well done! Let's now cover some important considerations for your future text preprocessing projects.
+## Before we go
+
+If you notice that the output object saved as `comments_preprocessed` contains one fewer row (observation) than the original dataset, this is because, after applying normalization and stopword removal with the Snowball Lexicon, the comment associated with ID `"s2_0998"` became an empty string.
+
+![](images/output-missingID.png)
+
+Well done! That concludes all our preprocessing steps. Let's now cover some important considerations for your future text preprocessing projects.
