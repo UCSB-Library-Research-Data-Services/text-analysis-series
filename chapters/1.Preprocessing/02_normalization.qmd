@@ -42,17 +42,17 @@ After applying them the sentence should look like:
 :::
 :::
 
-A caveat when working with emojis is that they are figurative and highly contextual. Also, there may be important generational and cultural variability in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.
+A caveat when working with [emojis is that they are figurative and highly contextual]{.underline}. Also, there may be important [generational and cultural variability]{.underline} in how people interpret them. For example, some countries may use the Folded Hands Emoji (🙏) as a sign of thank you where others may seem as religious expression. Also, some may use it in a more positive way as gratitude, hope or respect, or in a negative context, where they might be demonstrating submission or begging.
 
 You might have noticed based on the example above that emojis are converted to their equivalent CLDR (common, human-readable name) based on this [emoji unicode list](https://www.unicode.org/emoji/charts/full-emoji-list.html), which are not as nuanced and always helpful to detect sentiment. While not always perfect, that is an important step to normalize the data and we will see how this process looks like later on this episode.
 
 ## The Role of Regular Expressions
 
-Regular expressions (regex) are powerful tools for pattern matching and text manipulation. They allow you to identify, extract, or replace specific sequences of characters in text, such as email addresses, URLs, hashtags, or user mentions. In text cleaning, regex is essential for reducing noise by removing unwanted elements like punctuation, special symbols, or repeated whitespace, which can interfere with analysis. By systematically filtering out irrelevant or inconsistent text, regex helps create cleaner, more structured data, improving the accuracy of downstream tasks like sentiment analysis, topic modeling, or machine learning. Essentially, regex transforms messy raw text into a manageable, analyzable format.
+[Regular expressions (regex) are powerful tools for pattern matching and text manipulation]{.underline}. They allow you to identify, extract, or replace specific sequences of characters in text, such as email addresses, URLs, hashtags, or user mentions. In text cleaning, regex is essential for reducing noise by removing unwanted elements like punctuation, special symbols, or repeated whitespace, which can interfere with analysis. By systematically filtering out irrelevant or inconsistent text, regex helps create cleaner, more structured data, improving the accuracy of downstream tasks like sentiment analysis, topic modeling, or machine learning.
 
-We won’t have time to cover regular expressions in detail during this workshop, but it’s important to know that they are a fundamental tool for working with text data. Regex allows you to identify, extract, and manipulate patterns in text, such as emails, hashtags, or special characters, which is essential for cleaning and preparing data for analysis. Even though we won’t dive into the syntax or practice exercises here, being aware of regex and its capabilities can help you understand how text preprocessing works behind the scenes and guide you toward resources to learn it on your own.
+Even though we won’t dive into the syntax or practice exercises here, being aware of regex and its capabilities can help you understand how text preprocessing works behind the scenes and guide you toward resources to learn it on your own.
 
-Working with regular expressions might require some trial and error, especially when you are working with a large and highly messy corpus. To make things easier and make the lesson less typing-intensive, we’ve pre-populated the worksheet with regex patterns noted below and will provide a clear explanation of how they are expected to function, so you can follow along confidently.
+Working with regular expressions might require some trial and error, especially when you are working with a large and highly messy corpus. To make things easier and make the lesson less typing-intensive, we’ve pre-populated the workbook with regex patterns noted below and will provide a clear explanation of how they are expected to function, so you can follow along confidently.
 
 ``` r
 url_pattern <- "http[s]?://[^\\s,]+|www\\.[^\\s,]+"
@@ -77,7 +77,7 @@ Testing regular expressions is essential for accuracy and reliability, since com
 When performing text normalization and noise reduction, **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, `"can't"` might turn into `"cant"` instead of `"cannot"`, losing the correct meaning.
 :::
 
-Alright, let's return to our worksheet to dive into cleaning and normalization. The order in which we apply these steps matters, each transformation builds on the previous one to make the data more consistent, structured, and analysis-ready. Keep in mind, however, that the pipeline we’ll use here is unlikely to perfectly fit every type of textual data; the best approach always depends on your specific dataset and project goals.
+Alright, let's return to our workbook to dive into cleaning and normalization. The order in which we apply these steps matters, each transformation builds on the previous one to make the data more consistent, structured, and analysis-ready. Keep in mind, however, that the pipeline we’ll use here is unlikely to perfectly fit every type of textual data; the best approach always depends on your specific dataset and project goals.
 
 ## 0. Creating a New Data Frame
 
