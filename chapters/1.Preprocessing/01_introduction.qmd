@@ -92,14 +92,14 @@ Alright! With all the necessary packages loaded, let's take a look at the datase
 comments <- readr::read_csv("./data/raw/comments.csv")
 ```
 
-Which should show our dataset contains 5877 comments and two columns:
+Which should show our dataset contains 5877 comments and two columns and display the comments dataset to our environment:
 
 ![](images/output-readingdata.png){width="774"}
 
-You’ll notice that we’ve pre-populated some chunks below to save you from the tedious typing. Don’t worry about them for now, we’ll come back to them shortly.
+In the workbook, you’ll notice that we’ve pre-populated some chunks below to save you from the tedious typing. Don’t worry about them for now, we’ll come back to them shortly.
 
 ::: {.callout-note icon="false"}
 # 💬 Discussion
 
-Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?
+Working in pairs or trios, look briefly by double clicking comments dataset in the environment panel. Then, discuss could be potential challenges of analyzing this text on its current form. What could be potential areas of friction that could compromise the results?
 :::
