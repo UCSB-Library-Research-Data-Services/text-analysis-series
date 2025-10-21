@@ -160,7 +160,7 @@ So, while it may seem like a small step, it often leads to cleaner data, leaner 
 | `ʼ`       | U+02BC  | Modifier letter apostrophe                              |
 | `` ` ``   | U+0060  | Grave accent (sometimes typed by mistake)               |
 
-Let's make sure that words like "don't" become "do not", by adding the following line to our code chunk:
+To perform this step we will be using the function `replace_contraction` from the `textclean` package to make sure that words like "don't" become "do not", by adding the following line to our code chunk:
 
 ``` r
 # Expand contractions (e.g., "don't" → "do not")
@@ -281,8 +281,6 @@ Wait, we are not done yet! We still have to add the `replace_emojis` function, b
 # Replace emojis with textual description (function - see above)
 replace_emojis(emoji_dict) %>%
 ```
-
-\[FIXME ADD IMAGES\]
 
 Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the next and final normalization and noise reduction step.
 
