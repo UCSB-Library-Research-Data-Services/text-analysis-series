@@ -65,6 +65,8 @@ numbers <- "[[:digit:]]"
 repeated_chars <- "(.)\\1{2,}"
 ```
 
+Let's **run this chunk with pattern variables for now**, we will get back to each line when covering their corresponding code in our normalization and noise reduction chunk.
+
 ::: callout-tip
 ## Get Help with Regex
 
