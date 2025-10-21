@@ -61,9 +61,19 @@ renv::restore()
 ```
 
 ::: callout-warning
-**Matrix Package**
+**Matrix Package Incompatible with R**
 
-In case you are working with the newest R version, you might experience an error with the installation. To resolve this, search for "matrix" in the `renv.lock` file, manually change its version to 1.7-4, and save the file. Then, re-run `renv::restore()` in your console.
+If you encounter incompatibility issues with the **Matrix** package (or any other) due to your R version, you can explicitly install the package by running the following in your console:
+
+```         
+renv::install("Matrix")
+```
+
+Next, update your `renv.lock` file to reflect this version by running:
+
+```         
+renv::snapshot()
+```
 :::
 
 ### Loading Packages & Inspecting the Data
