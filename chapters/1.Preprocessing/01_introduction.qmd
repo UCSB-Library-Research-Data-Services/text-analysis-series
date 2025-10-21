@@ -40,14 +40,24 @@ Before we can apply any meaningful analysis or modeling, it’s crucial to visua
 
 ### Getting Files and Launching RStudio
 
-Time to launch RStudio and our example! Click on this [link](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv) to download the `text-preprocessing` subfolder, from the folder `text-analysis-series`. Among other files, this subfolder contains the dataset we will be using `comments.csv`, a worksheet in qmd, a Quarto extension (learn more about [Quarto](https://quarto.org/)), named `preprocessing-workbook.qmd` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
+Time to launch RStudio and our example! Click on this [link](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv) to download the `text-preprocessing` subfolder, from the folder `text-analysis-series`. Among other files, this subfolder contains the dataset we will be using `comments.csv`, a worksheet in qmd, a Quarto extension (learn more about [Quarto](https://quarto.org/)), named `preprocessing-workbook.qmd` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop.
+
+This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
 
 After downloading this subfolder, double click on the project file `text-preprocessing.Rproj` to launch Rstudio. Look for and open the file `preprocessing-workbook.qmd` on your Rstudio environment.
+
+### Setting up the environment with renv
 
 Next, we will need to install the package \`renv\` so you can setup the working environment correctly with all the packages and dependencies we will need. On the console, type:
 
 ``` r
 install.packages("renv")
+```
+
+Then, still in the console, we will restore it, which will essentially installs packages in an R project to match the versions recorded in the project's renv.lock file we have shared with you.
+
+``` r
+renv::restore()
 ```
 
 ### Loading Packages & Inspecting the Data
