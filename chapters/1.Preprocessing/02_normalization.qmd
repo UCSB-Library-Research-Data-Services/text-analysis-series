@@ -16,7 +16,7 @@ Just as a gardener would prune dead branches, enrich the soil, and care for the 
 The main goal of normalization is to remove irrelevant content and standardize the data in order to reduce noise. Below are some key actions we’ll be performing during this workshop:
 
 | Action                       | Why it matters?                                                                                                                                                                                                                                                                                                                                                         |
-|----------------|--------------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | Remove URLs                  | URLs often contain irrelevant noise and don't contribute meaningful content for analysis.                                                                                                                                                                                                                                                                               |
 | Remove Punctuation & Symbols | Punctuation marks and other symbols including those extensively used in social media for mentioning (\@) or tagging (#) rarely adds value in most NLP tasks and can interfere with tokenization (as we will cover in a bit) or word matching.                                                                                                                           |
 | Remove Numbers               | Numbers can be noise in most contexts unless specifically relevant (e.g., in financial or medical texts) don't contribute much to the analysis. However, in NLP tasks they are considered important, there might be considerations to replace them with dummy tokens (e.g. \<NUMBER\>), or even converting them into their written form (e.g, 100 becomes one hundred). |
@@ -63,9 +63,13 @@ mentions <- "@[A-Za-z0-9_]+"
 punctuation <- "[[:punct:]“”‘’–—…|+]"
 numbers <- "[[:digit:]]"
 repeated_chars <- "(.)\\1{2,}"
+single_characters <- "\\b[a-zA-Z]\\b" 
+``
 ```
 
-Let's **run this chunk with pattern variables for now**, we will get back to each line when covering their corresponding code in our normalization and noise reduction chunk.
+Let's **run this chunk with pattern variables for now**, we will get back to each line when covering their corresponding code in our normalization and noise reduction chunk. Notice this patterns will show in our environment as seen below:
+
+![](images/output-patterns-environment-01.png)
 
 ::: callout-tip
 ## Get Help with Regex
@@ -76,7 +80,7 @@ Testing regular expressions is essential for accuracy and reliability, since com
 ::: callout-caution
 ## The Order Matters!
 
-When performing text normalization and noise reduction, **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, `"can't"` might turn into `"cant"` instead of `"cannot"`, losing the correct meaning.
+Before we start performing text normalization and noise reduction, we should caution you that **the order of steps matters** because each transformation changes the text in a way that can affect subsequent steps. Doing things in a different order can lead to different results, and sometimes even incorrect or unexpected outcomes. For example, if we **remove punctuation before expanding contractions**, `"can't"` might turn into `"cant"` instead of `"cannot"`, losing the correct meaning.
 :::
 
 Alright, let's return to our workbook to dive into cleaning and normalization. The order in which we apply these steps matters, each transformation builds on the previous one to make the data more consistent, structured, and analysis-ready. Keep in mind, however, that the pipeline we’ll use here is unlikely to perfectly fit every type of textual data; the best approach always depends on your specific dataset and project goals.
@@ -86,6 +90,7 @@ Alright, let's return to our workbook to dive into cleaning and normalization. T
 The first step would be to create a new data frame called `comments_clean` and adding a `clean_text` column to it:
 
 ``` r
+# Create a new column for the output clean text
 comments_clean <- comments %>%
   mutate(
     clean_text = text %>%
@@ -105,6 +110,7 @@ This comes first because URLs can contain other characters (like punctuation or 
 Since we already have the URL pattern, we can use `str_replace_all()` from the `stringr` package to replace all matching URLs with an empty string in our text.
 
 ``` r
+# Remove URLs
 str_replace_all(url_pattern, "") %>%
 ```
 
@@ -125,6 +131,7 @@ To ensure they won't cause us future problems, we have included a regex pattern 
 Let's now call that variable and enter some code to address that:
 
 ``` r
+# Replace hidden/special characters with space
 str_replace_all(hidden_characters, " ") %>%
 ```
 
@@ -133,6 +140,7 @@ str_replace_all(hidden_characters, " ") %>%
 This step helps clean up text by making sure all apostrophes are consistent, rather than a mix of fancy Unicode versions. Applying it to the `text` column in our `comments` dataset should look like. In this case, the pattern "\[’‘ʼ\]" looks for several different kinds of apostrophes and backticks; like the left and right single quotes, the modifier apostrophe, and the backtick. Each of those gets replaced with a simple, standard apostrophe ('\`) when we apply the function below:
 
 ``` r
+# Standardize apostrophes
 str_replace_all(apostrophes, "'") %>%
 ```
 
@@ -145,7 +153,7 @@ Now that we have normalized variations of apostrophes, we can properly handle co
 So, while it may seem like a small step, it often leads to cleaner data, leaner models, and more accurate results. First, however, we need to ensure that apostrophes are handled correctly. It's not uncommon to encounter messy text where nonstandard characters are used in place of the straight apostrophe ('). Such inconsistencies are very common and can disrupt contraction expansion.
 
 | Character | Unicode | Notes                                                   |
-|---------------|---------------|------------------------------------------|
+|------------------|------------------|------------------------------------|
 | `'`       | U+0027  | Standard straight apostrophe, used in most dictionaries |
 | `’`       | U+2019  | Right single quotation mark (curly apostrophe)          |
 | `‘`       | U+2018  | Left single quotation mark                              |
@@ -155,6 +163,7 @@ So, while it may seem like a small step, it often leads to cleaner data, leaner 
 Let's make sure that words like "don't" become "do not", by adding the following line to our code chunk:
 
 ``` r
+# Expand contractions (e.g., "don't" → "do not")
 replace_contraction() %>%
 ```
 
@@ -173,6 +182,7 @@ While some researchers might want to separate them from the text for further ana
 We can call that pattern and use the string replacement function to adds the space between words while keeping the letters themselves intact, by adding the following to our code chunk:
 
 ``` r
+# Split camelCase hashtags (optional)
 str_replace_all(hashtag_splitter, "\\1 \\2") %>%
 ```
 
@@ -185,6 +195,7 @@ You might be asking, "wait a minute but what about the hastag (#) itself?". It i
 Having all text converted to lowercase will be our next step, by adding the following line to our code chunk:
 
 ``` r
+# Convert to lowercase
 str_to_lower() %>%
 ```
 
@@ -193,6 +204,7 @@ str_to_lower() %>%
 Continuing with our workflow, we will now handle direct mentions and usernames in our dataset, as they do not contribute relevant information to our analysis. We will use a function to replace all occurrences of usernames preceded. Since we have pre-populated the regular expression and stored it in the variable "mentions", `mentions <- "@[A-Za-z0-9_]+"` we will only need to add that we want to replace it with an empty string and remove them.
 
 ``` r
+# Remove mentions (@username)
 str_replace_all(mentions, "") %>%
 ```
 
@@ -203,12 +215,14 @@ Alright, time to remove punctuation and symbols, and then numbers.
 But first, last break it down, the punctuation regex pattern, where **`[[:punct:]]`** is character class in regex that matches any standard punctuation character, including: ! " \# \$ % & ' ( ) \* + , - . / : ; \< = \> ? \@ \[  \] \^ \_ \` { \| } \~. To be safe and because our dataset is really messy, we added extra characters (`“”‘’–—…|+`) to catch some special quotes, dashes, ellipsis, and symbols that `[[:punct:]]` might miss. Calling that variable, we can remove them by adding to our code:
 
 ``` r
+# Remove punctuation
 str_replace_all(punctuation, " ") %>%
 ```
 
 Next, last clear some numbers by adding `[[:digit:]]+`. This is the regex pattern matches any single digit (0–9) and `+` means one or more digits in a row. So it matches sequences like `7`, `42`, `2025`, etc:
 
 ``` r
+# Remove digits
 str_replace_all("[[:digit:]]+", " ") %>%
 ```
 
@@ -227,7 +241,8 @@ Putting it together `(.)\\1{2,}` matches any character that repeats 3 or more ti
 Because the pattern is already in our workbook, we can simply add:
 
 ``` r
-str_replace_all(repeated_chars, "\1") %>%
+# Normalize repeated characters (e.g., loooove → love)
+str_replace_all(repeated_chars, "\\1") %>%
 ```
 
 Can you guess what `"\1"` does? It uses the character we captured earlier, keeping it in the text.
@@ -236,13 +251,17 @@ Can you guess what `"\1"` does? It uses the character we captured earlier, keepi
 
 Okay, now we’ll convert emojis into their text descriptions to make them machine-readable, using the emoji package to help with this step. We need to first load the emoji dictionary:
 
+### Getting the emoji dictionary
+
 ``` r
 # Load the emoji dictionary
 emoji_dict <- emo::jis[, c("emoji", "name")]
 emoji_dict
 ```
 
-Take a look at the emoji dictionary we loaded into our RStudio environment. It’s packed with more emojis and some surprising meanings than you might expect. We will then write a separate function to deal with those emojis:
+Take a look at the emoji dictionary we loaded into our RStudio environment. It’s packed with more emojis and some surprising meanings than you might expect. 
+
+We will then write a separate function to deal with those emojis in our dataset:
 
 ``` r
 # Function to replace emojis in text with their corresponding names
@@ -259,6 +278,7 @@ replace_emojis <- function(text, emoji_dict) {
 Wait, we are not done yet! We still have to add the `replace_emojis` function, based on our loaded dictionary, into our code chunk. This will replace the emojis with their corresponding text on our dataset:
 
 ``` r
+# Replace emojis with textual description (function - see above)
 replace_emojis(emoji_dict) %>%
 ```
 
@@ -266,17 +286,35 @@ replace_emojis(emoji_dict) %>%
 
 Neat! Let's re-run the code chunk and check it once again. With emojis taken care of, we can now apply the next and final normalization and noise reduction step.
 
-## 11. Dealing with Extraspaces
+## 13. Removing single characters
+
+After removing digits and handling contractions, some single characters may remain in the text. For example:
+
+-   `"S1"` (referring to “Season one”) would become `"s"` after digit removal.
+
+-   Possessive forms like `"Mark's"` would turn into `"Mark s"` once the apostrophe is removed.
+
+These isolated single characters generally do not carry meaningful information for analysis, so we should remove them from the dataset to keep our text clean and focused.
+
+We will be using the function `str_replace_all()` comes from the **`stringr`** package:
+
+``` r
+# Remove single characters (e.g S1 which became S)
+str_replace_all(single_characters, "") %>%
+```
+
+## 12. Dealing with Extraspaces
 
 After completing several normalization steps, we should also account for any extra spaces at the beginning or end of the text. These often come from inconsistent user input, copy-pasting, or formatting issues on different platforms. Let’s clean up these spaces before moving on to the next episode.
 
 ``` r
-str_squish())
+# Remove extra whitespaces
+str_squish()
 ```
 
 Putting every step together we should have the following code:
 
-``` r
+```` r
 #Create a new column for the output clean text
 comments <- comments %>%
   mutate(
@@ -303,28 +341,39 @@ comments <- comments %>%
       str_replace_all(repeated_chars, "\\1") %>%
       # Replace emojis with textual description (function - see above)
       replace_emojis(emoji_dict) %>%
+      # Remove single characters (e.g S1 which became S)
+      str_replace_all(single_characters, "") %>%
       # Remove extra whitespaces
       str_squish()
   )
 ```
+````
 
 Neat! Our normalization and noise reduction code chunk is complete, but don't forget to close the parentheses before running it! Let's see and compare the original "text column" compares to "text_cleaned".
 
-## One more thing
+## One more thing before we are done
 
-Oh, no, if we look at row 1756 we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
+Oh, no, if we search for "s1_1755" we will notice that we still have a waffle 🧇 emoji in that comment. Well, not too worry, while this emoji wasn't included in the original dictionary we used, we can still add it to it for automatic handling:
 
-```{emoji_dict <- emo::jis[, c("emoji", "name")]}
+``` r
+{emoji_dict <- emo::jis[, c("emoji", "name")]}
 emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
 emoji_dict
 ```
 
-::: callout-note
-## 🦾 Challenge (FIXME)
+::: {.callout-tip icon="false" collapse="true"}
+### 🦾 Challenge
 
-Identify any remaining emoji that wasn’t converted and add it to the emoji dictionary.
+Identify at least one remaining emoji that wasn’t converted and add it to the emoji dictionary. It is okay if we are focusing on different ones, since the process is the same.
 
-add_row(emoji = "🥹", name = "pleading face"
+#### Solution
+
+``` r
+# Adding new emojis manually to dictionary 
+emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle") %>%
+add_row(emoji = "🥹", name = "pleading face")
+emoji_dict
+```
 :::
 
 Let's re-run the code chunk and check how those emojis were taken care of. With normalization and noise reduction completed, we are now ready to move to the next preprocessing step: tokenization.
