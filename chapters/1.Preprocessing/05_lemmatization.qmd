@@ -36,11 +36,14 @@ Alright, back to our pipeline, we will now convert words to their dictionary for
 We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
 
 ``` r
+# Applying Lemmas
 lemmatized <- nonstopwords %>%
   mutate(word = lemmatize_words(word))
 ```
 
-Great! Let's take a look at the lemmatized data frame. For example, captivating was converted into captivate.
+Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".
+
+![](images/output_lemma.png){width="559"}
 
 ## Rebuilding Sentences
 
@@ -55,7 +58,7 @@ preprocessed <- lemmatized %>%
 
 After you use `group_by(id, text)`, each group contains all the lemmatized words that belong to the same original text. The `summarise()` function then takes each group and creates one summary row per group.
 
-Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words.
+Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words. We will also ensure to describe a different path to save our progress to a folder named `preprocessed` under the `data` folder.
 
 ## Saving your Work for Analysis
 
