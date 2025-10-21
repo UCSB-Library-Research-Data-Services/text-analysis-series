@@ -60,6 +60,12 @@ Then, still in the console, we will restore it, which will essentially installs 
 renv::restore()
 ```
 
+::: callout-warning
+**Matrix Package**
+
+In case you are working with the newest R version, you might experience an error with the installation. To resolve this, search for "matrix" in the `renv.lock` file, manually change its version to 1.7-4, and save the file. Then, re-run `renv::restore()` in your console.
+:::
+
 ### Loading Packages & Inspecting the Data
 
 Let's start by loading all the required packages that are pre-installed in the project:
