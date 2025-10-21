@@ -70,4 +70,4 @@ output <- preprocessed %>%
 write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
 ```
 
-Well done! Let's now cover some important considerations for future projects.
+Well done! Let's now cover some important considerations for your future text preprocessing projects.
