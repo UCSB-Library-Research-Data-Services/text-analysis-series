@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ae3f271f63f1cd2c76b717a789340001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -253,8 +253,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="summary-and-setup" class="level1">
 <h1>Summary and Setup</h1>
-<p><strong>Authors:</strong> Renata Curty <a href="https://orcid.org/0000-0002-4615-6030" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a> and Jairo Melo <a href="https://orcid.org/0000-0002-2020-1163" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a></p>
-<p>TODO: Add summary</p>
+<p><strong>Authors:</strong> Renata Curty <a href="https://orcid.org/0000-0002-4615-6030" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a> and Jairo Melo <a href="https://orcid.org/0000-0002-2020-1163" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a><br>
+</p>
+<p>This three-part, hands-on workshop series introduces participants to the fundamentals of extracting insights from textual data using R. In <strong>Part 1: Text Preprocessing</strong>, we focus on cleaning and preparing text for analysis through normalization, noise reduction, stopword removal, tokenization, and lemmatization. <strong>Part 2</strong> will delve into core text analysis techniques, including word frequencies, collocations, n-grams, and visualizations such as word clouds. Finally, <strong>Part 3</strong> will explore <strong>sentiment analysis</strong>, applying polarity scoring and emotion detection methods. Throughout the series, we’ll also highlight important caveats and best practices unique to working with textual data.</p>
 <section id="prerequisites" class="level2">
 <h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
 <p>These lessons are hands-on and are designed to be followed with <strong>R</strong> and <strong>RStudio</strong> open. Before starting, please ensure you have the following software installed:</p>
@@ -769,60 +770,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Text Analysis with R"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu"># Summary and Setup</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>**Authors:** Renata Curty <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-4615-6030"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="er">&amp;</span><span class="st">ssl=1"</span><span class="ot"> </span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> and Jairo Melo <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-2020-1163"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="er">&amp;</span><span class="st">ssl=1"</span><span class="ot"> </span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>TODO: Add summary</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prerequisites</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>These lessons are hands-on and are designed to be followed with **R** and **RStudio** open. Before starting, please ensure you have the following software installed:</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**R**: We recommend R version 4.3 or newer. Download from <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target='_blank'}.</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**RStudio**: We recommend RStudio version 2023.12 or newer. Download from <span class="co">[</span><span class="ot">Posit's website</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target='_blank'}.</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="How to update R and RStudio" collapse="true"}</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Summary and Setup</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>**Authors:** Renata Curty <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-4615-6030"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="dv">&amp;amp;</span><span class="st">ssl=1"</span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> and Jairo Melo <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-2020-1163"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="dv">&amp;amp;</span><span class="st">ssl=1"</span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span>\</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>This three-part, hands-on workshop series introduces participants to the fundamentals of extracting insights from textual data using R. In **Part 1: Text Preprocessing**, we focus on cleaning and preparing text for analysis through normalization, noise reduction, stopword removal, tokenization, and lemmatization. **Part 2** will delve into core text analysis techniques, including word frequencies, collocations, n-grams, and visualizations such as word clouds. Finally, **Part 3** will explore **sentiment analysis**, applying polarity scoring and emotion detection methods. Throughout the series, we’ll also highlight important caveats and best practices unique to working with textual data.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prerequisites</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>These lessons are hands-on and are designed to be followed with **R** and **RStudio** open. Before starting, please ensure you have the following software installed:</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**R**: We recommend R version 4.3 or newer. Download from <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target="_blank"}.</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**RStudio**: We recommend RStudio version 2023.12 or newer. Download from <span class="co">[</span><span class="ot">Posit's website</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target="_blank"}.</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="How to update R and RStudio" collapse="true"}</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>**Check your versions**</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>**Check your versions**</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**RStudio**:</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>On Mac: Go to <span class="in">`RStudio`</span> -&gt; <span class="in">`About RStudio`</span>.</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>On Windows: Go to <span class="in">`Help`</span> -&gt; <span class="in">`About RStudio`</span>.</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**R**: In the R console, run:</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>R.version.string</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>**Update R**</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**RStudio**:</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>On Mac: Go to <span class="in">`RStudio`</span> -<span class="sc">\&gt;</span> <span class="in">`About RStudio`</span>.</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>On Windows: Go to <span class="in">`Help`</span> -<span class="sc">\&gt;</span> <span class="in">`About RStudio`</span>.</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**R**: In the R console, run:</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>R.version.string</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>**Update R**</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Go to <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target="_blank"} and download the latest version for your operating system.</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)</span>
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Go to <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target='_blank'} and download the latest version for your operating system.</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>**Update RStudio**</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>**Update RStudio**</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Go to <span class="co">[</span><span class="ot">Posit’s download page</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target="_blank"}.</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Download and install the newest version for your operating system.</span>
 <span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Go to <span class="co">[</span><span class="ot">Posit’s download page</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target='_blank'}.</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Download and install the newest version for your operating system.</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>That’s it! After updating, restart your computer to make sure RStudio finds the latest R.</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>That’s it! After updating, restart your computer to make sure RStudio finds the latest R.</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Access to Data</span></span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using <span class="co">[</span><span class="ot">Brandwatch</span><span class="co">](https://www.brandwatch.com/)</span>{target="_blank"} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Access to Data</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>The R project containing the dataset and other files is available for download from this link: <span class="co">[</span><span class="ot">Severance Dataset</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span>{target="_blank"}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using <span class="co">[</span><span class="ot">Brandwatch</span><span class="co">](https://www.brandwatch.com/)</span>{target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Skill Level</span></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>The R project containing the dataset and other files is available for download from this link: <span class="co">[</span><span class="ot">Severance Dataset</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span>{target='_blank'}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Skill Level</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>This level assumes a basic familiarity with <span class="in">`R`</span> and <span class="in">`RStudio`</span>. If you are new to R, we recommend you check out the <span class="co">[</span><span class="ot">Introduction to Data Analysis with R</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/)</span>{target='_blank'}, particularly the <span class="co">[</span><span class="ot">Introduction to R and RStudio</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html)</span> section.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>This level assumes a basic familiarity with <span class="in">`R`</span> and <span class="in">`RStudio`</span>. If you are new to R, we recommend you check out the <span class="co">[</span><span class="ot">Introduction to Data Analysis with R</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/)</span>{target="_blank"}, particularly the <span class="co">[</span><span class="ot">Introduction to R and RStudio</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html)</span> section.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

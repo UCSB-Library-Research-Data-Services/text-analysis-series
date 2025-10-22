@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ae3f271f63f1cd2c76b717a789340001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -244,10 +244,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Text can be tokenized into sentences, word, subwords or even characters, depending on project goals and analysis plan. Here is a summary of these approaches:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 20%">
-<col style="width: 32%">
-<col style="width: 20%">
-<col style="width: 26%">
+<col style="width: 23%">
+<col style="width: 29%">
+<col style="width: 23%">
+<col style="width: 23%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -293,11 +293,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Although this issue has been resolved in later versions of the model, it was originally caused by <em>subword tokenization</em>. In this case, the tokenizer would split “strawberry” into “st,” “raw,” and “berry.” As a result, the model would incorrectly count the letter “r” only within the “berry” token. This illustrates how the tokenization approach directly affects how words are segmented and how their components are interpreted by the model.</p>
 <p>While this is beyond the scope of the workshop, it’s important to note that some advanced AI models use neural networks to dynamically determine token segmentation. Rather than relying on fixed rules, these models can adapt based on the contextual cues within the text. However, tokenization remains inherently limited by the irregular, organic, and often unpredictable nature of human language.</p>
-<p>Let’s go back to our dataset and apply tokenization. We will use the tidytext function <code>unnest_tokens()</code>, which splits the text in a specified column into individual tokens (here, words), creating one row per token while keeping other data intact. The first argument (<code>word</code>) names the new column for tokens, and the second (<code>clean_text</code>) specifies the text column to tokenize. In short, it turns each word from <code>clean_text</code> into its own row in a new column called <code>word</code>.</p>
+<p>Let’s go back to our dataset and apply tokenization. We will use the `tidytext` function <code>unnest_tokens()</code>, which splits the text in a specified column into individual tokens (here, words), creating one row per token while keeping other data intact. The first argument (<code>word</code>) names the new column for tokens, and the second (<code>text_cleaned</code>) specifies the text column to tokenize. In short, it turns each word from <code>text_cleaned</code> into its own row in a new column called <code>word</code> in a new dataframe named tokenized.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenization</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>tokenized <span class="ot">&lt;-</span> comments <span class="sc">%&gt;%</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text_cleaned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Great! We’ve just tokenized each individual comment (text string) in our dataset into individual words, giving us a total of 128,396 tokens in the tokenized dataframe!</p>
+<p>Great! We’ve just tokenized each individual comment (text string) in our dataset into individual words, giving us, as noted in the environment a total of 121,360 tokens in the tokenized dataframe!</p>
+<p><img src="images/output-tokens.png" class="img-fluid" width="675"></p>
 <p>If you’ve looked at the token output, you may have noticed that some of these tokens are common but less meaningful words, like to, <em>it</em>, and <em>is</em>. Don’t worry; we’ll take care of those in the next step: stop word removal.</p>
 
 
@@ -766,7 +767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Text can be tokenized into sentences, word, subwords or even characters, depending on project goals and analysis plan. Here is a summary of these approaches:</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Type**                   | **Description**                                                                                                                 | **Example**                                                                | **Common Use Cases**                                                                                  <span class="pp">|</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------------|------------------------|---------------|-------------------|</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------------|---------------------|-----------------|-----------------|</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Sentence Tokenization**  <span class="pp">|</span> Splits text into individual sentences                                                                                           <span class="pp">|</span> <span class="in">`"I love NLP. It's fascinating!"`</span> → <span class="in">`["I love NLP.", "It's fascinating!"]`</span> <span class="pp">|</span> Ideal for tasks like summarization, machine translation, and sentiment analysis at the sentence level <span class="pp">|</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Word Tokenization**      <span class="pp">|</span> Divides text into individual words                                                                                              <span class="pp">|</span> <span class="in">`"I love NLP"`</span> → <span class="in">`["I", "love", "NLP"]`</span>                                    <span class="pp">|</span> Works well for languages with clear word boundaries, such as English                                  <span class="pp">|</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Character Tokenization** <span class="pp">|</span> Breaks text down into individual characters                                                                                     <span class="pp">|</span> <span class="in">`"NLP"`</span> → <span class="in">`["N", "L", "P"]`</span>                                                <span class="pp">|</span> Useful for languages without explicit word boundaries or for very fine-grained text analysis          <span class="pp">|</span></span>
@@ -780,7 +781,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>While this is beyond the scope of the workshop, it's important to note that some advanced AI models use neural networks to dynamically determine token segmentation. Rather than relying on fixed rules, these models can adapt based on the contextual cues within the text. However, tokenization remains inherently limited by the irregular, organic, and often unpredictable nature of human language.</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Let's go back to our dataset and apply tokenization. We will use the tidytext function <span class="in">`unnest_tokens()`</span>, which splits the text in a specified column into individual tokens (here, words), creating one row per token while keeping other data intact. The first argument (<span class="in">`word`</span>) names the new column for tokens, and the second (<span class="in">`clean_text`</span>) specifies the text column to tokenize. In short, it turns each word from <span class="in">`clean_text`</span> into its own row in a new column called <span class="in">`word`</span>.</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Let's go back to our dataset and apply tokenization. We will use the <span class="sc">\`</span>tidytext<span class="sc">\`</span> function <span class="in">`unnest_tokens()`</span>, which splits the text in a specified column into individual tokens (here, words), creating one row per token while keeping other data intact. The first argument (<span class="in">`word`</span>) names the new column for tokens, and the second (<span class="in">`text_cleaned`</span>) specifies the text column to tokenize. In short, it turns each word from <span class="in">`text_cleaned`</span> into its own row in a new column called <span class="in">`word`</span> in a new dataframe named tokenized.</span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenization</span></span>
@@ -788,9 +789,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text_cleaned)</span>
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>Great! We’ve just tokenized each individual comment (text string) in our dataset into individual words, giving us a total of 128,396 tokens in the tokenized dataframe!</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>Great! We’ve just tokenized each individual comment (text string) in our dataset into individual words, giving us, as noted in the environment a total of 121,360 tokens in the tokenized dataframe!</span>
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>If you’ve looked at the token output, you may have noticed that some of these tokens are common but less meaningful words, like to, *it*, and *is*. Don’t worry; we’ll take care of those in the next step: stop word removal.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-tokens.png)</span>{width="675"}</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>If you’ve looked at the token output, you may have noticed that some of these tokens are common but less meaningful words, like to, *it*, and *is*. Don’t worry; we’ll take care of those in the next step: stop word removal.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

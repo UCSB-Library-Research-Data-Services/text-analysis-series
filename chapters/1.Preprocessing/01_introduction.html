@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ae3f271f63f1cd2c76b717a789340001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -225,6 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#getting-things-started" id="toc-getting-things-started" class="nav-link" data-scroll-target="#getting-things-started">Getting Things Started</a>
   <ul class="collapse">
   <li><a href="#getting-files-and-launching-rstudio" id="toc-getting-files-and-launching-rstudio" class="nav-link" data-scroll-target="#getting-files-and-launching-rstudio">Getting Files and Launching RStudio</a></li>
+  <li><a href="#setting-up-the-environment-with-renv" id="toc-setting-up-the-environment-with-renv" class="nav-link" data-scroll-target="#setting-up-the-environment-with-renv">Setting up the environment with renv</a></li>
   <li><a href="#loading-packages-inspecting-the-data" id="toc-loading-packages-inspecting-the-data" class="nav-link" data-scroll-target="#loading-packages-inspecting-the-data">Loading Packages &amp; Inspecting the Data</a></li>
   </ul></li>
   </ul>
@@ -277,25 +278,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.</p>
 <section id="getting-files-and-launching-rstudio" class="level3">
 <h3 class="anchored" data-anchor-id="getting-files-and-launching-rstudio">Getting Files and Launching RStudio</h3>
-<p>Time to launch RStudio and our example! Click on this <a href="https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv">link</a> to download the <code>text-preprocessing</code> subfolder, from the folder <code>text-analysis-series</code>. Among other files, this subfolder contains the dataset we will be using <code>comments.csv</code>, a worksheet in qmd, a Quarto extension (learn more about <a href="https://quarto.org/">Quarto</a>), named <code>preprocessing_worksheet</code> where we will be performing some coding, and an <code>renv.lock</code>(learn more about <a href="https://rstudio.github.io/renv/articles/renv.html">Renv</a>) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.</p>
-<p>After downloading this subfolder, double click on the project file <code>text-preprocessing.Rproj</code> to launch Rstudio. Look for and open the file <code>preprocessing_worksheet</code> on your Rstudio environment.</p>
-<p>In your R Console, type <code>renv::restore()</code> to read the renv.lock file and installs the specific package versions used in the project.</p>
+<p>Time to launch RStudio and our example! Click on this <a href="https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv">link</a> to download the <code>text-preprocessing</code> subfolder, from the folder <code>text-analysis-series</code>. Among other files, this subfolder contains the dataset we will be using <code>comments.csv</code>, a worksheet in qmd, a Quarto extension (learn more about <a href="https://quarto.org/">Quarto</a>), named <code>preprocessing-workbook.qmd</code> where we will be performing some coding, and an <code>renv.lock</code>(learn more about <a href="https://rstudio.github.io/renv/articles/renv.html">Renv</a>) file listing all the R packages (and their versions) we’ll use during the workshop.</p>
+<p>This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.</p>
+<p>After downloading this subfolder, double click on the project file <code>text-preprocessing.Rproj</code> to launch Rstudio. Look for and open the file <code>preprocessing-workbook.qmd</code> on your Rstudio environment.</p>
+</section>
+<section id="setting-up-the-environment-with-renv" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-the-environment-with-renv">Setting up the environment with renv</h3>
+<p>Next, we will need to install the package `renv` so you can setup the working environment correctly with all the packages and dependencies we will need. On the console, type:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"renv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then, still in the console, we will restore it, which will essentially installs packages in an R project to match the versions recorded in the project’s renv.lock file we have shared with you.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Matrix Package Incompatible with R</strong></p>
+<p>If you encounter incompatibility issues with the <strong>Matrix</strong> package (or any other) due to your R version, you can explicitly install the package by running the following in your console:</p>
+<pre><code>renv::install("Matrix")</code></pre>
+<p>Next, update your <code>renv.lock</code> file to reflect this version by running:</p>
+<pre><code>renv::snapshot()</code></pre>
+</div>
+</div>
 </section>
 <section id="loading-packages-inspecting-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="loading-packages-inspecting-the-data">Loading Packages &amp; Inspecting the Data</h3>
 <p>Let’s start by loading all the required packages that are pre-installed in the project:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># general data manipulation</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)     <span class="co"># tokenization and text processing</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)      <span class="co"># string manipulation</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)      <span class="co"># emoji handling</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># data wrangling</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textclean)    <span class="co"># expand contractions</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)          <span class="co"># emoji dictionary</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textstem)     <span class="co"># lemmatization</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># general data manipulation</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)     <span class="co"># tokenization and text processing</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)      <span class="co"># string manipulation</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)      <span class="co"># emoji handling</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># data wrangling</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textclean)    <span class="co"># expand contractions</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)          <span class="co"># emoji dictionary</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textstem)     <span class="co"># lemmatization</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After running it, you should get:</p>
+<p><img src="images/output-loaded-packages.png" class="img-fluid" width="757"></p>
 <p>Alright! With all the necessary packages loaded, let’s take a look at the dataset we’ll be working with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"./data/raw/comments.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You’ll notice that we’ve pre-populated a code chunk with Patterns to save you from the tedious task of typing out regular expressions (regex for short). Don’t worry about them for now, we’ll come back to it shortly.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"./data/raw/comments.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Which should show our dataset contains 5877 comments and two columns and display the comments dataset to our environment:</p>
+<p><img src="images/output-readingdata.png" class="img-fluid" width="774"></p>
+<p>In the workbook, you’ll notice that we’ve pre-populated some chunks below to save you from the tedious typing. Don’t worry about them for now, we’ll come back to them shortly.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -306,7 +335,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?</p>
+<p>Working in pairs or trios, look briefly by double clicking comments dataset in the environment panel. Then, discuss could be potential challenges of analyzing this text on its current form. What could be potential areas of friction that could compromise the results?</p>
 </div>
 </div>
 
@@ -768,83 +797,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Preprocessing"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Understanding the terms and their relationships</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>**Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>**Natural Language Processing (NLP)** provides the computational methods that make text analysis possible. It is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language. NLP techniques include part-of-speech tagging, named entity recognition, sentiment detection, topic modeling, and transforming words into numerical representations for analysis.</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. Before text can be analyzed computationally, it needs to be standardized. Computers see “Happy,” “happy,” and “HAPPY!!!” as different words — preprocessing fixes that.</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">### Garbage in, Garbage out</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>You've probably heard the phrase *"garbage in, garbage out"*, right? It's a core principle in computing: the quality of the output heavily depends on the quality of the input.</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>This concept holds especially true text analysis tasks because human language is naturally messy, inconsistent, and often ambiguous.</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>Key text preprocessing steps include normalization (noise reduction), stop words removal, tokenization and lemmatization, which are depicted and explained in the handout below:</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> width</span><span class="op">=</span><span class="st">"50%"</span><span class="ot"> height</span><span class="op">=</span><span class="st">"600"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf"</span><span class="dt">&gt;</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>Source: Data Literacy Series <span class="ot">&lt;https://perma.cc/L8U5-ZEXD&gt;</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis, but before, let's take a quick look at the data so we can have a better grasp of the challenge at hand.</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## Getting Things Started</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>The data we pulled for this exercise comes from real social media posts, meaning they are inherently messy, and we know that even before going in. Because it is derived from natural language, this kind of data is unstructured, often filled with inconsistencies and irregularities.</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="fu">### Getting Files and Launching RStudio</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>Time to launch RStudio and our example! Click on this <span class="co">[</span><span class="ot">link</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span> to download the <span class="in">`text-preprocessing`</span> subfolder, from the folder <span class="in">`text-analysis-series`</span>. Among other files, this subfolder contains the dataset we will be using <span class="in">`comments.csv`</span>, a worksheet in qmd, a Quarto extension (learn more about <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org/)</span>), named <span class="in">`preprocessing_worksheet`</span> where we will be performing some coding, and an <span class="in">`renv.lock`</span>(learn more about <span class="co">[</span><span class="ot">Renv</span><span class="co">](https://rstudio.github.io/renv/articles/renv.html)</span>) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>After downloading this subfolder, double click on the project file <span class="in">`text-preprocessing.Rproj`</span> to launch Rstudio. Look for and open the file <span class="in">`preprocessing_worksheet`</span> on your Rstudio environment.</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>In your R Console, type <span class="in">`renv::restore()`</span> to read the renv.lock file and installs the specific package versions used in the project.</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Loading Packages &amp; Inspecting the Data</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>Let's start by loading all the required packages that are pre-installed in the project:</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># general data manipulation</span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)     <span class="co"># tokenization and text processing</span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)      <span class="co"># string manipulation</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)      <span class="co"># emoji handling</span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># data wrangling</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textclean)    <span class="co"># expand contractions</span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)          <span class="co"># emoji dictionary</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textstem)     <span class="co"># lemmatization</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>Alright! With all the necessary packages loaded, let's take a look at the dataset we’ll be working with:</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"./data/raw/comments.csv"</span>)</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>You’ll notice that we’ve pre-populated a code chunk with Patterns to save you from the tedious task of typing out regular expressions (regex for short). Don’t worry about them for now, we’ll come back to it shortly.</span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="fu"># 💬 Discussion</span></span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?</span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Preprocessing"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### Understanding the terms and their relationships</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>**Text analysis** is about digging into written words to find meaning, spotting patterns, tracking sentiment, or identifying key topics and themes. It’s essentially the “what does this text tell us?” part of the process. Text analysis turns unstructured words into structured insights. Every day, countless emails, news articles, social media content, scientific literature, and reports are produced, hiding patterns, opinions, and signals that numbers alone can’t capture. By applying computational text analysis, we can uncover trends, measure public sentiment, compare perspectives, and extract meaning from massive collections of information that would otherwise feel overwhelming.</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>**Text preprocessing** is the set of steps used to clean, standardize, and structure raw text before it can be meaningfully analyzed. This may include removing punctuation, normalizing letter case, eliminating stop words, breaking text into tokens (words or sentences), and reducing words to their base forms through lemmatization. Preprocessing reduces noise and inconsistencies in the text, making it ready for computational analysis.</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>**Natural Language Processing (NLP)** provides the computational methods that make text analysis possible. It is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language. NLP techniques include part-of-speech tagging, named entity recognition, sentiment detection, topic modeling, and transforming words into numerical representations for analysis.</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>These three elements are co-dependent and work together. Preprocessing prepares messy text for analysis, NLP provides the computational tools to process and interpret the text, and text analysis applies these insights to answer meaningful questions. Without preprocessing, NLP models struggle with noise; without NLP, text analysis would be limited to surface-level counts; and without text analysis, NLP would have little purpose beyond technical processing. Together, they transform raw text into structured, actionable insights.From messy to analysis-ready text</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>Of course, text isn’t quite as “analysis-ready” as numbers. Have you ever looked at raw text data and thought, *where do I even start*? That’s the challenge: before computers can process it meaningfully, text usually needs some cleaning and preparation. Before text can be analyzed computationally, it needs to be standardized. Computers see “Happy,” “happy,” and “HAPPY!!!” as different words — preprocessing fixes that.</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>It’s extra work, but it’s also the foundation of any meaningful analysis. The exciting part is what happens next; once the text is shaped and structured, it can reveal insights you’d never notice just by skimming. And here’s the real advantage: computers can process enormous amounts of text not only faster but often more effectively than humans, allowing us to see patterns and connections that would otherwise stay hidden.</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="fu">### Garbage in, Garbage out</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>You've probably heard the phrase *"garbage in, garbage out"*, right? It's a core principle in computing: the quality of the output heavily depends on the quality of the input.</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>This concept holds especially true text analysis tasks because human language is naturally messy, inconsistent, and often ambiguous.</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>Key text preprocessing steps include normalization (noise reduction), stop words removal, tokenization and lemmatization, which are depicted and explained in the handout below:</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> width</span><span class="op">=</span><span class="st">"50%"</span><span class="ot"> height</span><span class="op">=</span><span class="st">"600"</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://rcd.ucsb.edu/sites/default/files/2025-05/DLS-2025-05-TextPreprocessing_navy.pdf"</span><span class="dt">&gt;</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>Source: Data Literacy Series <span class="ot">&lt;https://perma.cc/L8U5-ZEXD&gt;</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>In the next chapters, we'll dive deeper into this pipeline to prepare the data further analysis, but before, let's take a quick look at the data so we can have a better grasp of the challenge at hand.</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## Getting Things Started</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>The data we pulled for this exercise comes from real social media posts, meaning they are inherently messy, and we know that even before going in. Because it is derived from natural language, this kind of data is unstructured, often filled with inconsistencies and irregularities.</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>Before we can apply any meaningful analysis or modeling, it’s crucial to visually inspect the data to get a sense of what we’re working with. Eyeballing the raw text helps us identify common patterns, potential noise, and areas that will require careful preprocessing to ensure the downstream tasks are effective and reliable.</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="fu">### Getting Files and Launching RStudio</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>Time to launch RStudio and our example! Click on this <span class="co">[</span><span class="ot">link</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span> to download the <span class="in">`text-preprocessing`</span> subfolder, from the folder <span class="in">`text-analysis-series`</span>. Among other files, this subfolder contains the dataset we will be using <span class="in">`comments.csv`</span>, a worksheet in qmd, a Quarto extension (learn more about <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org/)</span>), named <span class="in">`preprocessing-workbook.qmd`</span> where we will be performing some coding, and an <span class="in">`renv.lock`</span>(learn more about <span class="co">[</span><span class="ot">Renv</span><span class="co">](https://rstudio.github.io/renv/articles/renv.html)</span>) file listing all the R packages (and their versions) we’ll use during the workshop.</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>After downloading this subfolder, double click on the project file <span class="in">`text-preprocessing.Rproj`</span> to launch Rstudio. Look for and open the file <span class="in">`preprocessing-workbook.qmd`</span> on your Rstudio environment.</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Setting up the environment with renv</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>Next, we will need to install the package <span class="sc">\`</span>renv<span class="sc">\`</span> so you can setup the working environment correctly with all the packages and dependencies we will need. On the console, type:</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"renv"</span>)</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>Then, still in the console, we will restore it, which will essentially installs packages in an R project to match the versions recorded in the project's renv.lock file we have shared with you.</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>**Matrix Package Incompatible with R**</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>If you encounter incompatibility issues with the **Matrix** package (or any other) due to your R version, you can explicitly install the package by running the following in your console:</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="in">renv::install("Matrix")</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>Next, update your <span class="in">`renv.lock`</span> file to reflect this version by running:</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="in">renv::snapshot()</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### Loading Packages &amp; Inspecting the Data</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>Let's start by loading all the required packages that are pre-installed in the project:</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)    <span class="co"># general data manipulation</span></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)     <span class="co"># tokenization and text processing</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)      <span class="co"># string manipulation</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)      <span class="co"># emoji handling</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># data wrangling</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textclean)    <span class="co"># expand contractions</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emo)          <span class="co"># emoji dictionary</span></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textstem)     <span class="co"># lemmatization</span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>After running it, you should get:</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-loaded-packages.png)</span>{width="757"}</span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>Alright! With all the necessary packages loaded, let's take a look at the dataset we’ll be working with:</span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspecting the data</span></span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"./data/raw/comments.csv"</span>)</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>Which should show our dataset contains 5877 comments and two columns and display the comments dataset to our environment:</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-readingdata.png)</span>{width="774"}</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>In the workbook, you’ll notice that we’ve pre-populated some chunks below to save you from the tedious typing. Don’t worry about them for now, we’ll come back to them shortly.</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a><span class="fu"># 💬 Discussion</span></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>Working in pairs or trios, look briefly by double clicking comments dataset in the environment panel. Then, discuss could be potential challenges of analyzing this text on its current form. What could be potential areas of friction that could compromise the results?</span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ae3f271f63f1cd2c76b717a789340001.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -285,8 +285,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, let’s return to the worksheet and see how we can put that into practice.</p>
-<p>In R, two commonly used stopword lists (lexicons) are <strong>SMART</strong> and <strong>Snowball</strong>, available through packages like <code>stopwords</code>, <code>tm</code>, or <code>tidytext</code>. Both serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. <strong>SMART</strong> contains approximately 570 English stopwords, making it more comprehensive and slightly more restrictive, while <strong>Snowball</strong> fewer(350–400), leaving more content words intact. For this workshop, we will adopt the Snowball list because its less restrictive nature helps preserve context, which is especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.</p>
-<p>We will start our stop word removal by calling <code>data("stop_words")</code> to load a built-in dataset from the tidytext package. Then, the he <code>filter(lexicon == "snowball")</code> line selects rows where the source (or lexicon) is Snowball, and the <code>select(word)</code> line keeps only the column called <code>word</code>, dropping other columns like the source name. This gives you a clean list of Snowball stopwords.</p>
+<p><strong>SMART</strong>, <strong>Snowbal</strong> and <strong>Onix</strong> are the three lexicons available to handle <code>stopwords</code> through the the tidytext ecossytem. They serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. For this workshop, we will adopt the <strong>Snowball</strong> list because its less restrictive nature, which helps preserve context, especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.</p>
+<p>We will start our stop word removal by calling <code>data("stop_words")</code> to load a built-in dataset from the tidytext package. This should create a dictionary containing 1,149 words as part of the lexicon’s library.</p>
+<p><img src="images/output-stopwprdsdictionary.png" class="img-fluid" width="263"></p>
+<p>Then, we will apply the expression <code>filter(lexicon == "snowball")</code> to select the Snowball source (or lexicon). The double equal sign <code>==</code> it is a comparison operator which checks for equality.</p>
+<p>Next, <code>select(word)</code> line keeps only the column called <code>word</code>, dropping other columns like the source name. This gives you a clean list of Snowball stopwords.</p>
 <p>Next, we will remove stopwords from the tokenized text. The <code>anti_join(..., by = "word")</code> function keeps only the words that do not match any word in the Snowball stopword list. The result, stored in <code>nonstopwords</code>, is a dataset containing only the meaningful words from your text, with the common stopwords removed.</p>
 <p>The code chunk, should look like:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load stop words</span></span>
@@ -300,7 +303,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stopwords from your tokenized data</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>nonstopwords <span class="ot">&lt;-</span> tokenized <span class="sc">%&gt;%</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(snowball_stopwords, <span class="at">by =</span> <span class="st">"word"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Awesome! This step should bring our token count down to <strong>75,729</strong> by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.</p>
+<p>Awesome! This step should bring our token count down to <strong>74,264</strong> by removing filler and unnecessary words:</p>
+<p><img src="images/output-nonstopwords.png" class="img-fluid" width="577"></p>
+<p>We are now ready to move to lemmatization.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -817,37 +822,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>Now, let’s return to the worksheet and see how we can put that into practice.</span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>In R, two commonly used stopword lists (lexicons) are **SMART** and **Snowball**, available through packages like `stopwords`, `tm`, or `tidytext`. Both serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. **SMART** contains approximately 570 English stopwords, making it more comprehensive and slightly more restrictive, while **Snowball** fewer(350–400), leaving more content words intact. For this workshop, we will adopt the Snowball list because its less restrictive nature helps preserve context, which is especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>**SMART**, **Snowbal** and **Onix** are the three lexicons available to handle `stopwords` through the the tidytext ecossytem. They serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. For this workshop, we will adopt the **Snowball** list because its less restrictive nature, which helps preserve context, especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.</span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>We will start our stop word removal by calling <span class="in">`data("stop_words")`</span> to load a built-in dataset from the tidytext package. Then, the he <span class="in">`filter(lexicon == "snowball")`</span> line selects rows where the source (or lexicon) is Snowball, and the <span class="in">`select(word)`</span> line keeps only the column called <span class="in">`word`</span>, dropping other columns like the source name. This gives you a clean list of Snowball stopwords.</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>We will start our stop word removal by calling <span class="in">`data("stop_words")`</span> to load a built-in dataset from the tidytext package. This should create a dictionary containing 1,149 words as part of the lexicon's library.</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>Next, we will remove stopwords from the tokenized text. The <span class="in">`anti_join(..., by = "word")`</span> function keeps only the words that do not match any word in the Snowball stopword list. The result, stored in <span class="in">`nonstopwords`</span>, is a dataset containing only the meaningful words from your text, with the common stopwords removed.</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-stopwprdsdictionary.png)</span>{width="263"}</span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>The code chunk, should look like:</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>Then, we will apply the expression <span class="in">`filter(lexicon == "snowball")`</span> to select the Snowball source (or lexicon). The double equal sign <span class="in">`==`</span> it is a comparison operator which checks for equality.</span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Load stop words</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>Next, <span class="in">`select(word)`</span> line keeps only the column called <span class="in">`word`</span>, dropping other columns like the source name. This gives you a clean list of Snowball stopwords.</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>Next, we will remove stopwords from the tokenized text. The <span class="in">`anti_join(..., by = "word")`</span> function keeps only the words that do not match any word in the Snowball stopword list. The result, stored in <span class="in">`nonstopwords`</span>, is a dataset containing only the meaningful words from your text, with the common stopwords removed.</span>
 <span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for Snowball stopwords only (less aggressive than SMART)</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>snowball_stopwords <span class="ot">&lt;-</span> stop_words <span class="sc">%&gt;%</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lexicon <span class="sc">==</span> <span class="st">"snowball"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(word)  <span class="co"># keep only the 'word' column</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stopwords from your tokenized data</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>nonstopwords <span class="ot">&lt;-</span> tokenized <span class="sc">%&gt;%</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(snowball_stopwords, <span class="at">by =</span> <span class="st">"word"</span>)</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>Awesome! This step should bring our token count down to **75,729** by removing filler and unnecessary words, getting our dataset almost ready for sentiment analysis. Next up is lemmatization.</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="fu"># 📑 **Suggested Reading**</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>Check out this blog post for a summary of the history of stop words, discussion on its applications and some perspectives on developments in the age of AI.</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>Gaviraj, K. (2025, April 24). *The origins of stop words*. BytePlus. <span class="ot">&lt;https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words&gt;</span></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>The code chunk, should look like:</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Load stop words</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for Snowball stopwords only (less aggressive than SMART)</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>snowball_stopwords <span class="ot">&lt;-</span> stop_words <span class="sc">%&gt;%</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lexicon <span class="sc">==</span> <span class="st">"snowball"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(word)  <span class="co"># keep only the 'word' column</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stopwords from your tokenized data</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>nonstopwords <span class="ot">&lt;-</span> tokenized <span class="sc">%&gt;%</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(snowball_stopwords, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>Awesome! This step should bring our token count down to **74,264** by removing filler and unnecessary words:</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-nonstopwords.png)</span>{width="577"}</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>We are now ready to move to lemmatization.</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu"># 📑 **Suggested Reading**</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>Check out this blog post for a summary of the history of stop words, discussion on its applications and some perspectives on developments in the age of AI.</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>Gaviraj, K. (2025, April 24). *The origins of stop words*. BytePlus. <span class="ot">&lt;https://www.byteplus.com/en/topic/400391?title=the-origins-of-stop-words&gt;</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
