@@ -36,11 +36,36 @@ Alright, back to our pipeline, we will now convert words to their dictionary for
 We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
 
 ``` r
+# Applying Lemmas
 lemmatized <- nonstopwords %>%
   mutate(word = lemmatize_words(word))
 ```
 
-Great! Let's take a look at the lemmatized data frame. For example, captivating was converted into captivate.
+Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".
+
+![](images/output-lemmas-issue.png){width="422"}
+
+Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the last row of the screenshot above? This is a known issue with the `textstem` package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:
+
+``` r
+# Load the full dictionary
+custom_dict <- as.data.frame(lexicon::hash_lemmas)
+# Look for the word "second" in the dictonary
+
+# Find rows where token is "second"
+idx <- custom_dict$token == "second"
+
+# Set lemma = token to preserve the word
+custom_dict$lemma[idx] <- custom_dict$token[idx]
+
+# Now lemmatize your text
+lemmatized_nonumbers <- nonstopwords
+custom_dict <- as.data.frame(lexicon::hash_lemmas, stringsAsFactors = FALSE)
+```
+
+Let's see that row (20) once again in the new \`lemmatized_nonumbers\` dataframe we have created.
+
+Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let's address only this specifc case.
 
 ## Rebuilding Sentences
 
@@ -55,7 +80,7 @@ preprocessed <- lemmatized %>%
 
 After you use `group_by(id, text)`, each group contains all the lemmatized words that belong to the same original text. The `summarise()` function then takes each group and creates one summary row per group.
 
-Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words.
+Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words. We will also ensure to describe a different path to save our progress to a folder named `preprocessed` under the `data` folder.
 
 ## Saving your Work for Analysis
 
@@ -70,4 +95,10 @@ output <- preprocessed %>%
 write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
 ```
 
-Well done! Let's now cover some important considerations for future projects.
+## Before we go
+
+If you notice that the output object saved as `comments_preprocessed` contains one fewer row (observation) than the original dataset, this is because, after applying normalization and stopword removal with the Snowball Lexicon, the comment associated with ID `"s2_0998"` became an empty string.
+
+![](images/output-missingID.png)
+
+Well done! That concludes all our preprocessing steps. Let's now cover some important considerations for your future text preprocessing projects.

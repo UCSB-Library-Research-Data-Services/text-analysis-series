@@ -40,11 +40,41 @@ Before we can apply any meaningful analysis or modeling, it’s crucial to visua
 
 ### Getting Files and Launching RStudio
 
-Time to launch RStudio and our example! Click on this [link](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv) to download the `text-preprocessing` subfolder, from the folder `text-analysis-series`. Among other files, this subfolder contains the dataset we will be using `comments.csv`, a worksheet in qmd, a Quarto extension (learn more about [Quarto](https://quarto.org/)), named `preprocessing_worksheet` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop. This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
+Time to launch RStudio and our example! Click on this [link](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv) to download the `text-preprocessing` subfolder, from the folder `text-analysis-series`. Among other files, this subfolder contains the dataset we will be using `comments.csv`, a worksheet in qmd, a Quarto extension (learn more about [Quarto](https://quarto.org/)), named `preprocessing-workbook.qmd` where we will be performing some coding, and an `renv.lock`(learn more about [Renv](https://rstudio.github.io/renv/articles/renv.html)) file listing all the R packages (and their versions) we’ll use during the workshop.
 
-After downloading this subfolder, double click on the project file `text-preprocessing.Rproj` to launch Rstudio. Look for and open the file `preprocessing_worksheet` on your Rstudio environment.
+This setup ensures a self-contained environment, so you can run everything needed for the session without installing or changing any packages that might affect your other R projects.
 
-In your R Console, type `renv::restore()` to read the renv.lock file and installs the specific package versions used in the project.
+After downloading this subfolder, double click on the project file `text-preprocessing.Rproj` to launch Rstudio. Look for and open the file `preprocessing-workbook.qmd` on your Rstudio environment.
+
+### Setting up the environment with renv
+
+Next, we will need to install the package \`renv\` so you can setup the working environment correctly with all the packages and dependencies we will need. On the console, type:
+
+``` r
+install.packages("renv")
+```
+
+Then, still in the console, we will restore it, which will essentially installs packages in an R project to match the versions recorded in the project's renv.lock file we have shared with you.
+
+``` r
+renv::restore()
+```
+
+::: callout-warning
+**Matrix Package Incompatible with R**
+
+If you encounter incompatibility issues with the **Matrix** package (or any other) due to your R version, you can explicitly install the package by running the following in your console:
+
+```         
+renv::install("Matrix")
+```
+
+Next, update your `renv.lock` file to reflect this version by running:
+
+```         
+renv::snapshot()
+```
+:::
 
 ### Loading Packages & Inspecting the Data
 
@@ -61,6 +91,10 @@ library(emo)          # emoji dictionary
 library(textstem)     # lemmatization
 ```
 
+After running it, you should get:
+
+![](images/output-loaded-packages.png){width="757"}
+
 Alright! With all the necessary packages loaded, let's take a look at the dataset we’ll be working with:
 
 ``` r
@@ -68,10 +102,14 @@ Alright! With all the necessary packages loaded, let's take a look at the datase
 comments <- readr::read_csv("./data/raw/comments.csv")
 ```
 
-You’ll notice that we’ve pre-populated a code chunk with Patterns to save you from the tedious task of typing out regular expressions (regex for short). Don’t worry about them for now, we’ll come back to it shortly.
+Which should show our dataset contains 5877 comments and two columns and display the comments dataset to our environment:
+
+![](images/output-readingdata.png){width="774"}
+
+In the workbook, you’ll notice that we’ve pre-populated some chunks below to save you from the tedious typing. Don’t worry about them for now, we’ll come back to them shortly.
 
 ::: {.callout-note icon="false"}
 # 💬 Discussion
 
-Working in pairs or trios, look briefly at the data and discuss the challenges that may arise when attempting to analyze this dataset on its current form. What could be potential areas of friction that could compromise the results?
+Working in pairs or trios, look briefly by double clicking comments dataset in the environment panel. Then, discuss could be potential challenges of analyzing this text on its current form. What could be potential areas of friction that could compromise the results?
 :::

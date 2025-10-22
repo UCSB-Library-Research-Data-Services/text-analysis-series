@@ -1,30 +1,27 @@
 ---
 title: "Text Analysis with R"
-
 ---
 
 # Summary and Setup
 
-**Authors:** Renata Curty <a href="https://orcid.org/0000-0002-4615-6030" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&ssl=1" /></a> and Jairo Melo <a href="https://orcid.org/0000-0002-2020-1163" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&ssl=1" /></a>
+**Authors:** Renata Curty <a href="https://orcid.org/0000-0002-4615-6030" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"/></a> and Jairo Melo <a href="https://orcid.org/0000-0002-2020-1163" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"/></a>\
 
-TODO: Add summary
+This three-part, hands-on workshop series introduces participants to the fundamentals of extracting insights from textual data using R. In **Part 1: Text Preprocessing**, we focus on cleaning and preparing text for analysis through normalization, noise reduction, stopword removal, tokenization, and lemmatization. **Part 2** will delve into core text analysis techniques, including word frequencies, collocations, n-grams, and visualizations such as word clouds. Finally, **Part 3** will explore **sentiment analysis**, applying polarity scoring and emotion detection methods. Throughout the series, we’ll also highlight important caveats and best practices unique to working with textual data.
 
 ## Prerequisites
 
 These lessons are hands-on and are designed to be followed with **R** and **RStudio** open. Before starting, please ensure you have the following software installed:
 
-- **R**: We recommend R version 4.3 or newer. Download from [CRAN](https://cran.r-project.org/){target='_blank'}.
-- **RStudio**: We recommend RStudio version 2023.12 or newer. Download from [Posit's website](https://posit.co/download/rstudio-desktop/){target='_blank'}.
+-   **R**: We recommend R version 4.3 or newer. Download from [CRAN](https://cran.r-project.org/){target="_blank"}.
+-   **RStudio**: We recommend RStudio version 2023.12 or newer. Download from [Posit's website](https://posit.co/download/rstudio-desktop/){target="_blank"}.
 
 ::: {.callout-note title="How to update R and RStudio" collapse="true"}
-
 **Check your versions**
 
-- **RStudio**:
-  - On Mac: Go to `RStudio` -> `About RStudio`.
-  - On Windows: Go to `Help` -> `About RStudio`.
-
-- **R**: In the R console, run:
+-   **RStudio**:
+    -   On Mac: Go to `RStudio` -\> `About RStudio`.
+    -   On Windows: Go to `Help` -\> `About RStudio`.
+-   **R**: In the R console, run:
 
 ``` r
 #| eval: false
@@ -33,25 +30,23 @@ R.version.string
 
 **Update R**
 
-1. Go to [CRAN](https://cran.r-project.org/){target='_blank'} and download the latest version for your operating system.
-2. Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)
+1.  Go to [CRAN](https://cran.r-project.org/){target="_blank"} and download the latest version for your operating system.
+2.  Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)
 
 **Update RStudio**
 
-1. Go to [Posit’s download page](https://posit.co/download/rstudio-desktop/){target='_blank'}.
-2. Download and install the newest version for your operating system.
+1.  Go to [Posit’s download page](https://posit.co/download/rstudio-desktop/){target="_blank"}.
+2.  Download and install the newest version for your operating system.
 
 That’s it! After updating, restart your computer to make sure RStudio finds the latest R.
-
 :::
 
 ## Access to Data
 
-For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/){target='_blank'} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.
+For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using [Brandwatch](https://www.brandwatch.com/){target="_blank"} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.
 
-The R project containing the dataset and other files is available for download from this link: [Severance Dataset](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv){target='_blank'}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).
+The R project containing the dataset and other files is available for download from this link: [Severance Dataset](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv){target="_blank"}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).
 
 ## R Skill Level
 
-This level assumes a basic familiarity with `R` and `RStudio`. If you are new to R, we recommend you check out the [Introduction to Data Analysis with R](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/){target='_blank'}, particularly the [Introduction to R and RStudio](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html) section.
-
+This level assumes a basic familiarity with `R` and `RStudio`. If you are new to R, we recommend you check out the [Introduction to Data Analysis with R](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/){target="_blank"}, particularly the [Introduction to R and RStudio](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html) section.
