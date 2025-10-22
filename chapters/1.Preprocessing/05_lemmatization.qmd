@@ -63,7 +63,9 @@ lemmatized_nonumbers <- nonstopwords
 custom_dict <- as.data.frame(lexicon::hash_lemmas, stringsAsFactors = FALSE)
 ```
 
-Keep in mind this would apply to most words refering to numbers, but to save us time let's address only this specifc case.
+Let's see that row (20) once again in the new \`lemmatized_nonumbers\` dataframe we have created.
+
+Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let's address only this specifc case.
 
 ## Rebuilding Sentences
 
