@@ -43,7 +43,27 @@ lemmatized <- nonstopwords %>%
 
 Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".
 
-![](images/output_lemma.png){width="559"}
+![](images/output-lemmas-issue.png){width="422"}
+
+Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the last row of the screenshot above? This is a known issue with the `textstem` package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:
+
+``` r
+# Load the full dictionary
+custom_dict <- as.data.frame(lexicon::hash_lemmas)
+# Look for the word "second" in the dictonary
+
+# Find rows where token is "second"
+idx <- custom_dict$token == "second"
+
+# Set lemma = token to preserve the word
+custom_dict$lemma[idx] <- custom_dict$token[idx]
+
+# Now lemmatize your text
+lemmatized_nonumbers <- nonstopwords
+custom_dict <- as.data.frame(lexicon::hash_lemmas, stringsAsFactors = FALSE)
+```
+
+Keep in mind this would apply to most words refering to numbers, but to save us time let's address only this specifc case.
 
 ## Rebuilding Sentences
 
