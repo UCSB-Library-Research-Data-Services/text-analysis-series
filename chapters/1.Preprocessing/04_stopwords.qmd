@@ -43,7 +43,7 @@ How many stop words can you spot in each of the following sentences:
 
 Now, let’s return to the worksheet and see how we can put that into practice.
 
-In R, two commonly used stopword lists (lexicons) are **SMART** and **Snowbal** available through packages like `stopwords`, `tm`, or `tidytext`. Both serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. **SMART** contains approximately 570 English stopwords, making it more comprehensive and slightly more restrictive, while **Snowball** fewer(350–400), leaving more content words intact. For this workshop, we will adopt the Snowball list because its less restrictive nature helps preserve context, which is especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.
+**SMART**, **Snowbal** and **Onix** are the three lexicons available to handle `stopwords` through the the tidytext ecossytem. They serve the same purpose, removing common, low-information words, but they differ in origin, size, and linguistic design. For this workshop, we will adopt the **Snowball** list because its less restrictive nature, which helps preserve context, especially important for NLP tasks such as topic modeling, sentiment analysis, or classification.
 
 We will start our stop word removal by calling `data("stop_words")` to load a built-in dataset from the tidytext package. This should create a dictionary containing 1,149 words as part of the lexicon's library.
 
