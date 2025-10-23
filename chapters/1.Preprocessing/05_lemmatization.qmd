@@ -35,11 +35,11 @@ After applying lemmatization, the sentence should look like:
 
 Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.
 
-## Rebuilding Sentences
+## Rebuilding Sentences (Comments)
 
 After tokenization, our data consists of individual words. However, in order to preserve the ability to apply lemmatization while taking into account each word’s part of speech (POS), we need to first reconstruct sentences; otherwise, the lemmatizer would operate on isolated tokens without context, which can lead to incorrect or less accurate base forms.
 
-To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.
+To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing our comments into sentences, especially in large or complex datasets.
 
 ``` r
 rejoined <- nonstopwords %>%
@@ -49,7 +49,7 @@ rejoined <- nonstopwords %>%
 
 ## Applying Lemmatization
 
-Next, we will be using creating a new dataframe named `lemmatized` using the `lemmatize_strings()` function from the **`textstem`** package, and a new column called `sentences` to it, containing the dictonary form of each word.
+Next, we will be using creating a new dataframe named `lemmatized` using the `lemmatize_strings()` function from the **`textstem`** package, and a new column called `comments` to it, containing the dictonary form of each word.
 
 ``` r
 # Applying Lemmas
