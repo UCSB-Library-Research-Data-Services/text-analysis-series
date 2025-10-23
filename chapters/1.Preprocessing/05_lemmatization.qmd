@@ -11,7 +11,9 @@ For this reason, we will stick with lemmatization and skip stemming in our pipel
 
 An important thing to consider is that we look into words as separate units (tokens) as we saw in the previous episode. For example, think about the word "leaves". That could both represent the plural of the noun "leaf" or the verb in third person for the word "leave". That is a good reminder of always remember to apply part of speech (POS) because lemmatization algorithms utilize a lexicon with linguistic rules based on pre-determined tags to avoid misinterpretation.
 
-::: {.callout-note icon="false"}
+**Part of Speech (POS)** refers to the grammatical category that a word belongs to, indicating its syntactic function and role within a sentence. For example, the word *run* can serve as a verb in *“I like to run every morning”* or as a noun in *“I went for a long run”*. Without POS information, an NLP system might incorrectly treat *run* as always being a verb, producing inaccurate results. By applying POS tagging, systems can correctly recognize each word’s role, ensuring more accurate text processing.
+
+:::: {.callout-note icon="false"}
 ## 🧠 Knowledge Check
 
 In pairs or groups of three, apply **lemmatization** to the following sentence. Identify the base forms (lemmas) of each word:
@@ -29,28 +31,40 @@ After applying lemmatization, the sentence should look like:
 
 *Note*: Adverbs and prepositions usually remain unchanged because they are already in their simplest dictionary form and do not have a more basic lemma.
 :::
-:::
+::::
 
 Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.
 
-We will be using the `lemmatize_words()` function from the **`textstem`** package. And add a new column called `word_lemmatized` to your `comments_clean` dataset, containing the base form of each word:
+## Rebuilding Sentences (Comments)
+
+After tokenization, our data consists of individual words. However, in order to preserve the ability to apply lemmatization while taking into account each word’s part of speech (POS), we need to first reconstruct sentences; otherwise, the lemmatizer would operate on isolated tokens without context, which can lead to incorrect or less accurate base forms.
+
+To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing our comments into sentences, especially in large or complex datasets.
+
+``` r
+rejoined <- nonstopwords %>%
+  group_by(id) %>%  # group all tokens from the same sentence
+  summarise(comments = paste(word, collapse = " "), .groups = "drop")
+```
+
+## Applying Lemmatization
+
+Next, we will be using creating a new dataframe named `lemmatized` using the `lemmatize_strings()` function from the **`textstem`** package, and a new column called `comments` to it, containing the dictonary form of each word.
 
 ``` r
 # Applying Lemmas
-lemmatized <- nonstopwords %>%
-  mutate(word = lemmatize_words(word))
+lemmatized <- rejoined %>%
+  mutate(comments = lemmatize_strings(comments))
 ```
 
 Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".
 
-![](images/output-lemmas-issue.png){width="422"}
+![](images/output_lemmasentences.png){width="416"}
 
-Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the last row of the screenshot above? This is a known issue with the `textstem` package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:
+Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the third row? This is a known issue with the `textstem` package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:
 
 ``` r
-# Load the full dictionary
 custom_dict <- as.data.frame(lexicon::hash_lemmas)
-# Look for the word "second" in the dictonary
 
 # Find rows where token is "second"
 idx <- custom_dict$token == "second"
@@ -59,40 +73,21 @@ idx <- custom_dict$token == "second"
 custom_dict$lemma[idx] <- custom_dict$token[idx]
 
 # Now lemmatize your text
-lemmatized_nonumbers <- nonstopwords
+lemmatized_nonumbers <- rejoined
 custom_dict <- as.data.frame(lexicon::hash_lemmas, stringsAsFactors = FALSE)
 ```
 
-Let's see that row (20) once again in the new `lemmatized_nonumbers` dataframe we have created.
+Let's look at the third row once again in the new dataframe we have created.
 
 Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let's address only this specifc case.
 
-## Rebuilding Sentences
-
-But we’re not done yet. After tokenization, our data consists of individual words. We still need to reconstruct full sentences from these lemmatized words so that each row represents a complete piece of text. To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.
-
-``` r
-# Reconstruct sentences from lemmatized words
-preprocessed <- lemmatized %>%
-  group_by(id, text) %>%
-  summarise(text_preprocessed = paste(word, collapse = " "), .groups = "drop")
-```
-
-After you use `group_by(id, text)`, each group contains all the lemmatized words that belong to the same original text. The `summarise()` function then takes each group and creates one summary row per group.
-
-Inside `summarise`, `text_preprocessed = paste(word, collapse = " ")` takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words. We will also ensure to describe a different path to save our progress to a folder named `preprocessed` under the `data` folder.
-
 ## Saving your Work for Analysis
 
-let's save it as a new file named `comments_preprocessed`:
+Let's save our work as a new file named `comments_preprocessed`:
 
 ``` r
-# Select only important columns
-output <- preprocessed %>%
-  select(id, text_preprocessed)
-
 # Save to CSV
-write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
+write.csv(lemmatized_nonumbers, "./data/preprocessed/comments_preprocessed.csv")
 ```
 
 ## Before we go
