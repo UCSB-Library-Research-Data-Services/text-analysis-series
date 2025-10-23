@@ -220,7 +220,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#rebuilding-sentences" id="toc-rebuilding-sentences" class="nav-link active" data-scroll-target="#rebuilding-sentences">Rebuilding Sentences</a></li>
+  <li><a href="#rebuilding-sentences-comments" id="toc-rebuilding-sentences-comments" class="nav-link active" data-scroll-target="#rebuilding-sentences-comments">Rebuilding Sentences (Comments)</a></li>
+  <li><a href="#applying-lemmatization" id="toc-applying-lemmatization" class="nav-link" data-scroll-target="#applying-lemmatization">Applying Lemmatization</a></li>
   <li><a href="#saving-your-work-for-analysis" id="toc-saving-your-work-for-analysis" class="nav-link" data-scroll-target="#saving-your-work-for-analysis">Saving your Work for Analysis</a></li>
   <li><a href="#before-we-go" id="toc-before-we-go" class="nav-link" data-scroll-target="#before-we-go">Before we go</a></li>
   </ul>
@@ -252,6 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You might be wondering: what about stemming? <strong><em>Stemming</em></strong> is a simpler but more aggressive process that removes prefixes and suffixes to reduce words to their root forms. It is generally considered less precise than lemmatization because it can sometimes produce meaningless words. For example, while “ran” and “runs” would correctly stem to “run,” the word “running” would be reduced to “runn.”</p>
 <p>For this reason, we will stick with lemmatization and skip stemming in our pipeline. That said, if you need to process very large volumes of text and want a faster, more efficient approach, stemming could be a reasonable alternative.</p>
 <p>An important thing to consider is that we look into words as separate units (tokens) as we saw in the previous episode. For example, think about the word “leaves”. That could both represent the plural of the noun “leaf” or the verb in third person for the word “leave”. That is a good reminder of always remember to apply part of speech (POS) because lemmatization algorithms utilize a lexicon with linguistic rules based on pre-determined tags to avoid misinterpretation.</p>
+<p><strong>Part of Speech (POS)</strong> refers to the grammatical category that a word belongs to, indicating its syntactic function and role within a sentence. For example, the word <em>run</em> can serve as a verb in <em>“I like to run every morning”</em> or as a noun in <em>“I went for a long run”</em>. Without POS information, an NLP system might incorrectly treat <em>run</em> as always being a verb, producing inaccurate results. By applying POS tagging, systems can correctly recognize each word’s role, ensuring more accurate text processing.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -286,47 +288,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.</p>
-<p>We will be using the <code>lemmatize_words()</code> function from the <strong><code>textstem</code></strong> package. And add a new column called <code>word_lemmatized</code> to your <code>comments_clean</code> dataset, containing the base form of each word:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Lemmas</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>lemmatized <span class="ot">&lt;-</span> nonstopwords <span class="sc">%&gt;%</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">lemmatize_words</span>(word))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="rebuilding-sentences-comments" class="level2">
+<h2 class="anchored" data-anchor-id="rebuilding-sentences-comments">Rebuilding Sentences (Comments)</h2>
+<p>After tokenization, our data consists of individual words. However, in order to preserve the ability to apply lemmatization while taking into account each word’s part of speech (POS), we need to first reconstruct sentences; otherwise, the lemmatizer would operate on isolated tokens without context, which can lead to incorrect or less accurate base forms.</p>
+<p>To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing our comments into sentences, especially in large or complex datasets.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rejoined <span class="ot">&lt;-</span> nonstopwords <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span>  <span class="co"># group all tokens from the same sentence</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">comments =</span> <span class="fu">paste</span>(word, <span class="at">collapse =</span> <span class="st">" "</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="applying-lemmatization" class="level2">
+<h2 class="anchored" data-anchor-id="applying-lemmatization">Applying Lemmatization</h2>
+<p>Next, we will be using creating a new dataframe named <code>lemmatized</code> using the <code>lemmatize_strings()</code> function from the <strong><code>textstem</code></strong> package, and a new column called <code>comments</code> to it, containing the dictonary form of each word.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Lemmas</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lemmatized <span class="ot">&lt;-</span> rejoined <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comments =</span> <span class="fu">lemmatize_strings</span>(comments))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Great! Let’s take a look at the lemmatized data frame. For example, words such as “telling” and “captivating” were converted into “tell” and “captivate”.</p>
-<p><img src="images/output-lemmas-issue.png" class="img-fluid" width="422"></p>
-<p>Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the last row of the screenshot above? This is a known issue with the <code>textstem</code> package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the full dictionary</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for the word "second" in the dictonary</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Find rows where token is "second"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token <span class="sc">==</span> <span class="st">"second"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Set lemma = token to preserve the word</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>custom_dict<span class="sc">$</span>lemma[idx] <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token[idx]</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Now lemmatize your text</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>lemmatized_nonumbers <span class="ot">&lt;-</span> nonstopwords</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Let’s see that row (20) once again in the new <code>lemmatized_nonumbers</code> dataframe we have created.</p>
+<p><img src="images/output_lemmasentences.png" class="img-fluid" width="416"></p>
+<p>Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the third row? This is a known issue with the <code>textstem</code> package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find rows where token is "second"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token <span class="sc">==</span> <span class="st">"second"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set lemma = token to preserve the word</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>custom_dict<span class="sc">$</span>lemma[idx] <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token[idx]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Now lemmatize your text</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>lemmatized_nonumbers <span class="ot">&lt;-</span> rejoined</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let’s look at the third row once again in the new dataframe we have created.</p>
 <p>Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let’s address only this specifc case.</p>
-<section id="rebuilding-sentences" class="level2">
-<h2 class="anchored" data-anchor-id="rebuilding-sentences">Rebuilding Sentences</h2>
-<p>But we’re not done yet. After tokenization, our data consists of individual words. We still need to reconstruct full sentences from these lemmatized words so that each row represents a complete piece of text. To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruct sentences from lemmatized words</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>preprocessed <span class="ot">&lt;-</span> lemmatized <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, text) <span class="sc">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">text_preprocessed =</span> <span class="fu">paste</span>(word, <span class="at">collapse =</span> <span class="st">" "</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>After you use <code>group_by(id, text)</code>, each group contains all the lemmatized words that belong to the same original text. The <code>summarise()</code> function then takes each group and creates one summary row per group.</p>
-<p>Inside <code>summarise</code>, <code>text_preprocessed = paste(word, collapse = " ")</code> takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words. We will also ensure to describe a different path to save our progress to a folder named <code>preprocessed</code> under the <code>data</code> folder.</p>
 </section>
 <section id="saving-your-work-for-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="saving-your-work-for-analysis">Saving your Work for Analysis</h2>
-<p>let’s save it as a new file named <code>comments_preprocessed</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only important columns</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> preprocessed <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, text_preprocessed)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(output, <span class="st">"./data/preprocessed/comments_preprocessed.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let’s save our work as a new file named <code>comments_preprocessed</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lemmatized_nonumbers, <span class="st">"./data/preprocessed/comments_preprocessed.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="before-we-go" class="level2">
 <h2 class="anchored" data-anchor-id="before-we-go">Before we go</h2>
@@ -804,97 +801,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>An important thing to consider is that we look into words as separate units (tokens) as we saw in the previous episode. For example, think about the word "leaves". That could both represent the plural of the noun "leaf" or the verb in third person for the word "leave". That is a good reminder of always remember to apply part of speech (POS) because lemmatization algorithms utilize a lexicon with linguistic rules based on pre-determined tags to avoid misinterpretation.</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false"}</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🧠 Knowledge Check</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>In pairs or groups of three, apply **lemmatization** to the following sentence. Identify the base forms (lemmas) of each word:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>**Part of Speech (POS)** refers to the grammatical category that a word belongs to, indicating its syntactic function and role within a sentence. For example, the word *run* can serve as a verb in *“I like to run every morning”* or as a noun in *“I went for a long run”*. Without POS information, an NLP system might incorrectly treat *run* as always being a verb, producing inaccurate results. By applying POS tagging, systems can correctly recognize each word’s role, ensuring more accurate text processing.</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>:::: {.callout-note icon="false"}</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🧠 Knowledge Check</span></span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>*Cats chasing mice running quickly across gardens.*</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>In pairs or groups of three, apply **lemmatization** to the following sentence. Identify the base forms (lemmas) of each word:</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false" collapse="true"}</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Solution</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>How many words did you successfully lemmatize? Bingo if you have identified all key lemmas!</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>*Cats chasing mice running quickly across gardens.*</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>::: {.callout-note icon="false" collapse="true"}</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Solution</span></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>After applying lemmatization, the sentence should look like:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>How many words did you successfully lemmatize? Bingo if you have identified all key lemmas!</span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>*cat chase mouse run quickly across garden*</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>After applying lemmatization, the sentence should look like:</span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>*Note*: Adverbs and prepositions usually remain unchanged because they are already in their simplest dictionary form and do not have a more basic lemma.</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>*cat chase mouse run quickly across garden*</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>*Note*: Adverbs and prepositions usually remain unchanged because they are already in their simplest dictionary form and do not have a more basic lemma.</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>::::</span>
 <span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>We will be using the <span class="in">`lemmatize_words()`</span> function from the **`textstem`** package. And add a new column called <span class="in">`word_lemmatized`</span> to your <span class="in">`comments_clean`</span> dataset, containing the base form of each word:</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.</span>
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Lemmas</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>lemmatized <span class="ot">&lt;-</span> nonstopwords <span class="sc">%&gt;%</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">lemmatize_words</span>(word))</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rebuilding Sentences (Comments)</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>After tokenization, our data consists of individual words. However, in order to preserve the ability to apply lemmatization while taking into account each word’s part of speech (POS), we need to first reconstruct sentences; otherwise, the lemmatizer would operate on isolated tokens without context, which can lead to incorrect or less accurate base forms.</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing our comments into sentences, especially in large or complex datasets.</span>
 <span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-lemmas-issue.png)</span>{width="422"}</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the last row of the screenshot above? This is a known issue with the <span class="in">`textstem`</span> package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>rejoined <span class="ot">&lt;-</span> nonstopwords <span class="sc">%&gt;%</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span>  <span class="co"># group all tokens from the same sentence</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">comments =</span> <span class="fu">paste</span>(word, <span class="at">collapse =</span> <span class="st">" "</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the full dictionary</span></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas)</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for the word "second" in the dictonary</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Find rows where token is "second"</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token <span class="sc">==</span> <span class="st">"second"</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Set lemma = token to preserve the word</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>custom_dict<span class="sc">$</span>lemma[idx] <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token[idx]</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Now lemmatize your text</span></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>lemmatized_nonumbers <span class="ot">&lt;-</span> nonstopwords</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Applying Lemmatization</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>Next, we will be using creating a new dataframe named <span class="in">`lemmatized`</span> using the <span class="in">`lemmatize_strings()`</span> function from the **`textstem`** package, and a new column called <span class="in">`comments`</span> to it, containing the dictonary form of each word.</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Lemmas</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>lemmatized <span class="ot">&lt;-</span> rejoined <span class="sc">%&gt;%</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">comments =</span> <span class="fu">lemmatize_strings</span>(comments))</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output_lemmasentences.png)</span>{width="416"}</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>Wait a second! If we look closely, we’ll notice an outlier lemma. Do you see the number two in the third row? This is a known issue with the <span class="in">`textstem`</span> package. While it hasn’t been fully resolved yet, we can apply a workaround to address it:</span>
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>Let's see that row (20) once again in the new <span class="in">`lemmatized_nonumbers`</span> dataframe we have created.</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let's address only this specifc case.</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rebuilding Sentences</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas)</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Find rows where token is "second"</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token <span class="sc">==</span> <span class="st">"second"</span></span>
 <span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>But we’re not done yet. After tokenization, our data consists of individual words. We still need to reconstruct full sentences from these lemmatized words so that each row represents a complete piece of text. To ensure the words are reassembled in the correct order for each original text, we rely on the ID column. Having an ID column is crucial because it allows us to track which words belong to which original text, preventing confusion or misalignment when reconstructing sentences, especially in large or complex datasets.</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruct sentences from lemmatized words</span></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>preprocessed <span class="ot">&lt;-</span> lemmatized <span class="sc">%&gt;%</span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, text) <span class="sc">%&gt;%</span></span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">text_preprocessed =</span> <span class="fu">paste</span>(word, <span class="at">collapse =</span> <span class="st">" "</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>After you use <span class="in">`group_by(id, text)`</span>, each group contains all the lemmatized words that belong to the same original text. The <span class="in">`summarise()`</span> function then takes each group and creates one summary row per group.</span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>Inside <span class="in">`summarise`</span>, <span class="in">`text_preprocessed = paste(word, collapse = " ")`</span> takes all the words in the group and joins them together into a single string, with a space between each word. This produces a full sentence (or comment) instead of separate words. We will also ensure to describe a different path to save our progress to a folder named <span class="in">`preprocessed`</span> under the <span class="in">`data`</span> folder.</span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="fu">## Saving your Work for Analysis</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>let's save it as a new file named <span class="in">`comments_preprocessed`</span>:</span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only important columns</span></span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> preprocessed <span class="sc">%&gt;%</span></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, text_preprocessed)</span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(output, <span class="st">"./data/preprocessed/comments_preprocessed.csv"</span>)</span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## Before we go</span></span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>If you notice that the output object saved as <span class="in">`comments_preprocessed`</span> contains one fewer row (observation) than the original dataset, this is because, after applying normalization and stopword removal with the Snowball Lexicon, the comment associated with ID <span class="in">`"s2_0998"`</span> became an empty string.</span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-missingID.png)</span></span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>Well done! That concludes all our preprocessing steps. Let's now cover some important considerations for your future text preprocessing projects.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Set lemma = token to preserve the word</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>custom_dict<span class="sc">$</span>lemma[idx] <span class="ot">&lt;-</span> custom_dict<span class="sc">$</span>token[idx]</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Now lemmatize your text</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>lemmatized_nonumbers <span class="ot">&lt;-</span> rejoined</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>custom_dict <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(lexicon<span class="sc">::</span>hash_lemmas, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>Let's look at the third row once again in the new dataframe we have created.</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>Alright! Problem solved. Keep in mind, however, this would apply to most words referring to numbers, but to save us time let's address only this specifc case.</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="fu">## Saving your Work for Analysis</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>Let's save our work as a new file named <span class="in">`comments_preprocessed`</span>:</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(lemmatized_nonumbers, <span class="st">"./data/preprocessed/comments_preprocessed.csv"</span>)</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## Before we go</span></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>If you notice that the output object saved as <span class="in">`comments_preprocessed`</span> contains one fewer row (observation) than the original dataset, this is because, after applying normalization and stopword removal with the Snowball Lexicon, the comment associated with ID <span class="in">`"s2_0998"`</span> became an empty string.</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/output-missingID.png)</span></span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>Well done! That concludes all our preprocessing steps. Let's now cover some important considerations for your future text preprocessing projects.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
