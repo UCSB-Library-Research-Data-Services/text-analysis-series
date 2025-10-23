@@ -1,0 +1,91 @@
+
+## Import Libraries
+
+```{r}
+library(tidyverse)
+library(tidytext)      # text mining
+library(stringr)       # string manipulation
+library(stringi)       # string operations (emoji replacement)
+library(dplyr)         # data wrangling
+library(textclean)     # expand contractions
+library(emo)
+library(textstem)      # lemmatization
+```
+
+### Read comments data
+
+```{r}
+comments <- readr::read_csv("../data/raw/comments.csv")
+
+```
+
+### Patterns
+
+```{r}
+apostrophes <- ("[‘’‛ʼ❛❜＇`´′]")
+url_pattern <- "http[s]?://[^\\s,]+|www\\.[^\\s,]+"
+hidden_characters <- "[\u00A0\u2066\u2067\u2068\u2069]"
+mentions <- "@[A-Za-z0-9_]+"
+punctuation <- "[[:punct:]“”‘’–—…|+]"
+numbers <- "[[:digit:]]"
+repeated_chars <- "(.)\\1{2,}"
+hashtag_splitter <- "(?<![#@])([a-z])([A-Z])"
+```
+
+### Create emoji dictionary
+
+```{r}
+emoji_dict <- emo::jis[, c("emoji", "name")]
+emoji_dict <- emoji_dict %>% add_row("emoji" = "🧇", "name" = "waffle")
+emoji_dict
+```
+
+### Clean emojis function
+
+```{r}
+replace_emojis <- function(text, emoji_dict) {
+  stri_replace_all_fixed(
+    str = text,                  # The text to process
+    pattern = emoji_dict$emoji,  # The emojis to find
+    replacement = paste0(emoji_dict$name, " "), # Their corresponding names
+    vectorize_all = FALSE        # element-wise replacement in a same string
+  )
+}
+```
+
+### Clean data
+
+Control characters
+
+`\u00A0` → non-breaking space
+`\u2066` → LEFT-TO-RIGHT ISOLATE (LRI)
+`\u2067` → RIGHT-TO-LEFT ISOLATE (RLI)
+`\u2068` → FIRST STRONG ISOLATE (FSI)
+`\u2069` → POP DIRECTIONAL ISOLATE (PDI)
+
+
+```{r}
+comments_clean <- comments %>%
+  mutate(
+    clean_text = text %>%
+      str_replace_all(url_pattern, "") %>% # url pattern goes first
+      str_replace_all(hidden_characters, " ") %>%
+      str_replace_all(apostrophes, "'") %>%
+      replace_contraction() %>%
+      str_replace_all(hashtag_splitter, "\\1 \\2") %>% # optional
+      str_to_lower() %>%
+      str_replace_all(mentions, "") %>%
+      str_replace_all(punctuation, " ") %>%
+      str_replace_all("[[:digit:]]+", " ") %>%
+      str_squish() %>%
+      str_replace_all(repeated_chars, "\\1") %>%
+      replace_emojis(emoji_dict)
+  )
+```
+
+
+### Save CSV
+
+```{r}
+write_csv(comments_clean, "../data/clean/comments_clean.csv")
+```

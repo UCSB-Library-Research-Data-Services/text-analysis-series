@@ -9,4 +9,4 @@ _site/
 .DS_Store
 .Rproj.user
 
-/data/
+/data/raw/

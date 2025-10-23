@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - "*.qmd"
+    - "!scripts/"
 
 execute: 
   enabled: false
@@ -55,12 +58,12 @@ website:
       and [webexercises R package](https://cran.r-project.org/web/packages/webexercises/index.html).
       UCSB Library Research Data Services. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en)
     left: |
-      <img src="_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"/>
+      <img src="/_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"/>
 
 
 format:
   html:
-    css: _static/adapt-meds-website-styles.scss
+    css: /_static/adapt-meds-website-styles.scss
     toc: true
     page-layout: full
     code-line-numbers: false

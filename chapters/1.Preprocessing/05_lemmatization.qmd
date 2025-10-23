@@ -13,7 +13,7 @@ An important thing to consider is that we look into words as separate units (tok
 
 **Part of Speech (POS)** refers to the grammatical category that a word belongs to, indicating its syntactic function and role within a sentence. For example, the word *run* can serve as a verb in *“I like to run every morning”* or as a noun in *“I went for a long run”*. Without POS information, an NLP system might incorrectly treat *run* as always being a verb, producing inaccurate results. By applying POS tagging, systems can correctly recognize each word’s role, ensuring more accurate text processing.
 
-::: {.callout-note icon="false"}
+:::: {.callout-note icon="false"}
 ## 🧠 Knowledge Check
 
 In pairs or groups of three, apply **lemmatization** to the following sentence. Identify the base forms (lemmas) of each word:
@@ -31,7 +31,7 @@ After applying lemmatization, the sentence should look like:
 
 *Note*: Adverbs and prepositions usually remain unchanged because they are already in their simplest dictionary form and do not have a more basic lemma.
 :::
-:::
+::::
 
 Alright, back to our pipeline, we will now convert words to their dictionary form, remove any remaining noise, and finalize our preprocessing steps.
 
