@@ -83,7 +83,7 @@ Alright! Problem solved. Keep in mind, however, this would apply to most words r
 
 ## Saving your Work for Analysis
 
-let's save it as a new file named `comments_preprocessed`:
+Let's save our work as a new file named `comments_preprocessed`:
 
 ``` r
 # Select only important columns
