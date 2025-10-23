@@ -86,12 +86,8 @@ Alright! Problem solved. Keep in mind, however, this would apply to most words r
 Let's save our work as a new file named `comments_preprocessed`:
 
 ``` r
-# Select only important columns
-output <- lemmatized_nonumbers %>%
-  select(id, sentences)
-
 # Save to CSV
-write.csv(output, "./data/preprocessed/comments_preprocessed.csv")
+write.csv(lemmatized_nonumbers, "./data/preprocessed/comments_preprocessed.csv")
 ```
 
 ## Before we go
