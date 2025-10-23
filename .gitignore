@@ -5,6 +5,8 @@ _site/
 *_cache/
 
 .ipynb_checkpoints/
+# Ignore Quarto Jupyter Notebook checkpoints
+*.quarto_ipynb
 .Rhistory
 .DS_Store
 .Rproj.user
