@@ -44,7 +44,7 @@ To ensure the words are reassembled in the correct order for each original text,
 ``` r
 rejoined <- nonstopwords %>%
   group_by(id) %>%  # group all tokens from the same sentence
-  summarise(sentences = paste(word, collapse = " "), .groups = "drop")
+  summarise(comments = paste(word, collapse = " "), .groups = "drop")
 ```
 
 ## Applying Lemmatization
@@ -54,7 +54,7 @@ Next, we will be using creating a new dataframe named `lemmatized` using the `le
 ``` r
 # Applying Lemmas
 lemmatized <- rejoined %>%
-  mutate(sentences = lemmatize_strings(sentences))
+  mutate(comments = lemmatize_strings(comments))
 ```
 
 Great! Let's take a look at the lemmatized data frame. For example, words such as "telling" and "captivating" were converted into "tell" and "captivate".
