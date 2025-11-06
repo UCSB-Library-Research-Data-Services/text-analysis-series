@@ -57,6 +57,10 @@ website:
             text: Corpus-level Analysis
           - href: chapters/2.TextAnalysis/frequency_analysis.qmd
             text: Frequency Analysis
+      - section: "Sentiment Analysis"
+        contents:
+          - href: chapters/3.SentimentAnalysis/introduction.qmd
+            text: Introduction to Sentiment Analysis
       - about.qmd
 
   page-footer:
