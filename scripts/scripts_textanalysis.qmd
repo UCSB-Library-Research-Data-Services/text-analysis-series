@@ -1,0 +1,279 @@
+---
+title: "Text Analysis Scripts"
+format: html
+editor: visual
+---
+
+Required Packages
+
+```{r}
+#Install
+install.packages("RColorBrewer")  #Part I
+install.packages("tidyverse") #Parts I and II
+install.packages("tidytext") #Part II
+install.packages("wordcloud")  #Part I
+install.packages("wordcloud2")  #Part I
+install.packages("sentimentr") #Part III
+install.packages("syuzhet") #Part III
+```
+
+```{r}
+#Load
+library(dplyr) 
+library(ggplot2)
+library(RColorBrewer)
+library(stringr)
+library(tidytext)
+library(tidyverse)
+library(wordcloud) 
+library(wordcloud2) 
+library(sentimentr)
+library(syuzhet)
+```
+
+## Part 0 - Get the Dataset
+
+```{r}
+#Load Data
+comments <- readr::read_csv("./data/comments_preprocessed.csv")
+
+#Check first rows
+head(comments)
+```
+
+## Part I - Word Frequencies
+
+#### 1.1 Transform sentence strings into tokens (words) and n-grams
+
+```{r}
+#Applying Tokenization
+tokens <- comments %>%
+  unnest_tokens(word, comments)
+
+#We might also convert sentences into n-grams (consecutive words) 
+ngrams <- comments %>%
+  unnest_tokens(ngrams, comments, token = "ngrams", n = 2) #bigrams 
+
+```
+
+#### 1.2 Count frequencies
+
+```{r}
+#Count word freq
+word_freq <- tokens %>%
+  count(id, word, sort = TRUE)
+
+#Count bigram freq
+bigram_freq <- ngrams %>%
+  count(id, ngrams, sort = TRUE)
+
+#2nd round
+
+#Filtering words
+word_freq_filtered <- word_freq %>%
+  filter(!word %in% c("severance", "season", "appleTV", "apple", "tv", "show", "finale", "episode"))  #unwanted words
+```
+
+#### 1.3 Word Clouds
+
+```{r}
+#Basic Word Cloud (tokens)
+wordcloud_tokens <- tokens %>%
+  count(word, sort = TRUE)
+
+wordcloud2(wordcloud_tokens, size = 1.5, color = "random-light", backgroundColor = "black")
+
+```
+
+#### 1.4 Filtered Wordclouds
+
+```{r}
+##Only words with at least 5 mentions
+wordcloud_filtered <- word_freq_filtered %>%
+  count(word, sort = TRUE) %>%
+  filter(n >= 5) %>%  # example threshold
+  filter(!word %in% c("severance", "season", "appleTV", "apple", "tv", "show", "finale", "episode"))  #filter unwanted words
+
+wordcloud2(wordcloud_filtered, size = 1.5, color = "random-light", backgroundColor = "black")
+
+
+#Subset by seasons
+#Only "s1" IDs
+wordcloud_filtered_s1 <- word_freq_filtered %>%
+  filter(grepl("^s1", id)) %>%  # filter by id first
+  count(word, sort = TRUE) %>%
+  filter(n >= 5) %>%
+  filter(!word %in% c("severance", "season", "appleTV", "apple", "tv", "show", "finale", "episode"))
+
+wordcloud2(wordcloud_filtered_s1, size = 1.5, color = "random-light", backgroundColor = "black")
+
+
+#Only "s2" IDs
+wordcloud_filtered_s2 <- word_freq_filtered %>%
+  filter(grepl("^s2", id)) %>%  # filter by id first
+  count(word, sort = TRUE) %>%
+  filter(n >= 5) %>%
+  filter(!word %in% c("severance", "season", "appleTV", "apple", "tv", "show", "finale", "episode"))
+
+wordcloud2(wordcloud_filtered_s2, size = 1.5, color = "random-light", backgroundColor = "black")
+```
+
+## Part II - TF-IDF
+
+Q: Challenge per document, not informative. So perhaps season makes more sense?
+
+```{r}
+tf_idf <- tokens %>%
+  count(id, word, sort = TRUE) %>%      
+  bind_tf_idf(word, id, n) %>%    
+  arrange(desc(tf_idf)) #Sort by TF-IDF weight
+```
+
+## Part III - Sentiment Analysis
+
+#### Polarity with Sentiment R (Valence Sifters Capability)
+
+```{r}
+
+# Compute sentiment per row/case
+sentiment_scores <- sentiment_by(comments$comments)
+
+# Add scores and labels to original dataset
+polarity <- comments %>%
+  mutate(score = sentiment_scores$ave_sentiment,
+         sentiment_label = case_when(
+           score > 0.1  ~ "positive",
+           score < -0.1 ~ "negative",
+           TRUE         ~ "neutral"
+         ))
+
+# Check first rows with results
+head(polarity)
+
+# Scores per label
+table(polarity$sentiment_label)
+
+# Visualize
+ggplot(polarity, aes(x = score)) +
+  geom_histogram(binwidth = 0.1, fill = "skyblue", color = "white") +
+  theme_minimal() +
+  labs(title = "Sentiment Score Distribution", x = "Average Sentiment", y = "Count")
+
+# Extract season info (s1, s2) into a new column
+polarity_seasons <- mutate(polarity,
+                           season = str_extract(id, "s\\d+"))
+
+# Histogram comparison by season
+ggplot(polarity_seasons, aes(x = score, fill = season)) +
+  geom_histogram(binwidth = 0.1, position = "dodge", color = "white") +
+  theme_minimal() +
+  labs(title = "Sentiment Score Distribution by Season", 
+       x = "Average Sentiment", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
+
+# Save results
+write_csv(polarity, "output/polarity_results.csv")
+```
+
+#### Emotion Detection with Syuzhet's NRC Lexicon
+
+```{r}
+#Set emotion analysis by sentence
+sentences <- get_sentences(comments$comments)
+
+#Compute NRC sentiment per sentence
+emotion_score <- get_nrc_sentiment(sentences)
+
+#Summary Outout for each emotion
+summary(emotion_score)
+
+#Grouping so ID to match sentences to their original row
+comments$comments <- sentences
+emotion_data <- bind_cols(comments, emotion_score)
+
+#Summarize counts for each emotion
+emotion_summary <- emotion_data %>%
+  select(anger:trust) %>%                 # only emotion columns
+  summarise(across(everything(), sum)) %>% 
+  pivot_longer(cols = everything(), names_to = "emotion", values_to = "count") %>%
+  arrange(desc(count))    # sort by count
+
+# Plot overall emotion
+ggplot(emotion_summary, aes(x = emotion, y = count, fill = emotion)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = count), 
+            hjust = -0.2,   # position slightly outside the bar
+            size = 2) +     # font size
+  scale_fill_manual(values = brewer.pal(10, "Paired")) + # we need more than 8 colors
+  theme_minimal(base_size = 12) +
+  labs(title = "Overall Emotion Distribution",
+       x = "Emotion",
+       y = "Total Count") +
+  coord_flip()
+
+# Summary by season
+# Create season column
+emotion_seasons <- emotion_data %>%
+  mutate(season = ifelse(grepl("^s1_", id), "s1",
+                  ifelse(grepl("^s2_", id), "s2", NA)))
+
+# Summarize emotions per season
+emotion_by_season <- emotion_seasons %>%
+  group_by(season) %>%
+  summarise(across(anger:positive, sum, na.rm = TRUE))
+
+emotion_by_season
+
+# Convert to long format for plotting
+emotion_long <- emotion_by_season %>%
+  pivot_longer(
+    cols = anger:positive,
+    names_to = "emotion",
+    values_to = "count"
+  )
+
+# Plot horizontal bars to compare seasons
+ggplot(emotion_long, 
+       aes(x = reorder(emotion, -count), y = count, fill = season)) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = count), 
+            hjust = -0.2,   # position slightly outside the bar
+            size = 2) +     # font size
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Emotion Distribution by Season", 
+    x = "Emotion", 
+    y = "Total Count",
+    fill = "Season"
+  ) +
+  coord_flip()
+
+# Co-occurence Heatmap 
+emotion_matrix <- emotion_data %>%
+  select(anger:trust)  # keeping only emotion columns; removing positive and negative
+
+# Compute co-occurrence matrix
+co_occurrence <- cor(emotion_matrix, method = "pearson")  # values from -1 to 1
+
+# Remove diagonal color
+diag(co_occurrence) <- NA
+
+# Convert to long format for ggplot
+co_occurrence_long <- as.data.frame(as.table(co_occurrence))
+colnames(co_occurrence_long) <- c("emotion1", "emotion2", "correlation")
+
+# Plot heatmap
+ggplot(co_occurrence_long, aes(x = emotion1, y = emotion2, fill = correlation)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(mid = "white", high = "red", midpoint = 0,
+                       limits = c(0,1), na.value = "grey95", name = "Correlation") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Emotion Co-occurrence Heatmap",
+       x = "Emotion",
+       y = "Emotion")
+  
+# Save results
+write_csv(emotion_data, "output/sentiment_emotion_results.csv")
+```
