@@ -33,31 +33,30 @@ website:
     contents:
       - href: index.qmd
         text: Home
-      - title: Text Preprocessing
+      - section: "Text Preprocessing"
         contents:
-        - href: chapters/1.Preprocessing/01_introduction.qmd
-          text: Introduction to Text Preprocessing
-        - href: chapters/1.Preprocessing/02_normalization.qmd
-          text: Normalization & Noise Reduction
-        - href: chapters/1.Preprocessing/03_tokenization.qmd
-          text: Word Tokenization
-        - href: chapters/1.Preprocessing/04_stopwords.qmd
-          text: Stop Words Removal
-        - href: chapters/1.Preprocessing/05_lemmatization.qmd
-          text: Lemmatization
-        - href: chapters/1.Preprocessing/06_conclusion.qmd
-          text: Conclusion
-      - title: Text Analysis
+          - href: chapters/1.Preprocessing/01_introduction.qmd
+            text: Introduction to Text Preprocessing
+          - href: chapters/1.Preprocessing/02_normalization.qmd
+            text: Normalization & Noise Reduction
+          - href: chapters/1.Preprocessing/03_tokenization.qmd
+            text: Word Tokenization
+          - href: chapters/1.Preprocessing/04_stopwords.qmd
+            text: Stop Words Removal
+          - href: chapters/1.Preprocessing/05_lemmatization.qmd
+            text: Lemmatization
+          - href: chapters/1.Preprocessing/06_conclusion.qmd
+            text: Conclusion
+      - section: "Text Analysis"
         contents:
-        - href: chapters/2.TextAnalysis/introduction.qmd
-          text: Text Analysis
-        - href: chapters/2.TextAnalysis/common_processes.qmd
-          text: Common Text Analysis Processes
-        - href: chapters/2.TextAnalysis/corpus_analysis.qmd
-          text: Corpus-level Analysis
-        - href: chapters/2.TextAnalysis/frequency_analysis.qmd
-          text: Frequency Analysis
-
+          - href: chapters/2.TextAnalysis/introduction.qmd
+            text: Text Analysis
+          - href: chapters/2.TextAnalysis/common_processes.qmd
+            text: Common Text Analysis Processes
+          - href: chapters/2.TextAnalysis/corpus_analysis.qmd
+            text: Corpus-level Analysis
+          - href: chapters/2.TextAnalysis/frequency_analysis.qmd
+            text: Frequency Analysis
       - about.qmd
 
   page-footer:
@@ -78,5 +77,4 @@ format:
     code-line-numbers: false
     code-fold: false
     code-tools: true
-
 
