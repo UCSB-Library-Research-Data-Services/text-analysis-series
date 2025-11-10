@@ -1,0 +1,30 @@
+---
+title: "Emotion Detection"
+editor: visual
+---
+
+Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.
+
+We will use the `syuzhet` package ([more info](https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html)) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.
+
+The `syuzhet` package implements the [National Research Council Canada (NRC) Emotion Lexicon](https://nrc-publications.canada.ca/eng/view/ft/?id=0b6a5b58-a656-49d3-ab3e-252050a7a88c) which maps words to basic emotions, in addition to polarity scores, allowing for fine-grained emotion scoring at the word, sentence, or document level.
+
+This framework uses eight categories of emotions based on Robert Plutchik's theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.
+
+![Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., & Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. *Mathematical Problems in Engineering*, *2021*(1), 6695913. <https://doi.org/10.1155/2021/6695913>](images/emotion_wheel.jpg){fig-align="center" width="376"}
+
+The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.
+
+Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.
+
+You may explore NRC's lexicon Tableau dashboard to explore words associated with each emotion category:
+
+```{=html}
+<iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&:loadOrderID=0&:display_count=no&:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
+```
+Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data:
+
+``` r
+```
+
+You might be wondering: if the **`syuzhet`** package also computes polarity, why did we choose **`sentimentr`** in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because **`sentimentr`** adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.
