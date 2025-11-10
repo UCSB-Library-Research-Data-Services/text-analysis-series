@@ -11,7 +11,6 @@ Required Packages
 install.packages("RColorBrewer")  #Part I
 install.packages("tidyverse") #Parts I and II
 install.packages("tidytext") #Part II
-install.packages("wordcloud")  #Part I
 install.packages("wordcloud2")  #Part I
 install.packages("sentimentr") #Part III
 install.packages("syuzhet") #Part III
@@ -25,7 +24,6 @@ library(RColorBrewer)
 library(stringr)
 library(tidytext)
 library(tidyverse)
-library(wordcloud) 
 library(wordcloud2) 
 library(sentimentr)
 library(syuzhet)
@@ -35,7 +33,7 @@ library(syuzhet)
 
 ```{r}
 #Load Data
-comments <- readr::read_csv("./data/comments_preprocessed.csv")
+comments <- readr::read_csv("../data/clean/comments_preprocessed.csv")
 
 #Check first rows
 head(comments)
@@ -54,6 +52,26 @@ tokens <- comments %>%
 ngrams <- comments %>%
   unnest_tokens(ngrams, comments, token = "ngrams", n = 2) #bigrams 
 
+ngrams
+```
+
+```{r}
+# We can create a very primitive predictor using ngrams
+next_word <- function(word, ngrams_df) {
+    matches <- ngrams_df %>%
+        separate(ngrams, into = c("w1", "w2"), sep = " ", remove = FALSE) %>%
+        filter(w1 == word) %>%
+        pull(w2)
+    freq <- table(matches)
+    nw <- max(freq)
+    return(names(freq[freq == nw]))
+}
+```
+
+```{r}
+type_any_word = "show"
+
+next_word(type_any_word, ngrams)
 ```
 
 #### 1.2 Count frequencies
@@ -123,10 +141,32 @@ wordcloud2(wordcloud_filtered_s2, size = 1.5, color = "random-light", background
 Q: Challenge per document, not informative. So perhaps season makes more sense?
 
 ```{r}
-tf_idf <- tokens %>%
-  count(id, word, sort = TRUE) %>%      
-  bind_tf_idf(word, id, n) %>%    
-  arrange(desc(tf_idf)) #Sort by TF-IDF weight
+tweets_tfidf <- comments %>%
+  mutate(season = str_extract(id, "s[12]")) %>%
+  unnest_tokens(word, comments) %>%
+  filter(!word %in% stop_words$word) %>%
+  count(season, word, sort = TRUE) %>%
+  bind_tf_idf(word, season, n)
+
+tweets_tfidf %>%
+  group_by(season) %>%
+  slice_max(tf_idf, n = 10)
+```
+
+```{r}
+library(ggplot2)
+
+top_words <- tweets_tfidf %>%
+  group_by(season) %>%
+  slice_max(tf_idf, n = 15) %>%
+  ungroup() %>%
+  mutate(word = reorder_within(word, tf_idf, season))
+
+ggplot(top_words, aes(tf_idf, word, fill = season)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~season, scales = "free") +
+  scale_y_reordered() +
+  labs(x = "tf-idf", y = NULL, title = "Distinctive Vocabulary by Season")
 ```
 
 ## Part III - Sentiment Analysis
@@ -177,7 +217,22 @@ write_csv(polarity, "output/polarity_results.csv")
 
 #### Emotion Detection with Syuzhet's NRC Lexicon
 
-```{r}
+```{distance_matrix <- as.dist(1 - similarity_matrix)}
+
+# hierarchical clustering
+hc <- hclust(distance_matrix, method = "ward.D2")
+
+clusters <- cutree(hc, k = 5)
+
+clustered_docs <- tibble(
+    id = doc_ids,
+    cluster = clusters
+)
+
+tf_idf_clustered <- tf_idf %>%
+    left_join(clustered_docs, by = 'id')
+
+tf_idf_clustered{r}
 #Set emotion analysis by sentence
 sentences <- get_sentences(comments$comments)
 
