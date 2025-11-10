@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Text Analysis with R – Introduction to Text Analysis in R</title>
+<title>Emotion Detection – Introduction to Text Analysis in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,24 +58,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-371b621e789abf898c0beaf5261a5e49.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -104,7 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="./_static/adapt-meds-website-styles.scss">
+<link rel="stylesheet" href="../../_static/adapt-meds-website-styles.scss">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -114,14 +114,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Introduction to Text Analysis in R</span>
     </a>
   </div>
         <div class="quarto-navbar-tools tools-end">
-    <a href="./about.html" title="About RDS" class="quarto-navigation-tool px-1" aria-label="About RDS"><i class="bi bi-"></i></a>
+    <a href="../../about.html" title="About RDS" class="quarto-navigation-tool px-1" aria-label="About RDS"><i class="bi bi-"></i></a>
     <div class="dropdown">
       <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/3.SentimentAnalysis/introduction.html">Sentiment Analysis</a></li><li class="breadcrumb-item"><a href="../../chapters/3.SentimentAnalysis/emotion.html">Emotion Detection</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -157,14 +157,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="./index.html" class="sidebar-logo-link">
+      <a href="../../index.html" class="sidebar-logo-link">
       </a>
       </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -179,37 +179,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/01_introduction.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/01_introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction to Text Preprocessing</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/02_normalization.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/02_normalization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Normalization &amp; Noise Reduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/03_tokenization.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/03_tokenization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Word Tokenization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/04_stopwords.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/04_stopwords.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Stop Words Removal</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/05_lemmatization.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/05_lemmatization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Lemmatization</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/1.Preprocessing/06_conclusion.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/1.Preprocessing/06_conclusion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conclusion</span></a>
   </div>
 </li>
@@ -226,25 +226,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/2.TextAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Text Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/2.TextAnalysis/common_processes.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/2.TextAnalysis/common_processes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Common Text Analysis Processes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/2.TextAnalysis/corpus_analysis.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/2.TextAnalysis/corpus_analysis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Corpus-level Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/2.TextAnalysis/frequency_analysis.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/2.TextAnalysis/frequency_analysis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Frequency Analysis</span></a>
   </div>
 </li>
@@ -252,34 +252,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Sentiment Analysis</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/3.SentimentAnalysis/introduction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction to Sentiment Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/3.SentimentAnalysis/polarity.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/3.SentimentAnalysis/polarity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Polarity Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/3.SentimentAnalysis/polarity.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/3.SentimentAnalysis/polarity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Polarity Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./chapters/3.SentimentAnalysis/emotion.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/3.SentimentAnalysis/emotion.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Emotion Detection</span></a>
   </div>
 </li>
@@ -287,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./about.html" class="sidebar-item-text sidebar-link">
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About RDS</span></a>
   </div>
 </li>
@@ -296,31 +296,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#summary-and-setup" id="toc-summary-and-setup" class="nav-link active" data-scroll-target="#summary-and-setup">Summary and Setup</a>
-  <ul class="collapse">
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#access-to-data" id="toc-access-to-data" class="nav-link" data-scroll-target="#access-to-data">Access to Data</a></li>
-  <li><a href="#r-skill-level" id="toc-r-skill-level" class="nav-link" data-scroll-target="#r-skill-level">R Skill Level</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/3.SentimentAnalysis/introduction.html">Sentiment Analysis</a></li><li class="breadcrumb-item"><a href="../../chapters/3.SentimentAnalysis/emotion.html">Emotion Detection</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Text Analysis with R</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Emotion Detection</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
 
-<div class="quarto-title-meta column-body">
+<div class="quarto-title-meta column-page-right">
 
     
   
@@ -332,70 +321,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="summary-and-setup" class="level1">
-<h1>Summary and Setup</h1>
-<p><strong>Authors:</strong> Renata Curty <a href="https://orcid.org/0000-0002-4615-6030" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a> and Jairo Melo <a href="https://orcid.org/0000-0002-2020-1163" target="_blank"><img src="https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16&amp;ssl=1"></a><br>
-</p>
-<p>This three-part, hands-on workshop series introduces participants to the fundamentals of extracting insights from textual data using R. In <strong>Part 1: Text Preprocessing</strong>, we focus on cleaning and preparing text for analysis through normalization, noise reduction, stopword removal, tokenization, and lemmatization. <strong>Part 2</strong> will delve into core text analysis techniques, including word frequencies, collocations, n-grams, and visualizations such as word clouds. Finally, <strong>Part 3</strong> will explore <strong>sentiment analysis</strong>, applying polarity scoring and emotion detection methods. Throughout the series, we’ll also highlight important caveats and best practices unique to working with textual data.</p>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<p>These lessons are hands-on and are designed to be followed with <strong>R</strong> and <strong>RStudio</strong> open. Before starting, please ensure you have the following software installed:</p>
-<ul>
-<li><strong>R</strong>: We recommend R version 4.3 or newer. Download from <a href="https://cran.r-project.org/" target="_blank">CRAN</a>.</li>
-<li><strong>RStudio</strong>: We recommend RStudio version 2023.12 or newer. Download from <a href="https://posit.co/download/rstudio-desktop/" target="_blank">Posit’s website</a>.</li>
-</ul>
-<div class="callout callout-style-default callout-note callout-titled" title="How to update R and RStudio">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.</p>
+<p>We will use the <code>syuzhet</code> package (<a href="https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html">more info</a>) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.</p>
+<p>The <code>syuzhet</code> package implements the <a href="https://nrc-publications.canada.ca/eng/view/ft/?id=0b6a5b58-a656-49d3-ab3e-252050a7a88c">National Research Council Canada (NRC) Emotion Lexicon</a> which maps words to basic emotions, in addition to polarity scores, allowing for fine-grained emotion scoring at the word, sentence, or document level.</p>
+<p>This framework uses eight categories of emotions based on Robert Plutchik’s theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/emotion_wheel.jpg" class="img-fluid figure-img" width="376"></p>
+<figcaption>Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. <em>Mathematical Problems in Engineering</em>, <em>2021</em>(1), 6695913. <a href="https://doi.org/10.1155/2021/6695913" class="uri">https://doi.org/10.1155/2021/6695913</a></figcaption>
+</figure>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>How to update R and RStudio
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><strong>Check your versions</strong></p>
-<ul>
-<li><strong>RStudio</strong>:
-<ul>
-<li>On Mac: Go to <code>RStudio</code> -&gt; <code>About RStudio</code>.</li>
-<li>On Windows: Go to <code>Help</code> -&gt; <code>About RStudio</code>.</li>
-</ul></li>
-<li><strong>R</strong>: In the R console, run:</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>R.version.string</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Update R</strong></p>
-<ol type="1">
-<li>Go to <a href="https://cran.r-project.org/" target="_blank">CRAN</a> and download the latest version for your operating system.</li>
-<li>Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)</li>
-</ol>
-<p><strong>Update RStudio</strong></p>
-<ol type="1">
-<li>Go to <a href="https://posit.co/download/rstudio-desktop/" target="_blank">Posit’s download page</a>.</li>
-<li>Download and install the newest version for your operating system.</li>
-</ol>
-<p>That’s it! After updating, restart your computer to make sure RStudio finds the latest R.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="access-to-data" class="level2">
-<h2 class="anchored" data-anchor-id="access-to-data">Access to Data</h2>
-<p>For this lesson we will analyze a dataset of social media posts related to the Apple TV series <em>Severance</em>. The dataset was collected using <a href="https://www.brandwatch.com/" target="_blank">Brandwatch</a> (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</p>
-<p>The R project containing the dataset and other files is available for download from this link: <a href="https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv" target="_blank">Severance Dataset</a>. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</p>
-</section>
-<section id="r-skill-level" class="level2">
-<h2 class="anchored" data-anchor-id="r-skill-level">R Skill Level</h2>
-<p>This level assumes a basic familiarity with <code>R</code> and <code>RStudio</code>. If you are new to R, we recommend you check out the <a href="https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/" target="_blank">Introduction to Data Analysis with R</a>, particularly the <a href="https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html">Introduction to R and RStudio</a> section.</p>
+<p>The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.</p>
+<p>Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.</p>
+<p>You may explore NRC’s lexicon Tableau dashboard to explore words associated with each emotion category:</p>
+<iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&amp;:loadOrderID=0&amp;:display_count=no&amp;:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
+<p>Now that we have a better understanding of this package, let’s get back to business and perform emotion detection to our data:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You might be wondering: if the <strong><code>syuzhet</code></strong> package also computes polarity, why did we choose <strong><code>sentimentr</code></strong> in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because <strong><code>sentimentr</code></strong> adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.</p>
 
 
 <!-- -->
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -850,63 +796,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Text Analysis with R"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Summary and Setup</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>**Authors:** Renata Curty <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-4615-6030"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="dv">&amp;amp;</span><span class="st">ssl=1"</span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span> and Jairo Melo <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://orcid.org/0000-0002-2020-1163"</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://i0.wp.com/info.orcid.org/wp-content/uploads/2021/12/orcid_16x16.gif?resize=16%2C16</span><span class="dv">&amp;amp;</span><span class="st">ssl=1"</span><span class="dt">/&gt;&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span>\</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>This three-part, hands-on workshop series introduces participants to the fundamentals of extracting insights from textual data using R. In **Part 1: Text Preprocessing**, we focus on cleaning and preparing text for analysis through normalization, noise reduction, stopword removal, tokenization, and lemmatization. **Part 2** will delve into core text analysis techniques, including word frequencies, collocations, n-grams, and visualizations such as word clouds. Finally, **Part 3** will explore **sentiment analysis**, applying polarity scoring and emotion detection methods. Throughout the series, we’ll also highlight important caveats and best practices unique to working with textual data.</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prerequisites</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>These lessons are hands-on and are designed to be followed with **R** and **RStudio** open. Before starting, please ensure you have the following software installed:</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**R**: We recommend R version 4.3 or newer. Download from <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target="_blank"}.</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**RStudio**: We recommend RStudio version 2023.12 or newer. Download from <span class="co">[</span><span class="ot">Posit's website</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target="_blank"}.</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Emotion Detection"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`syuzhet`</span> package (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html)</span>) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>The <span class="in">`syuzhet`</span> package implements the <span class="co">[</span><span class="ot">National Research Council Canada (NRC) Emotion Lexicon</span><span class="co">](https://nrc-publications.canada.ca/eng/view/ft/?id=0b6a5b58-a656-49d3-ab3e-252050a7a88c)</span> which maps words to basic emotions, in addition to polarity scores, allowing for fine-grained emotion scoring at the word, sentence, or document level.</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>This framework uses eight categories of emotions based on Robert Plutchik's theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="al">![Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. *Mathematical Problems in Engineering*, *2021*(1), 6695913. &lt;https://doi.org/10.1155/2021/6695913&gt;](images/emotion_wheel.jpg)</span>{fig-align="center" width="376"}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="How to update R and RStudio" collapse="true"}</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>**Check your versions**</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**RStudio**:</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>On Mac: Go to <span class="in">`RStudio`</span> -<span class="sc">\&gt;</span> <span class="in">`About RStudio`</span>.</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>On Windows: Go to <span class="in">`Help`</span> -<span class="sc">\&gt;</span> <span class="in">`About RStudio`</span>.</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**R**: In the R console, run:</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>R.version.string</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>**Update R**</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Go to <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>{target="_blank"} and download the latest version for your operating system.</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Run the installer. (You don’t need to uninstall older versions—R will install alongside them.)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>**Update RStudio**</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Go to <span class="co">[</span><span class="ot">Posit’s download page</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>{target="_blank"}.</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Download and install the newest version for your operating system.</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>That’s it! After updating, restart your computer to make sure RStudio finds the latest R.</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Access to Data</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>For this lesson we will analyze a dataset of social media posts related to the Apple TV series *Severance*. The dataset was collected using <span class="co">[</span><span class="ot">Brandwatch</span><span class="co">](https://www.brandwatch.com/)</span>{target="_blank"} (via UCSB Library subscription), and it includes posts from the two days following the finales of Season 1 (April 2022) and Season 2 (March 2025). The dataset contains over 5,800 posts stored in a CSV file.</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>The R project containing the dataset and other files is available for download from this link: <span class="co">[</span><span class="ot">Severance Dataset</span><span class="co">](https://ucsb.box.com/s/z6buv80wmgqm1wb389o1j6vl9k3ldapv)</span>{target="_blank"}. You will need an active UCSB NetID and password to access the file (the same you use for your UCSB email).</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Skill Level</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>This level assumes a basic familiarity with <span class="in">`R`</span> and <span class="in">`RStudio`</span>. If you are new to R, we recommend you check out the <span class="co">[</span><span class="ot">Introduction to Data Analysis with R</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/)</span>{target="_blank"}, particularly the <span class="co">[</span><span class="ot">Introduction to R and RStudio</span><span class="co">](https://carpentry.library.ucsb.edu/R-ecology-lesson-2024-10-08/introduction-r-rstudio.html)</span> section.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>You may explore NRC's lexicon Tableau dashboard to explore words associated with each emotion category:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&amp;:loadOrderID=0&amp;:display_count=no&amp;:showVizHome=no" title="NRC Lexicon Interactive Visualization"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>You might be wondering: if the **`syuzhet`** package also computes polarity, why did we choose **`sentimentr`** in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because **`sentimentr`** adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><img src="./_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"></p>
+<p><img src="../../_static/images/RDS-logo.png" alt="UCSB Library Research Data Services logo" width="250"></p>
 </div>   
     <div class="nav-footer-center">
 <p>This website is built with <a href="https://quarto.org/">Quarto</a>, <a href="https://posit.co/">RStudio/Posit</a>, and <a href="https://cran.r-project.org/web/packages/webexercises/index.html">webexercises R package</a>. UCSB Library Research Data Services. <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY 4.0</a></p>
