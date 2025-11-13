@@ -43,15 +43,13 @@ $$\text{TF}(t, d) = \frac{\text{count of term } t \text{ in document } d}{\text{
 $$\text{IDF}(t) = \log\left(\frac{\text{total number of documents}}{\text{number of documents containing term } t}\right)$$
 
 A word gets a **high TF-IDF score** when:
+
 - It appears frequently in a particular document (high TF)
 - It appears in few other documents (high IDF)
 
 A word gets a **low TF-IDF score** when:
-- It appears in many documents (low IDF), even if it's frequent in one document
 
-::: {.callout-note title="Why logarithm in IDF?" collapse="true"}
-The logarithm in the IDF calculation dampens the effect of very rare words. Without it, a word that appears in only one document would dominate the scores. The log transformation ensures that the IDF increases more slowly as words become rarer, creating a more balanced weighting system.
-:::
+- It appears in many documents (low IDF), even if it's frequent in one document
 
 ## Calculating TF-IDF
 
@@ -80,6 +78,7 @@ head(comments_tfidf, 15)
 ```
 
 The resulting data frame includes:
+
 - `tf`: Term frequency (proportion of times the word appears in that season)
 - `idf`: Inverse document frequency (how rare the word is across seasons)
 - `tf_idf`: The product of TF and IDF
@@ -140,11 +139,10 @@ top_tfidf_s1 <- comments_tfidf %>%
   arrange(desc(tf_idf)) %>%
   head(15)
 
-# Compare
-cat("=== Top 15 words by frequency (Season 1) ===\n")
+# Top 15 words by frequency (Season 1)
 print(top_freq_s1)
 
-cat("\n=== Top 15 words by TF-IDF (Season 1) ===\n")
+# Top 15 words by TF-IDF (Season 1)
 print(top_tfidf_s1 %>% select(word, n, tf_idf))
 ```
 
