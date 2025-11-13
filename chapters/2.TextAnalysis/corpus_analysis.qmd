@@ -1,0 +1,21 @@
+---
+title: "Basic Text Analysis"
+engine: knitr
+format:
+  html:
+    fig-width: 10
+    fig-height: 12
+    dpi: 300
+editor_options: 
+  chunk_output_type: inline
+---
+
+In this chapter, we will explore some basic techniques for analyzing text data. 
+
+## Word Frequency Analysis
+
+Word frequency analysis is one of the most fundamental techniques in text analysis. It helps us understand which words appear most often in our texts and can reveal important patterns about content, style, and themes.
+
+### Word Counts
+
+We can start by calculating the frequency of each word in our corpus. This involves tokenizing the text into individual words, counting the occurrences of each word, and then sorting them by frequency.
