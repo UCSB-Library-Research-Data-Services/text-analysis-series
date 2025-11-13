@@ -1,5 +1,5 @@
 ---
-title: "Basic Text Analysis"
+title: "Basic word frequencies"
 engine: knitr
 format:
   html:
