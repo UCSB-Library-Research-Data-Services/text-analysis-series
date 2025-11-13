@@ -22,19 +22,16 @@ You may explore NRC's lexicon Tableau dashboard to explore words associated with
 ```{=html}
 <iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&:loadOrderID=0&:display_count=no&:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
 ```
+
 Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data.
 
 #### Emotion Detection with Syuzhet's NRC Lexicon
 
-##### Break Text into Sentences
+##### Detecting Emotions per Comment/Sentence
 
 ``` r
 sentences <- get_sentences(comments$comments)
 ```
-
-The `get_sentences()` function splits your text into individual sentences.
-
-This allows us to analyze emotions at a finer level — rather than by entire comments, we examine each sentence separately. If a comment says: “I love the show. The ending made me sad.” It becomes two sentences.
 
 ##### Compute Emotion Scores per Sentence
 
@@ -42,7 +39,9 @@ This allows us to analyze emotions at a finer level — rather than by entire co
 emotion_score <- get_nrc_sentiment(sentences)
 ```
 
-The `get_nrc_sentiment()` function assigns emotion and sentiment scores (based on the NRC lexicon) to each sentence. Each sentence gets numeric values (0 or 1) for the eight emotions to represent their absence or presence. The output also includes positive and negative sentiment scores.
+The `get_nrc_sentiment()` function assigns emotion and sentiment scores (based on the NRC lexicon) to each sentence. Each sentence gets numeric values (0 or 1) for the eight emotions to represent their absence or presence. The output also includes positive and negative sentiment scores:
+
+![](images/emotions_scores-dataframe.png)
 
 ##### Review Summary of Emotion Scores
 
@@ -52,9 +51,17 @@ Let's now compute basic statistics (min, max, mean, etc.) for each emotion colum
 summary(emotion_score)
 ```
 
-##### Rejoin Sentences
+This step should generate the following output:
 
-After sentence-level analysis, we want to link each emotion score back to its **original comment or ID**.
+![](images/emotion-score.png)
+
+Based on the results the overall emotion in these comments leans heavily toward **sadness**, which scored the highest average (1.236). It looks like **sadness** and **trust** are the most common feelings, since they're the only ones with a median score of 1.000, meaning at least half the comments contained words for them.
+
+On the flip side, **Disgust** was the rarest emotion, with the lowest average (0.145). It's also worth noting that while Sadness and Trust are the most *common*, a few comments really went off the rails with **Trust (47.000), Anger (44.000)**, and **Fear (37.000)**, hitting the highest extreme scores.
+
+##### Regroup with comments and IDs
+
+After computing scores for emotions, we want to link them back to its **original comment and ID**.
 
 ``` r
 comments$comments <- sentences
@@ -79,6 +86,8 @@ emotion_summary <- emotion_data %>%
   arrange(desc(count)) # sort emotions
 ```
 
+![](images/emotion-counts.png){width="194"}
+
 ##### Plot the Overall Emotion Distribution
 
 ``` r
@@ -91,6 +100,8 @@ ggplot(emotion_summary, aes(x = emotion, y = count, fill = emotion)) +
        x = "Emotion", y = "Total Count") +    # Titles and axis labels
   coord_flip()                                # Flip axes for readability
 ```
+
+![](images/barchart-emotions.png)
 
 ##### Add a “Season” Variable (Grouping) and Summarize
 
@@ -105,12 +116,17 @@ emotion_seasons <- emotion_data %>%
 Time to aggregates the total count of each emotion within each season.
 
 ``` r
+# Aggregate emotion counts per season
 emotion_by_season <- emotion_seasons %>%
   group_by(season) %>%
-  summarise(across(anger:positive, sum, na.rm = TRUE))
+  summarise(
+    across(anger:positive, ~sum(., na.rm = TRUE))
+  )
 ```
 
-##### Compare Emotions by Season (Visualization)
+##### Plotting the Data
+
+Comparing emotions by season:
 
 ``` r
 emotion_long <- emotion_by_season %>%
@@ -126,7 +142,7 @@ ggplot(emotion_long, aes(x = reorder(emotion, -count), y = count, fill = season)
   coord_flip()
 ```
 
-##### Plotting the Data
+![](images/plot-emotion-by-season-01.png)
 
 Now, let's explore to see which emotions tend to occur together, revealing patterns of emotional co-occurrence in the text.
 
@@ -162,6 +178,14 @@ ggplot(co_occurrence_long, aes(x = emotion1, y = emotion2, fill = correlation)) 
   )
 ```
 
+After running the script we should get the following heat map:
+
+![](images/emotion-correlation-heatmap.png)
+
+Based on these results, Overall, the emotional picture is pretty interconnected. It looks like the **negative emotions—Sadness, Fear, Anger, and Disgust—are more tightly linked**, meaning when people express one of these, they usually express the others too. In other words, they often show up together in the same comments.
+
+While we've only scratched the surface of this particular dataset, the steps we've completed—from calculating basic sentiment scores to visualizing the co-occurrence of emotions—have demonstrated the **power of sentiment and emotion detection**. You now have the foundational skills to convert unstructured text into actionable data, allowing you to understand the **polarity (positive/negative)** and **specific emotional landscape** of any textual dataset.
+
 ##### Saving our work
 
 After performing all the calculations and visualizations, it’s important to save the results so they can be reused or shared.
@@ -169,7 +193,3 @@ After performing all the calculations and visualizations, it’s important to sa
 ``` r
 write_csv(emotion_data, "output/sentiment_emotion_results.csv")
 ```
-
-#### Final Thoughts
-
-You might be wondering: if the **`syuzhet`** package also computes polarity, why did we choose **`sentimentr`** in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because **`sentimentr`** adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.
