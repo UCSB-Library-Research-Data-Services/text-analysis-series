@@ -23,7 +23,7 @@ Our analysis pipeline will follow a two-step approach. First, we will compute ba
 Let’s start by installing and loading the necessary packages, then bringing in the cleaned dataset so we can begin our sentiment analysis. We will discuss the role of each package in the next episodes.
 
 ``` r
-# Install packages (remove comments for packages you might have skipped)
+# Install packages (remove comments for packages you might have skipped in previous episodes)
 install.packages("sentimentr")
 install.packages("syuzhet")
 # install.packages("dplyr")
