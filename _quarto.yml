@@ -65,6 +65,8 @@ website:
             text: Polarity Classification
           - href: chapters/3.SentimentAnalysis/emotion.qmd
             text: Emotion Detection
+          - href: chapters/3.SentimentAnalysis/considerations.qmd
+            text: Final Considerations
       - about.qmd
 
   page-footer:
