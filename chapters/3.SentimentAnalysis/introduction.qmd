@@ -19,3 +19,17 @@ While the analysis of public opinion predates the Internet, the modern field of 
 Whether through product reviews, political commentary, or social media posts in virtually any possible topic of interest, sentiment analysis aims to quantify and interpret subjective information at scale, enabling applications in marketing, social science, finance, and beyond. In this course, we will explore ways of extracting insights from textual data, in particular how we can detect underlying emotions within messages shared by people on a popular streaming TV series.
 
 Our analysis pipeline will follow a two-step approach. First, we will compute basic sentiment polarity to determine whether viewers who commented on both season finales reacted more negatively, neutrally, or positively. Next, we will apply a more fine-grained emotion detection technique to capture and analyze the specific emotional expressions conveyed in the text.
+
+Let’s start by installing and loading the necessary packages, then bringing in the cleaned dataset so we can begin our sentiment analysis. We will discuss the role of each package in the next episodes.
+
+``` r
+# Install Packages
+install.packages(c("sentimentr", "syuzhet"))
+
+# Load Packages 
+library(sentimentr)
+library(syuzhet)
+
+# Load Data
+comments <- readr::read_csv("../data/clean/comments_preprocessed.csv")
+```
