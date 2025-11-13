@@ -22,9 +22,15 @@ library(tidytext)
 ```
 
 ```{r}
-#| output: false
+#| include: false
+# This is just to render the document correctly in the CI/CD pipeline
+comments <- readr::read_csv("../../data/clean/comments_preprocessed.csv") 
+```
+
+```{r}
+#| eval: false
 # Load the text data
-comments <- readr::read_csv("../../data/clean/comments_preprocessed.csv") # Adjust the path to your data location
+comments <- readr::read_csv("data/clean/comments_preprocessed.csv") # Adjust the path to your data location
 ```
 
 Explore the first few rows of the dataset to understand its structure.
