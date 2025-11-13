@@ -55,9 +55,9 @@ website:
             text: Text Analysis
           - href: chapters/2.TextAnalysis/word_frequencies.qmd
             text: Basic Word Frequencies
-          - href: chapters/2.TextAnalysis/corpus_analysis.qmd
-            text: Corpus-level Analysis
-          - href: chapters/2.TextAnalysis/frequency_analysis.qmd
+          - href: chapters/2.TextAnalysis/ngrams.qmd
+            text: N-grams and Collocations
+          - href: chapters/2.TextAnalysis/tfidf.qmd
             text: Frequency Analysis
       - section: "Sentiment Analysis"
         contents:
