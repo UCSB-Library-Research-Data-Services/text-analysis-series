@@ -271,6 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Emotion Detection</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/3.SentimentAnalysis/considerations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Considerations</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -319,16 +325,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The main polarized word’s sentiment is then adjusted by the surrounding words. Amplifiers make it stronger, de-amplifiers make it weaker, and negators can flip the sentiment. Multiple negators can cancel each other out, like “not unhappy” turning positive.</p>
 <p>Words like “but,” “however,” and “although” also influence the sentiment. Words before these are weighted less, and words after them are weighted more because they signal a shift in meaning. Finally, all the adjusted scores are combined and scaled by the sentence length to give a final sentiment score for the sentence.</p>
 <p>With this approach, we can explore more confidently whether the show’s viewers felt positive, neutral, or negative about it.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="computing-polarity-with-sentiment-r-valence-sifters-capability" class="level4">
+<h4 class="anchored" data-anchor-id="computing-polarity-with-sentiment-r-valence-sifters-capability">Computing Polarity with Sentiment R (Valence Sifters Capability)</h4>
+<section id="calculating-sentiment-scores" class="level5">
+<h5 class="anchored" data-anchor-id="calculating-sentiment-scores">Calculating sentiment scores</h5>
+<p>Here we’re using the <strong><code>sentiment_by()</code></strong> function which looks at each comment and calculates a <strong>sentiment score</strong> representing how positive or negative comments are.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sentiment_scores <span class="ot">&lt;-</span> <span class="fu">sentiment_by</span>(comments<span class="sc">$</span>comments)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/sentiment-scores.png" class="img-fluid figure-img" width="342"></p>
+<figcaption>Sentiment Scores Output</figcaption>
+</figure>
+</div>
+<p>So after running this, we get a new object called <code>sentiment_scores</code> with the average sentiment for every comment. Can you guess why the SD column is empty? A single data point (sentence/row) does not have a standard deviation by itself.</p>
+</section>
+<section id="adding-those-scores-back-to-our-dataset" class="level5">
+<h5 class="anchored" data-anchor-id="adding-those-scores-back-to-our-dataset">Adding those scores back to our dataset</h5>
+<p>Now we’re using the <strong><code>dplyr</code></strong> package to make our dataset more informative. We take our <code>comments</code> dataset, and with <strong><code>mutate()</code></strong>, we add two new columns: <code>score</code> and <code>sentiment label</code>. The little rule inside <strong><code>case_when()</code></strong> decides what label to give. The small buffer around zero (±0.1) helps us avoid overreacting to tiny fluctuations.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>polarity <span class="ot">&lt;-</span> comments <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">score =</span> sentiment_scores<span class="sc">$</span>ave_sentiment,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">sentiment_label =</span> <span class="fu">case_when</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>           score <span class="sc">&gt;</span> <span class="fl">0.1</span>  <span class="sc">~</span> <span class="st">"positive"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>           score <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">0.1</span> <span class="sc">~</span> <span class="st">"negative"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="cn">TRUE</span>         <span class="sc">~</span> <span class="st">"neutral"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Let’s now take a look at the <code>sentiment_scores</code> data frame:</p>
-<p><add output=""></add></p>
-<p>It’s expected that the standard deviation is missing, because each row/case is treated as a single sentence when computing the score. Now, let’s make sure to add these scores and the labels our dataset:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="plotting-things" class="level4">
-<h4 class="anchored" data-anchor-id="plotting-things">Plotting Things</h4>
-<p>Next, let’s plot some results and histograms to check the distribution:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the <em>Severance</em> show.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/polarity-scores.png" class="img-fluid figure-img"></p>
+<figcaption>Sentiment Scores with Polarity Results</figcaption>
+</figure>
+</div>
+<p>To get a sense of the overall mood of our dataset let’s run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(polarity<span class="sc">$</span>sentiment_label)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/overall-polarity-count.png" class="img-fluid figure-img" width="363"></p>
+<figcaption>Overall Polarity Count</figcaption>
+</figure>
+</div>
+<p>Overall, the majority of viewers reacted positively to the show, with positive opinions more than double the negative ones, indicating a generally favorable reception. However, this is only part of the story—positive sentiment can range from mildly favorable to very enthusiastic. To better visualize the full distribution of opinions, a histogram is presented below.</p>
+</section>
+</section>
+<section id="plotting-scores" class="level4">
+<h4 class="anchored" data-anchor-id="plotting-scores">Plotting Scores</h4>
+<p>Next, let’s plot some results and histograms to check the distribution for the scores:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(polarity, <span class="fu">aes</span>(<span class="at">x =</span> score)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Score Distribution"</span>, <span class="at">x =</span> <span class="st">"Average Sentiment"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/histogram-polarity.png" class="img-fluid figure-img" width="529"></p>
+<figcaption>Polarity Distribution</figcaption>
+</figure>
+</div>
+<p>This histogram suggests that the overall sentiment toward the Severance show was <strong>mostly neutral to slightly positive</strong>. This suggests that most viewers are expressing their opinions in a <strong>measured, nuanced, or factual</strong> manner, rather than with intense emotional language (either extremely positive or negative).</p>
+<p>We can also break the data down by season to compare how audience opinions vary over each season finale:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract season info (s1, s2) into a new column</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>polarity_seasons <span class="ot">&lt;-</span> <span class="fu">mutate</span>(polarity,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">season =</span> <span class="fu">str_extract</span>(id, <span class="st">"s</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram comparison by season, using Density</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(polarity_seasons, <span class="fu">aes</span>(<span class="at">x =</span> score, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),  </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="fl">0.1</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position =</span> <span class="st">"dodge"</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Score Distribution by Season (Normalized)"</span>, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Average Sentiment Score (Polarity)"</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Density (Proportion of Comments)"</span>) <span class="sc">+</span> </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="images/histogram-polarity-season-density-01.png" class="img-fluid"></p>
+<p>This plotting approach usind density allows us to directly compare the heights of the bars to determine which season had a <strong>higher proportion</strong> of comments at a specific polarity score, regardless of the total number of comments for that season.</p>
+<p>This result let us infer that there were differences in audience reception and reaction between the two season finales. Overall, the S1 finale resulted in a <strong>strongly positive</strong> audience reaction, while the S2 finale led to a <strong>more mixed, analytical, and critical</strong> conversation, with significantly more proportional negative sentiment than S1.</p>
+</section>
+<section id="saving-things" class="level4">
+<h4 class="anchored" data-anchor-id="saving-things">Saving Things</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.</p>
 <p>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</p>
 
 
@@ -788,56 +866,125 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Polarity Classification"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Polarity classification is a fundamental aspect of sentiment analysis to measure the overall emotional tone expressed in text data which can be categorized as positive, neutral or negative.</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>Most models assign "sentiment scores" with values ranging from -1 to +1 to represent the intensity of the sentiment, being scores closer to -1 considered negative, those closer to 0 neutral and +1 positive.</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/polarity.jpg)</span>{width="424"}</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>We will be using the package <span class="in">`sentimentr`</span> (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/sentimentr/sentimentr.pdf)</span>) to compute polarity classification and attribute sentiment scores to the posts included in our dataset.</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>Traditional sentiment analysis techniques assign polarity by matching words against dictionaries labeled as “positive,” “negative,” or “neutral.” While straightforward, this approach is overly simplistic: it ignores context and flattens the richness of our syntactically complex, lexically nuanced language, that transcends individual words. The <span class="in">`sentimentr`</span> package extends lexicon-based methods by accounting for *valence shifters*; words that subtly alter sentiment.</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>The package includes 130 valence shifters that can reverse or modulate the sentiment indicated by standard dictionaries. These fall into four main categories: negators (e.g., not, can’t), amplifiers (e.g., very, really, absolutely, totally, certainly), de-amplifiers or down-toners (e.g., barely, hardly, rarely, almost), and adversative conjunctions (e.g., although, however, but, yet, that being said). This refinement is important because simple dictionary lookups miss the nuanced meaning.</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>In summary, each word in a sentence is checked against a dictionary of positive and negative words, like the Jockers dictionary in the lexicon package. Words that are positive get a +1, and words that are negative get a -1, which are called polarized words. Around each polarized word, we look at the nearby words (usually four before and two after) to see if they change the strength or direction of the sentiment. This group of words is called a polarized context cluster. Words in the cluster can be neutral, negators (like "not"), amplifiers (like "very"), or de-amplifiers (like "slightly"). Neutral words don’t affect the sentiment but still count toward the total word count.</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>The main polarized word’s sentiment is then adjusted by the surrounding words. Amplifiers make it stronger, de-amplifiers make it weaker, and negators can flip the sentiment. Multiple negators can cancel each other out, like “not unhappy” turning positive.</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>Words like “but,” “however,” and “although” also influence the sentiment. Words before these are weighted less, and words after them are weighted more because they signal a shift in meaning. Finally, all the adjusted scores are combined and scaled by the sentence length to give a final sentiment score for the sentence.</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>With this approach, we can explore more confidently whether the show’s viewers felt positive, neutral, or negative about it.</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>Let's now take a look at the <span class="in">`sentiment_scores`</span> data frame:</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">add</span><span class="ot"> output</span><span class="dt">&gt;</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>It’s expected that the standard deviation is missing, because each row/case is treated as a single sentence when computing the score. Now, let's make sure to add these scores and the labels our dataset:</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Plotting Things</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>Next, let's plot some results and histograms to check the distribution:</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the *Severance* show.</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Polarity Classification"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>Polarity classification is a fundamental aspect of sentiment analysis to measure the overall emotional tone expressed in text data which can be categorized as positive, neutral or negative.</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>Most models assign "sentiment scores" with values ranging from -1 to +1 to represent the intensity of the sentiment, being scores closer to -1 considered negative, those closer to 0 neutral and +1 positive.</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/polarity.jpg)</span>{width="424"}</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>We will be using the package <span class="in">`sentimentr`</span> (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/sentimentr/sentimentr.pdf)</span>) to compute polarity classification and attribute sentiment scores to the posts included in our dataset.</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>Traditional sentiment analysis techniques assign polarity by matching words against dictionaries labeled as “positive,” “negative,” or “neutral.” While straightforward, this approach is overly simplistic: it ignores context and flattens the richness of our syntactically complex, lexically nuanced language, that transcends individual words. The <span class="in">`sentimentr`</span> package extends lexicon-based methods by accounting for *valence shifters*; words that subtly alter sentiment.</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>The package includes 130 valence shifters that can reverse or modulate the sentiment indicated by standard dictionaries. These fall into four main categories: negators (e.g., not, can’t), amplifiers (e.g., very, really, absolutely, totally, certainly), de-amplifiers or down-toners (e.g., barely, hardly, rarely, almost), and adversative conjunctions (e.g., although, however, but, yet, that being said). This refinement is important because simple dictionary lookups miss the nuanced meaning.</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>In summary, each word in a sentence is checked against a dictionary of positive and negative words, like the Jockers dictionary in the lexicon package. Words that are positive get a +1, and words that are negative get a -1, which are called polarized words. Around each polarized word, we look at the nearby words (usually four before and two after) to see if they change the strength or direction of the sentiment. This group of words is called a polarized context cluster. Words in the cluster can be neutral, negators (like "not"), amplifiers (like "very"), or de-amplifiers (like "slightly"). Neutral words don’t affect the sentiment but still count toward the total word count.</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>The main polarized word’s sentiment is then adjusted by the surrounding words. Amplifiers make it stronger, de-amplifiers make it weaker, and negators can flip the sentiment. Multiple negators can cancel each other out, like “not unhappy” turning positive.</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>Words like “but,” “however,” and “although” also influence the sentiment. Words before these are weighted less, and words after them are weighted more because they signal a shift in meaning. Finally, all the adjusted scores are combined and scaled by the sentence length to give a final sentiment score for the sentence.</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>With this approach, we can explore more confidently whether the show’s viewers felt positive, neutral, or negative about it.</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Computing Polarity with Sentiment R (Valence Sifters Capability)</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Calculating sentiment scores</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>Here we’re using the **`sentiment_by()`** function which looks at each comment and calculates a **sentiment score** representing how positive or negative comments are.</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>sentiment_scores <span class="ot">&lt;-</span> <span class="fu">sentiment_by</span>(comments<span class="sc">$</span>comments)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="al">![Sentiment Scores Output](images/sentiment-scores.png)</span>{width="342"}</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>So after running this, we get a new object called <span class="in">`sentiment_scores`</span> with the average sentiment for every comment. Can you guess why the SD column is empty? A single data point (sentence/row) does not have a standard deviation by itself.</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Adding those scores back to our dataset</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>Now we’re using the **`dplyr`** package to make our dataset more informative. We take our `comments` dataset, and with **`mutate()`**, we add two new columns: `score` and `sentiment label`. The little rule inside **`case_when()`** decides what label to give. The small buffer around zero (±0.1) helps us avoid overreacting to tiny fluctuations.</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>polarity <span class="ot">&lt;-</span> comments <span class="sc">%&gt;%</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">score =</span> sentiment_scores<span class="sc">$</span>ave_sentiment,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>         <span class="at">sentiment_label =</span> <span class="fu">case_when</span>(</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>           score <span class="sc">&gt;</span> <span class="fl">0.1</span>  <span class="sc">~</span> <span class="st">"positive"</span>,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>           score <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">0.1</span> <span class="sc">~</span> <span class="st">"negative"</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>           <span class="cn">TRUE</span>         <span class="sc">~</span> <span class="st">"neutral"</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>         ))</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>Let's now take a look at the <span class="in">`sentiment_scores`</span> data frame:</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="al">![Sentiment Scores with Polarity Results](images/polarity-scores.png)</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>To get a sense of the overall mood of our dataset let's run:</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(polarity<span class="sc">$</span>sentiment_label)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="al">![Overall Polarity Count](images/overall-polarity-count.png)</span>{width="363"}</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>Overall, the majority of viewers reacted positively to the show, with positive opinions more than double the negative ones, indicating a generally favorable reception. However, this is only part of the story—positive sentiment can range from mildly favorable to very enthusiastic. To better visualize the full distribution of opinions, a histogram is presented below.</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Plotting Scores</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>Next, let's plot some results and histograms to check the distribution for the scores:</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(polarity, <span class="fu">aes</span>(<span class="at">x =</span> score)) <span class="sc">+</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Score Distribution"</span>, <span class="at">x =</span> <span class="st">"Average Sentiment"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="al">![Polarity Distribution](images/histogram-polarity.png)</span>{width="529"}</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>This histogram suggests that the overall sentiment toward the Severance show was **mostly neutral to slightly positive**. This suggests that most viewers are expressing their opinions in a **measured, nuanced, or factual** manner, rather than with intense emotional language (either extremely positive or negative).</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>We can also break the data down by season to compare how audience opinions vary over each season finale:</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract season info (s1, s2) into a new column</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>polarity_seasons <span class="ot">&lt;-</span> <span class="fu">mutate</span>(polarity,</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>                           <span class="at">season =</span> <span class="fu">str_extract</span>(id, <span class="st">"s</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram comparison by season, using Density</span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(polarity_seasons, <span class="fu">aes</span>(<span class="at">x =</span> score, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),  </span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="fl">0.1</span>, </span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position =</span> <span class="st">"dodge"</span>, </span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Score Distribution by Season (Normalized)"</span>, </span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Average Sentiment Score (Polarity)"</span>, </span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Density (Proportion of Comments)"</span>) <span class="sc">+</span> </span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/histogram-polarity-season-density-01.png)</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>This plotting approach usind density allows us to directly compare the heights of the bars to determine which season had a **higher proportion** of comments at a specific polarity score, regardless of the total number of comments for that season.</span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>This result let us infer that there were differences in audience reception and reaction between the two season finales. Overall, the S1 finale resulted in a **strongly positive** audience reaction, while the S2 finale led to a **more mixed, analytical, and critical** conversation, with significantly more proportional negative sentiment than S1.</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Saving Things</span></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.</span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

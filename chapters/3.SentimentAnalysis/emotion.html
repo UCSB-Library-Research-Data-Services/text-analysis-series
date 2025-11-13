@@ -271,6 +271,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Emotion Detection</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/3.SentimentAnalysis/considerations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Considerations</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -316,20 +322,142 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/emotion_wheel.jpg" class="img-fluid figure-img" width="376"></p>
-<figcaption>Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. <em>Mathematical Problems in Engineering</em>, <em>2021</em>(1), 6695913. <a href="https://doi.org/10.1155/2021/6695913" class="uri">https://doi.org/10.1155/2021/6695913</a></figcaption>
+<figcaption>Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. Mathematical Problems in Engineering, 2021(1), 6695913. https://doi.org/10.1155/2021/6695913</figcaption>
 </figure>
 </div>
 <p>The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.</p>
 <p>Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.</p>
 <p>You may explore NRC’s lexicon Tableau dashboard to explore words associated with each emotion category:</p>
 <iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&amp;:loadOrderID=0&amp;:display_count=no&amp;:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
-<p>Now that we have a better understanding of this package, let’s get back to business and perform emotion detection to our data:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You might be wondering: if the <strong><code>syuzhet</code></strong> package also computes polarity, why did we choose <strong><code>sentimentr</code></strong> in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because <strong><code>sentimentr</code></strong> adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.</p>
+<p>Now that we have a better understanding of this package, let’s get back to business and perform emotion detection to our data.</p>
+<section id="emotion-detection-with-syuzhets-nrc-lexicon" class="level4">
+<h4 class="anchored" data-anchor-id="emotion-detection-with-syuzhets-nrc-lexicon">Emotion Detection with Syuzhet’s NRC Lexicon</h4>
+<section id="detecting-emotions-per-commentsentence" class="level5">
+<h5 class="anchored" data-anchor-id="detecting-emotions-per-commentsentence">Detecting Emotions per Comment/Sentence</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sentences <span class="ot">&lt;-</span> <span class="fu">get_sentences</span>(comments<span class="sc">$</span>comments)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="compute-emotion-scores-per-sentence" class="level5">
+<h5 class="anchored" data-anchor-id="compute-emotion-scores-per-sentence">Compute Emotion Scores per Sentence</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>emotion_score <span class="ot">&lt;-</span> <span class="fu">get_nrc_sentiment</span>(sentences)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>get_nrc_sentiment()</code> function assigns emotion and sentiment scores (based on the NRC lexicon) to each sentence. Each sentence gets numeric values (0 or 1) for the eight emotions to represent their absence or presence. The output also includes positive and negative sentiment scores:</p>
+<p><img src="images/emotions_scores-dataframe.png" class="img-fluid"></p>
+</section>
+<section id="review-summary-of-emotion-scores" class="level5">
+<h5 class="anchored" data-anchor-id="review-summary-of-emotion-scores">Review Summary of Emotion Scores</h5>
+<p>Let’s now compute basic statistics (min, max, mean, etc.) for each emotion column and get an overview of how frequent or strong each emotion is on our example dataset.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(emotion_score)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This step should generate the following output:</p>
+<p><img src="images/emotion-score.png" class="img-fluid"></p>
+<p>Based on the results the overall emotion in these comments leans heavily toward <strong>sadness</strong>, which scored the highest average (1.236). It looks like <strong>sadness</strong> and <strong>trust</strong> are the most common feelings, since they’re the only ones with a median score of 1.000, meaning at least half the comments contained words for them.</p>
+<p>On the flip side, <strong>Disgust</strong> was the rarest emotion, with the lowest average (0.145). It’s also worth noting that while Sadness and Trust are the most <em>common</em>, a few comments really went off the rails with <strong>Trust (47.000), Anger (44.000)</strong>, and <strong>Fear (37.000)</strong>, hitting the highest extreme scores.</p>
+</section>
+<section id="regroup-with-comments-and-ids" class="level5">
+<h5 class="anchored" data-anchor-id="regroup-with-comments-and-ids">Regroup with comments and IDs</h5>
+<p>After computing scores for emotions, we want to link them back to its <strong>original comment and ID</strong>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>comments<span class="sc">$</span>comments <span class="ot">&lt;-</span> sentences</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>emotion_data <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(comments, emotion_score)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>bind_cols()</code> merges the original <code>comments</code> data frame with the new <code>emotion_score</code> table.</p>
+</section>
+<section id="summarize-emotion-counts-across-all-sentences" class="level5">
+<h5 class="anchored" data-anchor-id="summarize-emotion-counts-across-all-sentences">Summarize Emotion Counts Across All Sentences</h5>
+<p>Now, let’s count <strong>how many times each emotion appears</strong> overall.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>emotion_summary <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(anger<span class="sc">:</span>trust) <span class="sc">%&gt;%</span> <span class="co"># get only the emotion columns</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), sum)) <span class="sc">%&gt;%</span> <span class="co"># sum counts </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">everything</span>(), </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"emotion"</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> <span class="co"># long format for easy plotting</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="co"># sort emotions</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="images/emotion-counts.png" class="img-fluid" width="194"></p>
+</section>
+<section id="plot-the-overall-emotion-distribution" class="level5">
+<h5 class="anchored" data-anchor-id="plot-the-overall-emotion-distribution">Plot the Overall Emotion Distribution</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(emotion_summary, <span class="fu">aes</span>(<span class="at">x =</span> emotion, <span class="at">y =</span> count, <span class="at">fill =</span> emotion)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>              <span class="co"># Bar plot for emotion counts</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> count), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Add count labels</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">"Paired"</span>)) <span class="sc">+</span>   <span class="co"># Color palette</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span>             <span class="co"># Clean theme</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Overall Emotion Distribution"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Emotion"</span>, <span class="at">y =</span> <span class="st">"Total Count"</span>) <span class="sc">+</span>    <span class="co"># Titles and axis labels</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()                                <span class="co"># Flip axes for readability</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="images/barchart-emotions.png" class="img-fluid"></p>
+</section>
+<section id="add-a-season-variable-grouping-and-summarize" class="level5">
+<h5 class="anchored" data-anchor-id="add-a-season-variable-grouping-and-summarize">Add a “Season” Variable (Grouping) and Summarize</h5>
+<p>Let’s now add a new column called <code>season</code> by looking at the ID pattern — for example, <code>s1_</code> means season 1 and <code>s2_</code> means season 2. This makes it easy to compare the emotional tone across seasons.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emotion_seasons <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^s1_"</span>, id), <span class="st">"s1"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^s2_"</span>, id), <span class="st">"s2"</span>, <span class="cn">NA</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Time to aggregates the total count of each emotion within each season.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate emotion counts per season</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>emotion_by_season <span class="ot">&lt;-</span> emotion_seasons <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(anger<span class="sc">:</span>positive, <span class="sc">~</span><span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="plotting-the-data" class="level5">
+<h5 class="anchored" data-anchor-id="plotting-the-data">Plotting the Data</h5>
+<p>Comparing emotions by season:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>emotion_long <span class="ot">&lt;-</span> emotion_by_season <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> anger<span class="sc">:</span>positive, <span class="at">names_to =</span> <span class="st">"emotion"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(emotion_long, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(emotion, <span class="sc">-</span>count), <span class="at">y =</span> count, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span> <span class="co"># separates bars for clarity</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> count), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Emotion Distribution by Season"</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Emotion"</span>, <span class="at">y =</span> <span class="st">"Total Count"</span>, <span class="at">fill =</span> <span class="st">"Season"</span>) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="images/plot-emotion-by-season-01.png" class="img-fluid"></p>
+<p>Now, let’s explore to see which emotions tend to occur together, revealing patterns of emotional co-occurrence in the text.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only emotion columns (excluding overall positive/negative sentiment)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>emotion_matrix <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(anger<span class="sc">:</span>trust)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the correlation matrix for emotions</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Pearson correlation shows how strongly two emotions co-occur</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>co_occurrence <span class="ot">&lt;-</span> <span class="fu">cor</span>(emotion_matrix, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove diagonal values to avoid coloring the perfect self-correlation</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(co_occurrence) <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the correlation matrix to long format for ggplot</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>co_occurrence_long <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(co_occurrence))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(co_occurrence_long) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"emotion1"</span>, <span class="st">"emotion2"</span>, <span class="st">"correlation"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the co-occurrence heatmap</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(co_occurrence_long, <span class="fu">aes</span>(<span class="at">x =</span> emotion1, <span class="at">y =</span> emotion2, <span class="at">fill =</span> correlation)) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span>  <span class="co"># draw grid tiles</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">na.value =</span> <span class="st">"grey95"</span>, <span class="at">name =</span> <span class="st">"Correlation"</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span>  <span class="co"># rotate x-axis labels</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Emotion Co-occurrence Heatmap"</span>,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Emotion"</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Emotion"</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>After running the script we should get the following heat map:</p>
+<p><img src="images/emotion-correlation-heatmap.png" class="img-fluid"></p>
+<p>Based on these results, Overall, the emotional picture is pretty interconnected. It looks like the <strong>negative emotions—Sadness, Fear, Anger, and Disgust—are more tightly linked</strong>, meaning when people express one of these, they usually express the others too. In other words, they often show up together in the same comments.</p>
+<p>While we’ve only scratched the surface of this particular dataset, the steps we’ve completed—from calculating basic sentiment scores to visualizing the co-occurrence of emotions—have demonstrated the <strong>power of sentiment and emotion detection</strong>. You now have the foundational skills to convert unstructured text into actionable data, allowing you to understand the <strong>polarity (positive/negative)</strong> and <strong>specific emotional landscape</strong> of any textual dataset.</p>
+</section>
+<section id="saving-our-work" class="level5">
+<h5 class="anchored" data-anchor-id="saving-our-work">Saving our work</h5>
+<p>After performing all the calculations and visualizations, it’s important to save the results so they can be reused or shared.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(emotion_data, <span class="st">"output/sentiment_emotion_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 <!-- -->
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -783,36 +911,201 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Emotion Detection"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`syuzhet`</span> package (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html)</span>) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>The <span class="in">`syuzhet`</span> package implements the <span class="co">[</span><span class="ot">National Research Council Canada (NRC) Emotion Lexicon</span><span class="co">](https://nrc-publications.canada.ca/eng/view/ft/?id=0b6a5b58-a656-49d3-ab3e-252050a7a88c)</span> which maps words to basic emotions, in addition to polarity scores, allowing for fine-grained emotion scoring at the word, sentence, or document level.</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>This framework uses eight categories of emotions based on Robert Plutchik's theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="al">![Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. *Mathematical Problems in Engineering*, *2021*(1), 6695913. &lt;https://doi.org/10.1155/2021/6695913&gt;](images/emotion_wheel.jpg)</span>{fig-align="center" width="376"}</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>You may explore NRC's lexicon Tableau dashboard to explore words associated with each emotion category:</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&amp;:loadOrderID=0&amp;:display_count=no&amp;:showVizHome=no" title="NRC Lexicon Interactive Visualization"&gt;&lt;/iframe&gt;</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data:</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>You might be wondering: if the **`syuzhet`** package also computes polarity, why did we choose **`sentimentr`** in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because **`sentimentr`** adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Emotion Detection"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`syuzhet`</span> package (<span class="co">[</span><span class="ot">more info</span><span class="co">](https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html)</span>) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>The <span class="in">`syuzhet`</span> package implements the <span class="co">[</span><span class="ot">National Research Council Canada (NRC) Emotion Lexicon</span><span class="co">](https://nrc-publications.canada.ca/eng/view/ft/?id=0b6a5b58-a656-49d3-ab3e-252050a7a88c)</span> which maps words to basic emotions, in addition to polarity scores, allowing for fine-grained emotion scoring at the word, sentence, or document level.</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>This framework uses eight categories of emotions based on Robert Plutchik's theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="al">![Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., &amp; Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. Mathematical Problems in Engineering, 2021(1), 6695913. https://doi.org/10.1155/2021/6695913](images/emotion_wheel.jpg)</span>{fig-align="center" width="376"}</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>Since its release, the NRC Emotion Lexicon has become a widely used resource in computational social science, marketing analytics, and text mining, because it allows researchers to move beyond simple positive/negative polarity to fine-grained emotion detection, making it possible to analyze the emotional content of text at scale.</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>You may explore NRC's lexicon Tableau dashboard to explore words associated with each emotion category:</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&amp;:loadOrderID=0&amp;:display_count=no&amp;:showVizHome=no" title="NRC Lexicon Interactive Visualization"&gt;&lt;/iframe&gt;</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data.</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Emotion Detection with Syuzhet's NRC Lexicon</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Detecting Emotions per Comment/Sentence</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>sentences <span class="ot">&lt;-</span> <span class="fu">get_sentences</span>(comments<span class="sc">$</span>comments)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Compute Emotion Scores per Sentence</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>emotion_score <span class="ot">&lt;-</span> <span class="fu">get_nrc_sentiment</span>(sentences)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>The <span class="in">`get_nrc_sentiment()`</span> function assigns emotion and sentiment scores (based on the NRC lexicon) to each sentence. Each sentence gets numeric values (0 or 1) for the eight emotions to represent their absence or presence. The output also includes positive and negative sentiment scores:</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/emotions_scores-dataframe.png)</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Review Summary of Emotion Scores</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>Let's now compute basic statistics (min, max, mean, etc.) for each emotion column and get an overview of how frequent or strong each emotion is on our example dataset.</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(emotion_score)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>This step should generate the following output:</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/emotion-score.png)</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>Based on the results the overall emotion in these comments leans heavily toward **sadness**, which scored the highest average (1.236). It looks like **sadness** and **trust** are the most common feelings, since they're the only ones with a median score of 1.000, meaning at least half the comments contained words for them.</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>On the flip side, **Disgust** was the rarest emotion, with the lowest average (0.145). It's also worth noting that while Sadness and Trust are the most *common*, a few comments really went off the rails with **Trust (47.000), Anger (44.000)**, and **Fear (37.000)**, hitting the highest extreme scores.</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Regroup with comments and IDs</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>After computing scores for emotions, we want to link them back to its **original comment and ID**.</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>comments<span class="sc">$</span>comments <span class="ot">&lt;-</span> sentences</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>emotion_data <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(comments, emotion_score)</span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="in">`bind_cols()`</span> merges the original <span class="in">`comments`</span> data frame with the new <span class="in">`emotion_score`</span> table.</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Summarize Emotion Counts Across All Sentences</span></span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>Now, let's count **how many times each emotion appears** overall.</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>emotion_summary <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(anger<span class="sc">:</span>trust) <span class="sc">%&gt;%</span> <span class="co"># get only the emotion columns</span></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), sum)) <span class="sc">%&gt;%</span> <span class="co"># sum counts </span></span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">everything</span>(), </span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"emotion"</span>, </span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> <span class="co"># long format for easy plotting</span></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="co"># sort emotions</span></span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/emotion-counts.png)</span>{width="194"}</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Plot the Overall Emotion Distribution</span></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(emotion_summary, <span class="fu">aes</span>(<span class="at">x =</span> emotion, <span class="at">y =</span> count, <span class="at">fill =</span> emotion)) <span class="sc">+</span></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>              <span class="co"># Bar plot for emotion counts</span></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> count), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Add count labels</span></span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">"Paired"</span>)) <span class="sc">+</span>   <span class="co"># Color palette</span></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span>             <span class="co"># Clean theme</span></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Overall Emotion Distribution"</span>,</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Emotion"</span>, <span class="at">y =</span> <span class="st">"Total Count"</span>) <span class="sc">+</span>    <span class="co"># Titles and axis labels</span></span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()                                <span class="co"># Flip axes for readability</span></span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/barchart-emotions.png)</span></span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Add a “Season” Variable (Grouping) and Summarize</span></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>Let's now add a new column called <span class="in">`season`</span> by looking at the ID pattern — for example, <span class="in">`s1_`</span> means season 1 and <span class="in">`s2_`</span> means season 2. This makes it easy to compare the emotional tone across seasons.</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>emotion_seasons <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^s1_"</span>, id), <span class="st">"s1"</span>,</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^s2_"</span>, id), <span class="st">"s2"</span>, <span class="cn">NA</span>)))</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>Time to aggregates the total count of each emotion within each season.</span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate emotion counts per season</span></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>emotion_by_season <span class="ot">&lt;-</span> emotion_seasons <span class="sc">%&gt;%</span></span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(season) <span class="sc">%&gt;%</span></span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(anger<span class="sc">:</span>positive, <span class="sc">~</span><span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Plotting the Data</span></span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>Comparing emotions by season:</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a>emotion_long <span class="ot">&lt;-</span> emotion_by_season <span class="sc">%&gt;%</span></span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> anger<span class="sc">:</span>positive, <span class="at">names_to =</span> <span class="st">"emotion"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>)</span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(emotion_long, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(emotion, <span class="sc">-</span>count), <span class="at">y =</span> count, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span> <span class="co"># separates bars for clarity</span></span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> count), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Emotion Distribution by Season"</span>, </span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Emotion"</span>, <span class="at">y =</span> <span class="st">"Total Count"</span>, <span class="at">fill =</span> <span class="st">"Season"</span>) <span class="sc">+</span></span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/plot-emotion-by-season-01.png)</span></span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a>Now, let's explore to see which emotions tend to occur together, revealing patterns of emotional co-occurrence in the text.</span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only emotion columns (excluding overall positive/negative sentiment)</span></span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a>emotion_matrix <span class="ot">&lt;-</span> emotion_data <span class="sc">%&gt;%</span></span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(anger<span class="sc">:</span>trust)</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the correlation matrix for emotions</span></span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a><span class="co"># Pearson correlation shows how strongly two emotions co-occur</span></span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>co_occurrence <span class="ot">&lt;-</span> <span class="fu">cor</span>(emotion_matrix, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove diagonal values to avoid coloring the perfect self-correlation</span></span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(co_occurrence) <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the correlation matrix to long format for ggplot</span></span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a>co_occurrence_long <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(co_occurrence))</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(co_occurrence_long) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"emotion1"</span>, <span class="st">"emotion2"</span>, <span class="st">"correlation"</span>)</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the co-occurrence heatmap</span></span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(co_occurrence_long, <span class="fu">aes</span>(<span class="at">x =</span> emotion1, <span class="at">y =</span> emotion2, <span class="at">fill =</span> correlation)) <span class="sc">+</span></span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span>  <span class="co"># draw grid tiles</span></span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(</span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a>    <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">na.value =</span> <span class="st">"grey95"</span>, <span class="at">name =</span> <span class="st">"Correlation"</span></span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span>  <span class="co"># rotate x-axis labels</span></span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Emotion Co-occurrence Heatmap"</span>,</span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Emotion"</span>,</span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Emotion"</span></span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>After running the script we should get the following heat map:</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/emotion-correlation-heatmap.png)</span></span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>Based on these results, Overall, the emotional picture is pretty interconnected. It looks like the **negative emotions—Sadness, Fear, Anger, and Disgust—are more tightly linked**, meaning when people express one of these, they usually express the others too. In other words, they often show up together in the same comments.</span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>While we've only scratched the surface of this particular dataset, the steps we've completed—from calculating basic sentiment scores to visualizing the co-occurrence of emotions—have demonstrated the **power of sentiment and emotion detection**. You now have the foundational skills to convert unstructured text into actionable data, allowing you to understand the **polarity (positive/negative)** and **specific emotional landscape** of any textual dataset.</span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Saving our work</span></span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>After performing all the calculations and visualizations, it’s important to save the results so they can be reused or shared.</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(emotion_data, <span class="st">"output/sentiment_emotion_results.csv"</span>)</span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
