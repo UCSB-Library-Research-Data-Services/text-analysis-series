@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Sentiment Analysis"
+title: "What is Sentiment Analysis?"
 ---
 
 Now that we have completed all the key preprocessing steps and our example dataset is in much better shape, we can finally proceed with sentiment analysis.
