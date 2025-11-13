@@ -11,7 +11,7 @@ The `syuzhet` package implements the [National Research Council Canada (NRC) Emo
 
 This framework uses eight categories of emotions based on Robert Plutchik's theory of the emotional wheel, a foundational model that illustrates the relationships between human emotions from a psychological perspective. Plutchik’s wheel identifies eight primary emotions: anger, disgust, sadness, surprise, fear, trust, joy, and anticipation. As illustrated in Figure ? below, these emotions are organized into four pairs of opposites on the wheel. Emotions positioned diagonally across from each other represent opposites, while adjacent emotions share similarities, reflecting a positive correlation.
 
-![Figure?. Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., & Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. *Mathematical Problems in Engineering*, *2021*(1), 6695913. <https://doi.org/10.1155/2021/6695913>](images/emotion_wheel.jpg){fig-align="center" width="376"}
+![Plutchik’s wheel of emotions. Image from: Zeng, X., Chen, Q., Chen, S., & Zuo, J. (2021). Emotion label enhancement via emotion wheel and lexicon. Mathematical Problems in Engineering, 2021(1), 6695913. https://doi.org/10.1155/2021/6695913](images/emotion_wheel.jpg){fig-align="center" width="376"}
 
 The NRC Emotion Lexicon was developed as part of research into affective computing and sentiment analysis using a combination of manual annotation and crowdsourcing. Human annotators evaluated thousands of words, indicating which emotions were commonly associated with each word. This method ensured that the lexicon captured human-perceived emotional associations, rather than relying solely on statistical co-occurrences in text.
 
@@ -22,9 +22,154 @@ You may explore NRC's lexicon Tableau dashboard to explore words associated with
 ```{=html}
 <iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&:loadOrderID=0&:display_count=no&:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
 ```
-Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data:
+Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data.
+
+#### Emotion Detection with Syuzhet's NRC Lexicon
+
+##### Break Text into Sentences
 
 ``` r
+sentences <- get_sentences(comments$comments)
 ```
+
+The `get_sentences()` function splits your text into individual sentences.
+
+This allows us to analyze emotions at a finer level — rather than by entire comments, we examine each sentence separately. If a comment says: “I love the show. The ending made me sad.” It becomes two sentences.
+
+##### Compute Emotion Scores per Sentence
+
+``` r
+emotion_score <- get_nrc_sentiment(sentences)
+```
+
+The `get_nrc_sentiment()` function assigns emotion and sentiment scores (based on the NRC lexicon) to each sentence. Each sentence gets numeric values (0 or 1) for the eight emotions to represent their absence or presence. The output also includes positive and negative sentiment scores.
+
+##### Review Summary of Emotion Scores
+
+Let's now compute basic statistics (min, max, mean, etc.) for each emotion column and get an overview of how frequent or strong each emotion is on our example dataset.
+
+``` r
+summary(emotion_score)
+```
+
+##### Rejoin Sentences
+
+After sentence-level analysis, we want to link each emotion score back to its **original comment or ID**.
+
+``` r
+comments$comments <- sentences
+emotion_data <- bind_cols(comments, emotion_score)
+```
+
+`bind_cols()` merges the original `comments` data frame with the new `emotion_score` table.
+
+##### Summarize Emotion Counts Across All Sentences
+
+Now, let's count **how many times each emotion appears** overall.
+
+``` r
+emotion_summary <- emotion_data %>%
+  select(anger:trust) %>% # get only the emotion columns
+  summarise(across(everything(), sum)) %>% # sum counts 
+  pivot_longer(
+    cols = everything(), 
+    names_to = "emotion", 
+    values_to = "count"
+    ) %>% # long format for easy plotting
+  arrange(desc(count)) # sort emotions
+```
+
+##### Plot the Overall Emotion Distribution
+
+``` r
+ggplot(emotion_summary, aes(x = emotion, y = count, fill = emotion)) +
+  geom_col(show.legend = FALSE) +              # Bar plot for emotion counts
+  geom_text(aes(label = count), hjust = -0.2, size = 2) +  # Add count labels
+  scale_fill_manual(values = brewer.pal(10, "Paired")) +   # Color palette
+  theme_minimal(base_size = 12) +             # Clean theme
+  labs(title = "Overall Emotion Distribution",
+       x = "Emotion", y = "Total Count") +    # Titles and axis labels
+  coord_flip()                                # Flip axes for readability
+```
+
+##### Add a “Season” Variable (Grouping) and Summarize
+
+Let's now add a new column called `season` by looking at the ID pattern — for example, `s1_` means season 1 and `s2_` means season 2. This makes it easy to compare the emotional tone across seasons.
+
+``` r
+emotion_seasons <- emotion_data %>%
+  mutate(season = ifelse(grepl("^s1_", id), "s1",
+                  ifelse(grepl("^s2_", id), "s2", NA)))
+```
+
+Time to aggregates the total count of each emotion within each season.
+
+``` r
+emotion_by_season <- emotion_seasons %>%
+  group_by(season) %>%
+  summarise(across(anger:positive, sum, na.rm = TRUE))
+```
+
+##### Compare Emotions by Season (Visualization)
+
+``` r
+emotion_long <- emotion_by_season %>%
+  pivot_longer(cols = anger:positive, names_to = "emotion", values_to = "count")
+
+ggplot(emotion_long, aes(x = reorder(emotion, -count), y = count, fill = season)) +
+  geom_col(position = "dodge") + # separates bars for clarity
+  geom_text(aes(label = count), hjust = -0.2, size = 2) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal(base_size = 12) +
+  labs(title = "Emotion Distribution by Season", 
+       x = "Emotion", y = "Total Count", fill = "Season") +
+  coord_flip()
+```
+
+##### Plotting the Data
+
+Now, let's explore to see which emotions tend to occur together, revealing patterns of emotional co-occurrence in the text.
+
+``` r
+# Select only emotion columns (excluding overall positive/negative sentiment)
+emotion_matrix <- emotion_data %>%
+  select(anger:trust)
+
+# Compute the correlation matrix for emotions
+# Pearson correlation shows how strongly two emotions co-occur
+co_occurrence <- cor(emotion_matrix, method = "pearson")
+
+# Remove diagonal values to avoid coloring the perfect self-correlation
+diag(co_occurrence) <- NA
+
+# Convert the correlation matrix to long format for ggplot
+co_occurrence_long <- as.data.frame(as.table(co_occurrence))
+colnames(co_occurrence_long) <- c("emotion1", "emotion2", "correlation")
+
+# Plot the co-occurrence heatmap
+ggplot(co_occurrence_long, aes(x = emotion1, y = emotion2, fill = correlation)) +
+  geom_tile(color = "white") +  # draw grid tiles
+  scale_fill_gradient2(
+    mid = "white", high = "red", midpoint = 0,
+    limits = c(0, 1), na.value = "grey95", name = "Correlation"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # rotate x-axis labels
+  labs(
+    title = "Emotion Co-occurrence Heatmap",
+    x = "Emotion",
+    y = "Emotion"
+  )
+```
+
+##### Saving our work
+
+After performing all the calculations and visualizations, it’s important to save the results so they can be reused or shared.
+
+``` r
+write_csv(emotion_data, "output/sentiment_emotion_results.csv")
+```
+
+#### Final Thoughts
 
 You might be wondering: if the **`syuzhet`** package also computes polarity, why did we choose **`sentimentr`** in our pipeline? The reason is that syuzhet does not inherently account for valence shifters. In the original syuzhet implementation, words are scored in isolation—so “good” = +1, “bad” = −1—regardless of nearby negations or intensifiers. For example, “not good” would still be counted as +1. Because **`sentimentr`** adjusts sentiment scores for negators and amplifiers, polarity results are more nuanced, robust, and reliable.

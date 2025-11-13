@@ -4,7 +4,7 @@ title: "Introduction to Sentiment Analysis"
 
 Now that we have completed all the key preprocessing steps and our example dataset is in much better shape, we can finally proceed with sentiment analysis.
 
-![Image from Canva](images/sentiment.png){width="750"}
+![Image from Canva](images/sentiment.png){fig-align="center" width="500"}
 
 ## What is Sentiment Analysis?
 
@@ -23,12 +23,25 @@ Our analysis pipeline will follow a two-step approach. First, we will compute ba
 Let’s start by installing and loading the necessary packages, then bringing in the cleaned dataset so we can begin our sentiment analysis. We will discuss the role of each package in the next episodes.
 
 ``` r
-# Install Packages
-install.packages(c("sentimentr", "syuzhet"))
+# Install packages (remove comments for packages you might have skipped)
+install.packages("sentimentr")
+install.packages("syuzhet")
+# install.packages("dplyr")
+# install.packages("tidyr")
+# install.packages("readr")
+# install.packages("ggplot2")
+# install.packages("RColorBrewer")
+# install.packages("stringr")
 
-# Load Packages 
+# Load all packages
 library(sentimentr)
 library(syuzhet)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(RColorBrewer)
+library(stringr)
 
 # Load Data
 comments <- readr::read_csv("../data/clean/comments_preprocessed.csv")

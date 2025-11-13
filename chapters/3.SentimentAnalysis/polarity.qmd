@@ -23,28 +23,73 @@ Words like “but,” “however,” and “although” also influence the senti
 
 With this approach, we can explore more confidently whether the show’s viewers felt positive, neutral, or negative about it.
 
-``` r
+#### Computing Polarity with Sentiment R (Valence Sifters Capability)
 
+##### Calculating sentiment scores
+
+``` r
+sentiment_scores <- sentiment_by(comments$comments)
 ```
+
+Here we’re using the **`sentiment_by()`** function which looks at each comment and calculates a **sentiment score** representing how positive or negative the language is.
+
+So after running this, we get a new object called `sentiment_scores` with the average sentiment for every comment.
+
+##### Adding those scores back to our dataset
+
+``` r
+polarity <- comments %>%
+  mutate(score = sentiment_scores$ave_sentiment,
+         sentiment_label = case_when(
+           score > 0.1  ~ "positive",
+           score < -0.1 ~ "negative",
+           TRUE         ~ "neutral"
+         ))
+```
+
+Now we’re using the **`dplyr`** package to make our dataset more informative. We take our `comments` dataset, and with **`mutate()`**, we add two new columns: `score` and `sentiment label`. The little rule inside **`case_when()`** decides what label to give. The small buffer around zero (±0.1) helps us avoid overreacting to tiny fluctuations.
 
 Let's now take a look at the `sentiment_scores` data frame:
 
 <add output>
 
-It’s expected that the standard deviation is missing, because each row/case is treated as a single sentence when computing the score. Now, let's make sure to add these scores and the labels our dataset:
+To get a sense of the overall mood of our dataset let's run:
 
 ``` r
-
+table(polarity$sentiment_label)
 ```
 
-#### Plotting Things
+#### Plotting Scores
 
-Next, let's plot some results and histograms to check the distribution:
+Next, let's plot some results and histograms to check the distribution per season:
 
 ``` r
+# Visualize
+ggplot(polarity, aes(x = score)) +
+  geom_histogram(binwidth = 0.1, fill = "skyblue", color = "white") +
+  theme_minimal() +
+  labs(title = "Sentiment Score Distribution", x = "Average Sentiment", y = "Count")
 
+# Extract season info (s1, s2) into a new column
+polarity_seasons <- mutate(polarity,
+                           season = str_extract(id, "s\\d+"))
+
+# Histogram comparison by season
+ggplot(polarity_seasons, aes(x = score, fill = season)) +
+  geom_histogram(binwidth = 0.1, position = "dodge", color = "white") +
+  theme_minimal() +
+  labs(title = "Sentiment Score Distribution by Season", 
+       x = "Average Sentiment", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
 ```
 
-We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the *Severance* show.
+#### Saving Things
+
+``` r
+# Save results
+write_csv(polarity, "output/polarity_results.csv")
+```
+
+We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.
 
 Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.
