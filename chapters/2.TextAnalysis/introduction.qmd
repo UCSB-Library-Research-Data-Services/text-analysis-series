@@ -1,3 +1,23 @@
 ---
-title: "Introduction to Text Analysis"
+title: "What is Text Analysis?"
+engine: knitr
+format:
+  html:
+    fig-width: 10
+    fig-height: 12
+    dpi: 300
+editor_options: 
+  chunk_output_type: inline
 ---
+
+Text analysis is an umbrella concept that involves multiple techniques, methods, and approaches for "extracting" the meaning, structure, or general characteristics of a text by analyzing its constitutive words and symbols, and their relationships with a context, epoch, trend, intention, etc.
+
+Thanks to the massification of computers and the miniaturization of computer power, computational methods for text analysis have become prevalent in certain contexts, allowing researchers to analyze large corpora of texts and also extrapolate those concepts for purposes beyond academic research, such as commercial text processing, sentiment analysis, or information retrieval.
+
+Building on these foundations, this episode focuses on the introductory analytical techniques that establish common ground for more complex tasks such as sentiment analysis, language modeling, topic modeling, or text generation.
+
+::: {.callout-note title="NLP"}
+Although Natural Language Processing (NLP) is sometimes used as a synonym for text analysis, Text Analysis encompasses both computational and non-computational approaches to analyzing text. NLP is primarily concerned with the interaction between computers and human language. It focuses on developing algorithms and models that enable machines to understand, interpret, and generate human language.
+:::
+
+
