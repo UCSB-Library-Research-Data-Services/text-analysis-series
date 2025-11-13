@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Text Analysis – Introduction to Text Analysis in R</title>
+<title>What is Text Analysis? – Introduction to Text Analysis in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -226,19 +226,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/2.TextAnalysis/common_processes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Common Text Analysis Processes</span></a>
+  <a href="../../chapters/2.TextAnalysis/word_frequencies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic Word Frequencies</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/2.TextAnalysis/corpus_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Corpus-level Analysis</span></a>
+  <a href="../../chapters/2.TextAnalysis/ngrams.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">N-grams and Collocations</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/2.TextAnalysis/frequency_analysis.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/2.TextAnalysis/tfidf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Frequency Analysis</span></a>
   </div>
 </li>
@@ -298,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/2.TextAnalysis/introduction.html">Text Analysis</a></li><li class="breadcrumb-item"><a href="../../chapters/2.TextAnalysis/introduction.html">Text Analysis</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Introduction to Text Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">What is Text Analysis?</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -315,6 +315,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Text analysis is an umbrella concept that involves multiple techniques, methods, and approaches for “extracting” the meaning, structure, or general characteristics of a text by analyzing its constitutive words and symbols, and their relationships with a context, epoch, trend, intention, etc.</p>
+<p>Thanks to the massification of computers and the miniaturization of computer power, computational methods for text analysis have become prevalent in certain contexts, allowing researchers to analyze large corpora of texts and also extrapolate those concepts for purposes beyond academic research, such as commercial text processing, sentiment analysis, or information retrieval.</p>
+<p>Building on these foundations, this episode focuses on the introductory analytical techniques that establish common ground for more complex tasks such as sentiment analysis, language modeling, topic modeling, or text generation.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="NLP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>NLP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Although Natural Language Processing (NLP) is sometimes used as a synonym for text analysis, Text Analysis encompasses both computational and non-computational approaches to analyzing text. NLP is primarily concerned with the interaction between computers and human language. It focuses on developing algorithms and models that enable machines to understand, interpret, and generate human language.</p>
+</div>
+</div>
 
 
 <!-- -->
@@ -773,8 +789,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introduction to Text Analysis"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "What is Text Analysis?"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">engine:</span><span class="co"> knitr</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 10</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 12</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    dpi: 300</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="an">editor_options:</span><span class="co"> </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  chunk_output_type: inline</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Text analysis is an umbrella concept that involves multiple techniques, methods, and approaches for "extracting" the meaning, structure, or general characteristics of a text by analyzing its constitutive words and symbols, and their relationships with a context, epoch, trend, intention, etc.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Thanks to the massification of computers and the miniaturization of computer power, computational methods for text analysis have become prevalent in certain contexts, allowing researchers to analyze large corpora of texts and also extrapolate those concepts for purposes beyond academic research, such as commercial text processing, sentiment analysis, or information retrieval.</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Building on these foundations, this episode focuses on the introductory analytical techniques that establish common ground for more complex tasks such as sentiment analysis, language modeling, topic modeling, or text generation.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="NLP"}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Although Natural Language Processing (NLP) is sometimes used as a synonym for text analysis, Text Analysis encompasses both computational and non-computational approaches to analyzing text. NLP is primarily concerned with the interaction between computers and human language. It focuses on developing algorithms and models that enable machines to understand, interpret, and generate human language.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
