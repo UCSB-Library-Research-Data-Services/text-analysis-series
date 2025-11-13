@@ -1,0 +1,170 @@
+---
+title: "TF-IDF: Finding Distinctive Vocabulary"
+engine: knitr
+format:
+  html:
+    fig-width: 10
+    fig-height: 12
+    dpi: 300
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+#| include: false
+# This is just to render the document correctly in the CI/CD pipeline
+library(tidyverse)
+library(tidytext)
+
+comments <- readr::read_csv("../../data/clean/comments_preprocessed.csv") 
+```
+
+So far, we have explored word frequencies and n-grams to understand common terms and phrases in our text data. However, simply counting words has a limitation: some words are frequent because they appear often across *all* documents, not because they are particularly meaningful for a specific document or group.
+
+For example, in our Severance dataset, words like "season," "episode," and "show" might appear frequently in comments about both Season 1 and Season 2. While these words are common, they don't help us understand what makes each season's discussion *distinctive*.
+
+This is where **TF-IDF (Term Frequency-Inverse Document Frequency)** becomes useful. TF-IDF is a statistical measure that evaluates how important a word is to a document in a collection of documents (corpus). It helps us identify words that are frequent in one document but rare across the entire corpus—precisely the words that make a document unique.
+
+## Understanding TF-IDF
+
+TF-IDF combines two metrics:
+
+1. **Term Frequency (TF)**: How often a word appears in a document
+2. **Inverse Document Frequency (IDF)**: How rare a word is across all documents
+
+The formula is:
+
+$$\text{TF-IDF} = \text{TF} \times \text{IDF}$$
+
+Where:
+
+$$\text{TF}(t, d) = \frac{\text{count of term } t \text{ in document } d}{\text{total terms in document } d}$$
+
+$$\text{IDF}(t) = \log\left(\frac{\text{total number of documents}}{\text{number of documents containing term } t}\right)$$
+
+A word gets a **high TF-IDF score** when:
+
+- It appears frequently in a particular document (high TF)
+- It appears in few other documents (high IDF)
+
+A word gets a **low TF-IDF score** when:
+
+- It appears in many documents (low IDF), even if it's frequent in one document
+
+## Calculating TF-IDF
+
+In our case, we want to compare the vocabulary between Season 1 and Season 2 comments. We'll treat each season as a "document" and calculate TF-IDF to find which words are distinctive to each season.
+
+First, we need to extract season information from the `id` column and tokenize the comments:
+
+```{r}
+# Calculate TF-IDF by season
+comments_tfidf <- comments %>%
+  mutate(season = str_extract(id, "s[12]")) %>%  # Extract season (s1 or s2)
+  unnest_tokens(word, comments) %>%               # Tokenize into words
+  count(season, word, sort = TRUE)                # Count words per season
+
+head(comments_tfidf)
+```
+
+Now we can apply the `bind_tf_idf()` function from the `tidytext` package, which automatically calculates TF, IDF, and TF-IDF for us:
+
+```{r}
+# Apply TF-IDF calculation
+comments_tfidf <- comments_tfidf %>%
+  bind_tf_idf(word, season, n)
+
+head(comments_tfidf, 15)
+```
+
+The resulting data frame includes:
+
+- `tf`: Term frequency (proportion of times the word appears in that season)
+- `idf`: Inverse document frequency (how rare the word is across seasons)
+- `tf_idf`: The product of TF and IDF
+
+Let's examine the top words by TF-IDF for each season:
+
+```{r}
+# Top 10 distinctive words per season
+comments_tfidf %>%
+  group_by(season) %>%
+  slice_max(tf_idf, n = 10)
+```
+
+Notice how these words are much more specific and meaningful than simply looking at the most frequent words. These are the words that truly characterize each season's discussion.
+
+## Visualizing Distinctive Vocabulary
+
+To better understand the distinctive vocabulary of each season, we can create a visualization comparing the top TF-IDF words:
+
+```{r}
+# Prepare data for visualization
+top_tfidf_words <- comments_tfidf %>%
+  group_by(season) %>%
+  slice_max(tf_idf, n = 15) %>%
+  ungroup() %>%
+  mutate(word = reorder_within(word, tf_idf, season))
+
+# Plot distinctive vocabulary by season
+ggplot(top_tfidf_words, aes(tf_idf, word, fill = season)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~season, scales = "free") +
+  scale_y_reordered() +
+  labs(
+    x = "TF-IDF",
+    y = NULL,
+    title = "Distinctive Vocabulary by Season"
+  ) +
+  theme_minimal()
+```
+
+This visualization clearly shows which words are most characteristic of each season's discussions. Words with higher TF-IDF scores are those that appear frequently in one season but not in the other, making them useful markers of distinctive content.
+
+## Comparing TF-IDF to Raw Frequency
+
+To appreciate the value of TF-IDF, let's compare it to simple word counts. We'll look at the top words by frequency versus the top words by TF-IDF for Season 1:
+
+```{r}
+# Top words by raw frequency for Season 1
+top_freq_s1 <- comments %>%
+  filter(grepl("^s1", id)) %>%
+  unnest_tokens(word, comments) %>%
+  count(word, sort = TRUE) %>%
+  head(15)
+
+# Top words by TF-IDF for Season 1
+top_tfidf_s1 <- comments_tfidf %>%
+  filter(season == "s1") %>%
+  arrange(desc(tf_idf)) %>%
+  head(15)
+
+# Top 15 words by frequency (Season 1)
+print(top_freq_s1)
+
+# Top 15 words by TF-IDF (Season 1)
+print(top_tfidf_s1 %>% select(word, n, tf_idf))
+```
+
+The raw frequency list likely includes many words that are common across both seasons, while the TF-IDF list highlights words that are specifically important to Season 1 discussions.
+
+## When to Use TF-IDF
+
+TF-IDF is particularly useful for:
+
+1. **Document comparison**: Identifying what makes each document unique in a collection
+2. **Feature extraction**: Preparing text data for machine learning by emphasizing distinctive words
+3. **Topic discovery**: Finding characteristic vocabulary for different groups or categories
+4. **Search and retrieval**: Ranking documents by relevance to a query (search engines use variations of TF-IDF)
+
+::: {.callout-tip title="Limitations of TF-IDF"}
+While TF-IDF is powerful, it has some limitations:
+
+- **No semantic understanding**: It treats words as independent units and doesn't understand synonyms or context
+- **Corpus dependency**: TF-IDF scores depend on the entire corpus, so adding or removing documents changes the scores
+- **Document length bias**: Can be affected by document length differences (though this is partially addressed by normalization)
+
+For more advanced semantic analysis, techniques like word embeddings or transformer models might be more appropriate.
+:::
+
+TF-IDF bridges the gap between simple word counting and more sophisticated text analysis techniques. By weighing words based on both their local importance (in a document) and their global rarity (across the corpus), it helps us discover the vocabulary that truly distinguishes different parts of our text data.

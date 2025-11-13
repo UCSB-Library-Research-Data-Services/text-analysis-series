@@ -12,3 +12,5 @@ _site/
 .Rproj.user
 
 /data/raw/
+
+.RData

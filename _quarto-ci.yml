@@ -1,4 +1,4 @@
 execute:
-  enabled: false
+  enabled: true
   freeze: auto
   cache: true
