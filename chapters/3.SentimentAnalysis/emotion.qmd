@@ -3,7 +3,7 @@ title: "Emotion Detection"
 editor: visual
 ---
 
-Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions—one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.
+Emotion detection is another NLP technique aimed at identifying and quantifying human emotions expressed in text, which builds directly on traditional sentiment polarity analysis focusing on capturing more nuanced emotional states. While polarity classification identifies whether a text expresses positive, negative, or neutral sentiment, it does not capture the specific type of emotion behind that sentiment. For example, two negative texts could express very different emotions: one might convey anger, while another reflects sadness. By extending polarity into multiple emotional dimensions, emotion detection provides more granular and more actionable insights into how people truly feel.
 
 We will use the `syuzhet` package ([more info](https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html)) to to help us classify emotions detected in our dataset. The name “syuzhet” is inspired by the work of Russian Formalists Victor Shklovsky and Vladimir Propp, who distinguished between two aspects of a narrative: the fabula and the syuzhet. The fabula represents the chronological sequence of events, while the syuzhet refers to the way these events are presented or structured; the narrative’s technique or “device.” In other words, syuzhet focuses on how the story (fabula) is organized and conveyed to the audience.
 
@@ -22,18 +22,17 @@ You may explore NRC's lexicon Tableau dashboard to explore words associated with
 ```{=html}
 <iframe width="780" height="500" src="https://public.tableau.com/views/NRC-Emotion-Lexicon-viz1/NRCEmotionLexicon-viz1?:embed=y&:loadOrderID=0&:display_count=no&:showVizHome=no" title="NRC Lexicon Interactive Visualization"></iframe>
 ```
-
 Now that we have a better understanding of this package, let's get back to business and perform emotion detection to our data.
 
-#### Emotion Detection with Syuzhet's NRC Lexicon
+### Emotion Detection with Syuzhet's NRC Lexicon
 
-##### Detecting Emotions per Comment/Sentence
+#### Detecting Emotions per Comment/Sentence
 
 ``` r
 sentences <- get_sentences(comments$comments)
 ```
 
-##### Compute Emotion Scores per Sentence
+#### Compute Emotion Scores per Sentence
 
 ``` r
 emotion_score <- get_nrc_sentiment(sentences)
@@ -43,7 +42,7 @@ The `get_nrc_sentiment()` function assigns emotion and sentiment scores (based o
 
 ![](images/emotions_scores-dataframe.png)
 
-##### Review Summary of Emotion Scores
+#### Review Summary of Emotion Scores
 
 Let's now compute basic statistics (min, max, mean, etc.) for each emotion column and get an overview of how frequent or strong each emotion is on our example dataset.
 
@@ -59,7 +58,7 @@ Based on the results the overall emotion in these comments leans heavily toward 
 
 On the flip side, **Disgust** was the rarest emotion, with the lowest average (0.145). It's also worth noting that while Sadness and Trust are the most *common*, a few comments really went off the rails with **Trust (47.000), Anger (44.000)**, and **Fear (37.000)**, hitting the highest extreme scores.
 
-##### Regroup with comments and IDs
+#### Regroup with comments and IDs
 
 After computing scores for emotions, we want to link them back to its **original comment and ID**.
 
@@ -70,7 +69,7 @@ emotion_data <- bind_cols(comments, emotion_score)
 
 `bind_cols()` merges the original `comments` data frame with the new `emotion_score` table.
 
-##### Summarize Emotion Counts Across All Sentences
+#### Summarize Emotion Counts Across All Sentences
 
 Now, let's count **how many times each emotion appears** overall.
 
@@ -88,7 +87,7 @@ emotion_summary <- emotion_data %>%
 
 ![](images/emotion-counts.png){width="194"}
 
-##### Plot the Overall Emotion Distribution
+#### Plot the Overall Emotion Distribution
 
 ``` r
 ggplot(emotion_summary, aes(x = emotion, y = count, fill = emotion)) +
@@ -103,7 +102,7 @@ ggplot(emotion_summary, aes(x = emotion, y = count, fill = emotion)) +
 
 ![](images/barchart-emotions.png)
 
-##### Add a “Season” Variable (Grouping) and Summarize
+#### Add a “Season” Variable (Grouping) and Summarize
 
 Let's now add a new column called `season` by looking at the ID pattern — for example, `s1_` means season 1 and `s2_` means season 2. This makes it easy to compare the emotional tone across seasons.
 
@@ -124,7 +123,7 @@ emotion_by_season <- emotion_seasons %>%
   )
 ```
 
-##### Plotting the Data
+#### Plotting the Data
 
 Comparing emotions by season:
 

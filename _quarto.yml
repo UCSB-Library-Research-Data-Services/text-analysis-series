@@ -62,7 +62,7 @@ website:
       - section: "Sentiment Analysis"
         contents:
           - href: chapters/3.SentimentAnalysis/introduction.qmd
-            text: Introduction to Sentiment Analysis
+            text: What is Sentiment Analysis?
           - href: chapters/3.SentimentAnalysis/polarity.qmd
             text: Polarity Classification
           - href: chapters/3.SentimentAnalysis/emotion.qmd

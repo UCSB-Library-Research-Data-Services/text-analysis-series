@@ -23,21 +23,21 @@ Words like “but,” “however,” and “although” also influence the senti
 
 With this approach, we can explore more confidently whether the show’s viewers felt positive, neutral, or negative about it.
 
-#### Computing Polarity with Sentiment R (Valence Sifters Capability)
+### Computing Polarity with Sentiment R (Valence Sifters Capability)
 
-##### Calculating sentiment scores
+#### Calculating sentiment scores
 
-Here we’re using the **`sentiment_by()`** function which looks at each comment and calculates a **sentiment score** representing how positive or negative comments are.
+Here we’re using the **`sentiment_by()`** function which looks at each comment and calculates a **sentiment score** representing how positive or negative comments are. Let's enter the following code to select all the values contained in the comments column:
 
 ``` r
 sentiment_scores <- sentiment_by(comments$comments)
 ```
 
-![Sentiment Scores Output](images/sentiment-scores.png){width="342"}
+![Sentiment Scores Output](images/sentiment-scores.png){width="418"}
 
 So after running this, we get a new object called `sentiment_scores` with the average sentiment for every comment. Can you guess why the SD column is empty? A single data point (sentence/row) does not have a standard deviation by itself.
 
-##### Adding those scores back to our dataset
+#### Adding those scores back to our dataset
 
 Now we’re using the **`dplyr`** package to make our dataset more informative. We take our `comments` dataset, and with **`mutate()`**, we add two new columns: `score` and `sentiment label`. The little rule inside **`case_when()`** decides what label to give. The small buffer around zero (±0.1) helps us avoid overreacting to tiny fluctuations.
 
@@ -55,17 +55,17 @@ Let's now take a look at the `sentiment_scores` data frame:
 
 ![Sentiment Scores with Polarity Results](images/polarity-scores.png)
 
-To get a sense of the overall mood of our dataset let's run:
+To get a sense of the overall "mood" of our dataset let's run:
 
 ``` r
 table(polarity$sentiment_label)
 ```
 
-![Overall Polarity Count](images/overall-polarity-count.png){width="363"}
+![Polarity Count](images/overall-polarity-count.png){width="363"}
 
 Overall, the majority of viewers reacted positively to the show, with positive opinions more than double the negative ones, indicating a generally favorable reception. However, this is only part of the story—positive sentiment can range from mildly favorable to very enthusiastic. To better visualize the full distribution of opinions, a histogram is presented below.
 
-#### Plotting Scores
+### Plotting Scores
 
 Next, let's plot some results and histograms to check the distribution for the scores:
 
@@ -77,9 +77,9 @@ ggplot(polarity, aes(x = score)) +
   labs(title = "Sentiment Score Distribution", x = "Average Sentiment", y = "Count")
 ```
 
-![Polarity Distribution](images/histogram-polarity.png){width="529"}
+![Polarity Distribution](images/histogram-polarity.png){width="699"}
 
-This histogram suggests that the overall sentiment toward the Severance show was **mostly neutral to slightly positive**. This suggests that most viewers are expressing their opinions in a **measured, nuanced, or factual** manner, rather than with intense emotional language (either extremely positive or negative).
+This histogram suggests that the overall sentiment toward the Severance show was **mostly neutral to slightly positive**. This suggests that most viewers are expressing their opinions without using intense emotional language (either extremely positive or negative).
 
 We can also break the data down by season to compare how audience opinions vary over each season finale:
 
