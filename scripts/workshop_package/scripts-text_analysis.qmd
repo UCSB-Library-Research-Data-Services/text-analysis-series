@@ -4,15 +4,6 @@ format: html
 editor: visual
 ---
 
-This notebook contains all the code from the Text Analysis workshop chapters, organized by topic. You can run each section independently or work through them in sequence.
-
-**Topics covered:**
-
-1.  Word Frequency Analysis
-2.  N-grams and Word Sequences
-3.  Collocations
-4.  TF-IDF
-
 ## Setup
 
 Install required libraries:
@@ -36,7 +27,7 @@ Load the data:
 
 ```{r}
 # Adjust the path to match your data location
-comments <- readr::read_csv("../data/clean/comments_preprocessed.csv")
+comments <- readr::read_csv("./data/clean/comments_preprocessed.csv")
 head(comments)
 ```
 
@@ -47,8 +38,7 @@ head(comments)
 Tokenizing the comments into words:
 
 ```{r}
-tokens <- comments %>%
-  unnest_tokens(word, comments)
+tokens <- 
 
 head(tokens)
 ```
@@ -57,7 +47,6 @@ head(tokens)
 
 ```{r}
 word_counts <- tokens %>%
-  count(word, sort = TRUE) 
 
 head(word_counts)
 ```
@@ -68,7 +57,6 @@ Bar plot of top 20 most common words:
 
 ```{r}
 top_words <- word_counts %>%
-  top_n(20)
 
 ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   geom_bar(stat = "identity") +
@@ -90,10 +78,9 @@ ggplot(word_counts %>% top_n(100), aes(label = word, size = n)) +
 Define common words to filter out:
 
 ```{r}
-common_words <- c("severance", "season", "appleTV", "apple", "tv", "show", "finale", "episode")
+common_words <- 
 
 filtered_word_counts <- word_counts %>%
-  filter(!word %in% common_words)
 ```
 
 Create a filtered word cloud:
@@ -118,10 +105,6 @@ season_1_tokens <- tokens %>%
   top_n(20)
 
 season_2_tokens <- tokens %>%
-  filter(grepl("^s2", id)) %>%
-  count(word, sort = TRUE) %>%
-  filter(!word %in% common_words) %>%
-  top_n(20)
 ```
 
 Side-by-side word clouds:
@@ -133,11 +116,7 @@ p1 <- ggplot(season_1_tokens, aes(label = word, size = n)) +
   coord_fixed(ratio = 1) +
   labs(title = "Season 1")
 
-p2 <- ggplot(season_2_tokens, aes(label = word, size = n)) +
-  geom_text_wordcloud(color = "darkred") +
-  theme_minimal() +
-  coord_fixed(ratio = 1) +
-  labs(title = "Season 2")
+p2 <- 
 
 p1 + p2
 ```
@@ -152,17 +131,14 @@ top_50_s1 <- season_1_tokens %>%
   pull(word)
 
 top_50_s2 <- season_2_tokens %>%
-  top_n(50) %>%
-  pull(word)
 
 unique_s1 <- setdiff(top_50_s1, top_50_s2)
-unique_s2 <- setdiff(top_50_s2, top_50_s1)
+unique_s2 <- 
 
 unique_s1_tokens <- season_1_tokens %>%
   filter(word %in% unique_s1)
 
 unique_s2_tokens <- season_2_tokens %>%
-  filter(word %in% unique_s2)
 ```
 
 Visualize unique words:
@@ -175,12 +151,7 @@ p3 <- ggplot(unique_s1_tokens, aes(label = word, size = n)) +
   coord_fixed(ratio = 1) +
   labs(title = "Unique Words - Season 1")
 
-p4 <- ggplot(unique_s2_tokens, aes(label = word, size = n)) +
-  geom_text_wordcloud(color = "lightcoral") +
-  scale_size_area(max_size = 20) +
-  theme_minimal() +
-  coord_fixed(ratio = 1) +
-  labs(title = "Unique Words - Season 2")
+p4 <- 
 
 p3 + p4
 ```
@@ -193,7 +164,6 @@ Creating bigrams (2-grams):
 
 ```{r}
 ngrams <- comments %>%
-  unnest_tokens(ngrams, comments, token = "ngrams", n = 2)
 
 ngrams
 ```
@@ -202,7 +172,6 @@ Creating trigrams (3-grams):
 
 ```{r}
 trigrams <- comments %>%
-  unnest_tokens(ngrams, comments, token = "ngrams", n = 3)
 
 trigrams
 ```
@@ -227,7 +196,6 @@ Test the prediction:
 
 ```{r}
 type_any_word <- "ben"
-next_word(type_any_word, ngrams)
 ```
 
 Run prediction in a loop:
@@ -263,7 +231,6 @@ Test trigram prediction:
 
 ```{r}
 type_any_phrase <- "best show"
-next_word_trigram(type_any_phrase, trigrams)
 ```
 
 # Part 3: Collocations
@@ -274,8 +241,6 @@ Separate bigrams and count them:
 
 ```{r}
 bigram_counts <- ngrams %>%
-  separate(ngrams, into = c("word1", "word2"), sep = " ", remove = FALSE) %>%
-  count(word1, word2, sort = TRUE)
 
 head(bigram_counts, 10)
 ```
@@ -286,8 +251,6 @@ Calculate individual word frequencies:
 
 ```{r}
 word_freqs <- comments %>%
-  unnest_tokens(word, comments) %>%
-  count(word, name = "word_count")
 
 # Total counts
 total_words <- sum(word_freqs$word_count)
@@ -317,8 +280,6 @@ head(collocations, 15)
 
 ```{r}
 top_collocations <- collocations %>%
-  head(20) %>%
-  unite(bigram, word1, word2, sep = " ")
 
 ggplot(top_collocations, aes(x = reorder(bigram, pmi), y = pmi)) +
   geom_col(fill = "steelblue") +
@@ -353,8 +314,7 @@ Compare prediction methods:
 
 ```{r}
 test_word <- "mark"
-freq_prediction <- next_word(test_word, ngrams)
-colloc_prediction <- next_word_collocation(test_word, collocations)
+
 
 cat("Frequency-based predictor:", test_word, "->", freq_prediction, "\n")
 cat("Collocation-based predictor:", test_word, "->", colloc_prediction, "\n")
@@ -392,9 +352,6 @@ Extract season and tokenize:
 
 ```{r}
 comments_tfidf <- comments %>%
-  mutate(season = str_extract(id, "s[12]")) %>%
-  unnest_tokens(word, comments) %>%
-  count(season, word, sort = TRUE)
 
 head(comments_tfidf)
 ```
@@ -403,7 +360,6 @@ Apply TF-IDF calculation:
 
 ```{r}
 comments_tfidf <- comments_tfidf %>%
-  bind_tf_idf(word, season, n)
 
 head(comments_tfidf, 15)
 ```
@@ -412,18 +368,12 @@ Top distinctive words per season:
 
 ```{r}
 comments_tfidf %>%
-  group_by(season) %>%
-  slice_max(tf_idf, n = 10)
 ```
 
 ## Visualize TF-IDF
 
 ```{r}
 top_tfidf_words <- comments_tfidf %>%
-  group_by(season) %>%
-  slice_max(tf_idf, n = 15) %>%
-  ungroup() %>%
-  mutate(word = reorder_within(word, tf_idf, season))
 
 ggplot(top_tfidf_words, aes(tf_idf, word, fill = season)) +
   geom_col(show.legend = FALSE) +
