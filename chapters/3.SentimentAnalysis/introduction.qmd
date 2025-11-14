@@ -26,22 +26,16 @@ Let’s start by installing and loading the necessary packages, then bringing in
 # Install packages (remove comments for packages you might have skipped in previous episodes)
 install.packages("sentimentr")
 install.packages("syuzhet")
-# install.packages("dplyr")
-# install.packages("tidyr")
-# install.packages("readr")
-# install.packages("ggplot2")
-# install.packages("RColorBrewer")
-# install.packages("stringr")
+install.packages("RColorBrewer")
 
 # Load all packages
 library(sentimentr)
 library(syuzhet)
-library(dplyr)
-library(tidyr)
-library(readr)
-library(ggplot2)
-library(RColorBrewer)
-library(stringr)
+# library(dplyr)
+# library(tidyr)
+# library(ggplot2)
+# library(RColorBrewer)
+# library(stringr)
 
 # Load Data
 comments <- readr::read_csv("./data/comments_preprocessed.csv")
