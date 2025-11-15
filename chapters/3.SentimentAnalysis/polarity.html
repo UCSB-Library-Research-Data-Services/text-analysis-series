@@ -411,7 +411,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="saving-things" class="level4">
 <h4 class="anchored" data-anchor-id="saving-things">Saving Things</h4>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>) <span class="co">#create dir</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.</p>
 <p>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</p>
 
@@ -986,12 +987,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
 <span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="co"># Save results</span></span>
-<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span>
-<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.</span>
-<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>) <span class="co">#create dir</span></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(polarity, <span class="st">"output/polarity_results.csv"</span>)</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>We could have spent more time refining these plots, but this is sufficient for our initial exploration. In pairs, review the plots and discuss what they reveal about viewers’ perceptions of the Severance show.</span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>Well, that’s only part of the story. Now we move on to emotion detection to discover what else we can learn from the data.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

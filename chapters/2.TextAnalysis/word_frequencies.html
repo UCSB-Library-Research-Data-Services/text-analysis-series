@@ -524,6 +524,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Season 2"</span>)</span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in wordcloud_boxes(data_points = points_valid_first, boxes = boxes, :
+One word could not fit on page. It has been placed at its original position.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -534,43 +538,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We can even select the 50 more frequent words per season and extract those that are unique to each season.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding unique words per season</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>top_50_s1 <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding unique words per season</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>top_50_s1 <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Selecting by n</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>top_50_s2 <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>top_50_s2 <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Selecting by n</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>unique_s1 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s1, top_50_s2)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>unique_s2 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s2, top_50_s1)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>unique_s1_tokens <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s1)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>unique_s2_tokens <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s2)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying unique word clouds for each season</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 1"</span>)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightcoral"</span>) <span class="sc">+</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 2"</span>)</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>unique_s1 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s1, top_50_s2)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>unique_s2 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s2, top_50_s1)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>unique_s1_tokens <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s1)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>unique_s2_tokens <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s2)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying unique word clouds for each season</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 1"</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightcoral"</span>) <span class="sc">+</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 2"</span>)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1040,210 +1044,210 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Basic word frequencies"</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="an">engine:</span><span class="co"> knitr</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 10</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 12</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">    dpi: 300</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="an">editor_options:</span><span class="co"> </span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">  chunk_output_type: inline</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>In this chapter, we will explore some basic techniques for analyzing text data. </span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importing the Data</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co"># This is just to render the document correctly in the CI/CD pipeline</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"../../data/clean/comments_preprocessed.csv"</span>) </span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the text data</span></span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/clean/comments_preprocessed.csv"</span>) <span class="co"># Adjust the path to your data location</span></span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>Explore the first few rows of the dataset to understand its structure.</span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(comments)</span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>We can see that the dataset is imported as a tibble with three columns: <span class="in">`..1`</span>, <span class="in">`id`</span>, and <span class="in">`comments`</span>. We are going to focus on the <span class="in">`comments`</span> column for our text analysis, but the <span class="in">`id`</span> column can be useful for grouping or filtering the data by season. </span>
-<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Word Frequency Analysis</span></span>
-<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>Word frequency analysis is one of the most fundamental techniques in text analysis. It helps us understand which words appear most often in our texts and can reveal important patterns about content, style, and themes.</span>
-<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Word Counts</span></span>
-<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>We can start by calculating the frequency of each word in our corpus. This involves tokenizing the text into individual words, counting the occurrences of each word, and then sorting them by frequency.</span>
-<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>**Tokenization** is the process of breaking down text into smaller units, such as words or phrases. In this case, we will use the <span class="in">`unnest_tokens()`</span> function from the <span class="in">`tidytext`</span> package to tokenize our comments into words. </span>
-<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Why not use strsplit()?" collapse="true"}</span>
-<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>While the <span class="in">`strsplit()`</span> function can be used for basic tokenization, it lacks the advanced features provided by <span class="in">`unnest_tokens()`</span>, such as handling punctuation, converting to lowercase, and removing stop words. Using <span class="in">`unnest_tokens()`</span> ensures a more accurate and efficient tokenization process, especially for larger datasets.</span>
-<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenizing the comments into words</span></span>
-<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>tokens <span class="ot">&lt;-</span> comments <span class="sc">%&gt;%</span></span>
-<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, comments)</span>
-<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tokens)</span>
-<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>Note that the resulting <span class="in">`tokens`</span> tibble contains a column named <span class="in">`word`</span>, which holds the individual words extracted from each comment. </span>
-<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>With this tokenized data, we can now counting words. For instance, just simply counting the occurrences of each word:</span>
-<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting word frequencies</span></span>
-<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>word_counts <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(word_counts)</span>
-<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a>This will give us a list of words along with their corresponding frequencies, sorted in descending order. We can also visualize the most common words using a bar plot or a word cloud.</span>
-<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizing the top 20 most common words</span></span>
-<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a>top_words <span class="ot">&lt;-</span> word_counts <span class="sc">%&gt;%</span></span>
-<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
-<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top_words, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 20 Most Common Words"</span>, <span class="at">x =</span> <span class="st">"Words"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>)</span>
-<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>We can also create a word cloud to visualize word frequencies in a more engaging way.</span>
-<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 6</span></span>
-<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a word cloud</span></span>
-<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggwordcloud)</span>
-<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(word_counts <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">100</span>), <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>() <span class="sc">+</span></span>
-<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Word Cloud"</span>)</span>
-<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>As expected, even in a preprocessed corpus, some words become dominant due to their frequent usage. In this case, "severance", "season", and "finale", pop up as the most frequent words. To get a more meaningful analysis, we can filter out these common words.</span>
-<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering out common words for a more meaningful word cloud</span></span>
-<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>common_words <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"severance"</span>, <span class="st">"season"</span>, <span class="st">"appleTV"</span>, <span class="st">"apple"</span>, <span class="st">"tv"</span>, <span class="st">"show"</span>, <span class="st">"finale"</span>, <span class="st">"episode"</span>) <span class="co"># you can expand this list as needed</span></span>
-<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a>filtered_word_counts <span class="ot">&lt;-</span> word_counts <span class="sc">%&gt;%</span></span>
-<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words)</span>
-<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a filtered word cloud</span></span>
-<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(filtered_word_counts <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">100</span>), <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>() <span class="sc">+</span></span>
-<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-138"><a href="#cb26-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Filtered Word Cloud"</span>)</span>
-<span id="cb26-139"><a href="#cb26-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a>Now we have a more distributed word cloud that highlights other significant words in the corpus.</span>
-<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a><span class="fu">### Words by Season</span></span>
-<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a>A simple but effective way to analyze text data is to compare word frequencies across different categories or groups. In this case, we can compare the word frequencies between different seasons of the show. </span>
-<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering and creating word clouds by season</span></span>
-<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a>season_1_tokens <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^s1"</span>, id)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words) <span class="sc">%&gt;%</span></span>
-<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
-<span id="cb26-158"><a href="#cb26-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a>season_2_tokens <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^s2"</span>, id)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words) <span class="sc">%&gt;%</span></span>
-<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
-<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb26-169"><a href="#cb26-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Season 1"</span>)</span>
-<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
-<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Season 2"</span>)</span>
-<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span>
-<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a>We can even select the 50 more frequent words per season and extract those that are unique to each season.</span>
-<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding unique words per season</span></span>
-<span id="cb26-191"><a href="#cb26-191" aria-hidden="true" tabindex="-1"></a>top_50_s1 <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-192"><a href="#cb26-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span>
-<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>top_50_s2 <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span>
-<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a>unique_s1 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s1, top_50_s2)</span>
-<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a>unique_s2 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s2, top_50_s1)</span>
-<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a>unique_s1_tokens <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s1)</span>
-<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a>unique_s2_tokens <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
-<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s2)</span>
-<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-206"><a href="#cb26-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying unique word clouds for each season</span></span>
-<span id="cb26-207"><a href="#cb26-207" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-208"><a href="#cb26-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
-<span id="cb26-209"><a href="#cb26-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-210"><a href="#cb26-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-211"><a href="#cb26-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-212"><a href="#cb26-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 1"</span>)</span>
-<span id="cb26-213"><a href="#cb26-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-214"><a href="#cb26-214" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-215"><a href="#cb26-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightcoral"</span>) <span class="sc">+</span></span>
-<span id="cb26-216"><a href="#cb26-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb26-217"><a href="#cb26-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-218"><a href="#cb26-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb26-219"><a href="#cb26-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 2"</span>)</span>
-<span id="cb26-220"><a href="#cb26-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-221"><a href="#cb26-221" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p4</span>
-<span id="cb26-222"><a href="#cb26-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb26-223"><a href="#cb26-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-224"><a href="#cb26-224" aria-hidden="true" tabindex="-1"></a>This analysis allows us to see which words are more prominent in each season, providing insights into the themes and topics that were more relevant during those times.</span>
-<span id="cb26-225"><a href="#cb26-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-226"><a href="#cb26-226" aria-hidden="true" tabindex="-1"></a>With these basic text analysis techniques, we can start to uncover patterns and insights from our text data. Although simple, these methods are helpful to explore the content and structure of the text, setting the stage for more advanced analyses, or even informing about the quality of the pre-processing steps applied to the data.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Basic word frequencies"</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="an">engine:</span><span class="co"> knitr</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 10</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 12</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">    dpi: 300</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="an">editor_options:</span><span class="co"> </span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">  chunk_output_type: inline</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>In this chapter, we will explore some basic techniques for analyzing text data. </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importing the Data</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="co"># This is just to render the document correctly in the CI/CD pipeline</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"../../data/clean/comments_preprocessed.csv"</span>) </span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the text data</span></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>comments <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/clean/comments_preprocessed.csv"</span>) <span class="co"># Adjust the path to your data location</span></span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>Explore the first few rows of the dataset to understand its structure.</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(comments)</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>We can see that the dataset is imported as a tibble with three columns: <span class="in">`..1`</span>, <span class="in">`id`</span>, and <span class="in">`comments`</span>. We are going to focus on the <span class="in">`comments`</span> column for our text analysis, but the <span class="in">`id`</span> column can be useful for grouping or filtering the data by season. </span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Word Frequency Analysis</span></span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>Word frequency analysis is one of the most fundamental techniques in text analysis. It helps us understand which words appear most often in our texts and can reveal important patterns about content, style, and themes.</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### Word Counts</span></span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a>We can start by calculating the frequency of each word in our corpus. This involves tokenizing the text into individual words, counting the occurrences of each word, and then sorting them by frequency.</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>**Tokenization** is the process of breaking down text into smaller units, such as words or phrases. In this case, we will use the <span class="in">`unnest_tokens()`</span> function from the <span class="in">`tidytext`</span> package to tokenize our comments into words. </span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Why not use strsplit()?" collapse="true"}</span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>While the <span class="in">`strsplit()`</span> function can be used for basic tokenization, it lacks the advanced features provided by <span class="in">`unnest_tokens()`</span>, such as handling punctuation, converting to lowercase, and removing stop words. Using <span class="in">`unnest_tokens()`</span> ensures a more accurate and efficient tokenization process, especially for larger datasets.</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenizing the comments into words</span></span>
+<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a>tokens <span class="ot">&lt;-</span> comments <span class="sc">%&gt;%</span></span>
+<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, comments)</span>
+<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tokens)</span>
+<span id="cb27-74"><a href="#cb27-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-75"><a href="#cb27-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-76"><a href="#cb27-76" aria-hidden="true" tabindex="-1"></a>Note that the resulting <span class="in">`tokens`</span> tibble contains a column named <span class="in">`word`</span>, which holds the individual words extracted from each comment. </span>
+<span id="cb27-77"><a href="#cb27-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-78"><a href="#cb27-78" aria-hidden="true" tabindex="-1"></a>With this tokenized data, we can now counting words. For instance, just simply counting the occurrences of each word:</span>
+<span id="cb27-79"><a href="#cb27-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-82"><a href="#cb27-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-83"><a href="#cb27-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting word frequencies</span></span>
+<span id="cb27-84"><a href="#cb27-84" aria-hidden="true" tabindex="-1"></a>word_counts <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-85"><a href="#cb27-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb27-86"><a href="#cb27-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-87"><a href="#cb27-87" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(word_counts)</span>
+<span id="cb27-88"><a href="#cb27-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-89"><a href="#cb27-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-90"><a href="#cb27-90" aria-hidden="true" tabindex="-1"></a>This will give us a list of words along with their corresponding frequencies, sorted in descending order. We can also visualize the most common words using a bar plot or a word cloud.</span>
+<span id="cb27-91"><a href="#cb27-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-94"><a href="#cb27-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-95"><a href="#cb27-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizing the top 20 most common words</span></span>
+<span id="cb27-96"><a href="#cb27-96" aria-hidden="true" tabindex="-1"></a>top_words <span class="ot">&lt;-</span> word_counts <span class="sc">%&gt;%</span></span>
+<span id="cb27-97"><a href="#cb27-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
+<span id="cb27-98"><a href="#cb27-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-99"><a href="#cb27-99" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top_words, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-100"><a href="#cb27-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb27-101"><a href="#cb27-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 20 Most Common Words"</span>, <span class="at">x =</span> <span class="st">"Words"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>)</span>
+<span id="cb27-102"><a href="#cb27-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-103"><a href="#cb27-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-104"><a href="#cb27-104" aria-hidden="true" tabindex="-1"></a>We can also create a word cloud to visualize word frequencies in a more engaging way.</span>
+<span id="cb27-105"><a href="#cb27-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-108"><a href="#cb27-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-109"><a href="#cb27-109" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 6</span></span>
+<span id="cb27-110"><a href="#cb27-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a word cloud</span></span>
+<span id="cb27-111"><a href="#cb27-111" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggwordcloud)</span>
+<span id="cb27-112"><a href="#cb27-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-113"><a href="#cb27-113" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(word_counts <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">100</span>), <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-114"><a href="#cb27-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>() <span class="sc">+</span></span>
+<span id="cb27-115"><a href="#cb27-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-116"><a href="#cb27-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-117"><a href="#cb27-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-118"><a href="#cb27-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Word Cloud"</span>)</span>
+<span id="cb27-119"><a href="#cb27-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-120"><a href="#cb27-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-121"><a href="#cb27-121" aria-hidden="true" tabindex="-1"></a>As expected, even in a preprocessed corpus, some words become dominant due to their frequent usage. In this case, "severance", "season", and "finale", pop up as the most frequent words. To get a more meaningful analysis, we can filter out these common words.</span>
+<span id="cb27-122"><a href="#cb27-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-125"><a href="#cb27-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-126"><a href="#cb27-126" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering out common words for a more meaningful word cloud</span></span>
+<span id="cb27-127"><a href="#cb27-127" aria-hidden="true" tabindex="-1"></a>common_words <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"severance"</span>, <span class="st">"season"</span>, <span class="st">"appleTV"</span>, <span class="st">"apple"</span>, <span class="st">"tv"</span>, <span class="st">"show"</span>, <span class="st">"finale"</span>, <span class="st">"episode"</span>) <span class="co"># you can expand this list as needed</span></span>
+<span id="cb27-128"><a href="#cb27-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-129"><a href="#cb27-129" aria-hidden="true" tabindex="-1"></a>filtered_word_counts <span class="ot">&lt;-</span> word_counts <span class="sc">%&gt;%</span></span>
+<span id="cb27-130"><a href="#cb27-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words)</span>
+<span id="cb27-131"><a href="#cb27-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-132"><a href="#cb27-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a filtered word cloud</span></span>
+<span id="cb27-133"><a href="#cb27-133" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(filtered_word_counts <span class="sc">%&gt;%</span> <span class="fu">top_n</span>(<span class="dv">100</span>), <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-134"><a href="#cb27-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>() <span class="sc">+</span></span>
+<span id="cb27-135"><a href="#cb27-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-136"><a href="#cb27-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-137"><a href="#cb27-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-138"><a href="#cb27-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Filtered Word Cloud"</span>)</span>
+<span id="cb27-139"><a href="#cb27-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-140"><a href="#cb27-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-141"><a href="#cb27-141" aria-hidden="true" tabindex="-1"></a>Now we have a more distributed word cloud that highlights other significant words in the corpus.</span>
+<span id="cb27-142"><a href="#cb27-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-143"><a href="#cb27-143" aria-hidden="true" tabindex="-1"></a><span class="fu">### Words by Season</span></span>
+<span id="cb27-144"><a href="#cb27-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-145"><a href="#cb27-145" aria-hidden="true" tabindex="-1"></a>A simple but effective way to analyze text data is to compare word frequencies across different categories or groups. In this case, we can compare the word frequencies between different seasons of the show. </span>
+<span id="cb27-146"><a href="#cb27-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-149"><a href="#cb27-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-150"><a href="#cb27-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb27-151"><a href="#cb27-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering and creating word clouds by season</span></span>
+<span id="cb27-152"><a href="#cb27-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a>season_1_tokens <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^s1"</span>, id)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-156"><a href="#cb27-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words) <span class="sc">%&gt;%</span></span>
+<span id="cb27-157"><a href="#cb27-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
+<span id="cb27-158"><a href="#cb27-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-159"><a href="#cb27-159" aria-hidden="true" tabindex="-1"></a>season_2_tokens <span class="ot">&lt;-</span> tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-160"><a href="#cb27-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^s2"</span>, id)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-161"><a href="#cb27-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-162"><a href="#cb27-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> common_words) <span class="sc">%&gt;%</span></span>
+<span id="cb27-163"><a href="#cb27-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>)</span>
+<span id="cb27-164"><a href="#cb27-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-165"><a href="#cb27-165" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb27-166"><a href="#cb27-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-167"><a href="#cb27-167" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-168"><a href="#cb27-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb27-169"><a href="#cb27-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-170"><a href="#cb27-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-171"><a href="#cb27-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-172"><a href="#cb27-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Season 1"</span>)</span>
+<span id="cb27-173"><a href="#cb27-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-174"><a href="#cb27-174" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(season_2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-175"><a href="#cb27-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb27-176"><a href="#cb27-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-177"><a href="#cb27-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-178"><a href="#cb27-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-179"><a href="#cb27-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Season 2"</span>)</span>
+<span id="cb27-180"><a href="#cb27-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-181"><a href="#cb27-181" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span>
+<span id="cb27-182"><a href="#cb27-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-183"><a href="#cb27-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-184"><a href="#cb27-184" aria-hidden="true" tabindex="-1"></a>We can even select the 50 more frequent words per season and extract those that are unique to each season.</span>
+<span id="cb27-185"><a href="#cb27-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-188"><a href="#cb27-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb27-189"><a href="#cb27-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb27-190"><a href="#cb27-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding unique words per season</span></span>
+<span id="cb27-191"><a href="#cb27-191" aria-hidden="true" tabindex="-1"></a>top_50_s1 <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-192"><a href="#cb27-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-193"><a href="#cb27-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span>
+<span id="cb27-194"><a href="#cb27-194" aria-hidden="true" tabindex="-1"></a>top_50_s2 <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-195"><a href="#cb27-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-196"><a href="#cb27-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(word)</span>
+<span id="cb27-197"><a href="#cb27-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-198"><a href="#cb27-198" aria-hidden="true" tabindex="-1"></a>unique_s1 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s1, top_50_s2)</span>
+<span id="cb27-199"><a href="#cb27-199" aria-hidden="true" tabindex="-1"></a>unique_s2 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(top_50_s2, top_50_s1)</span>
+<span id="cb27-200"><a href="#cb27-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-201"><a href="#cb27-201" aria-hidden="true" tabindex="-1"></a>unique_s1_tokens <span class="ot">&lt;-</span> season_1_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-202"><a href="#cb27-202" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s1)</span>
+<span id="cb27-203"><a href="#cb27-203" aria-hidden="true" tabindex="-1"></a>unique_s2_tokens <span class="ot">&lt;-</span> season_2_tokens <span class="sc">%&gt;%</span></span>
+<span id="cb27-204"><a href="#cb27-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">%in%</span> unique_s2)</span>
+<span id="cb27-205"><a href="#cb27-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-206"><a href="#cb27-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Displaying unique word clouds for each season</span></span>
+<span id="cb27-207"><a href="#cb27-207" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s1_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-208"><a href="#cb27-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb27-209"><a href="#cb27-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-210"><a href="#cb27-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-211"><a href="#cb27-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-212"><a href="#cb27-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 1"</span>)</span>
+<span id="cb27-213"><a href="#cb27-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-214"><a href="#cb27-214" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(unique_s2_tokens, <span class="fu">aes</span>(<span class="at">label =</span> word, <span class="at">size =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-215"><a href="#cb27-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="at">color =</span> <span class="st">"lightcoral"</span>) <span class="sc">+</span></span>
+<span id="cb27-216"><a href="#cb27-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb27-217"><a href="#cb27-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-218"><a href="#cb27-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-219"><a href="#cb27-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Unique Words - Season 2"</span>)</span>
+<span id="cb27-220"><a href="#cb27-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-221"><a href="#cb27-221" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p4</span>
+<span id="cb27-222"><a href="#cb27-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb27-223"><a href="#cb27-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-224"><a href="#cb27-224" aria-hidden="true" tabindex="-1"></a>This analysis allows us to see which words are more prominent in each season, providing insights into the themes and topics that were more relevant during those times.</span>
+<span id="cb27-225"><a href="#cb27-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-226"><a href="#cb27-226" aria-hidden="true" tabindex="-1"></a>With these basic text analysis techniques, we can start to uncover patterns and insights from our text data. Although simple, these methods are helpful to explore the content and structure of the text, setting the stage for more advanced analyses, or even informing about the quality of the pre-processing steps applied to the data.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
