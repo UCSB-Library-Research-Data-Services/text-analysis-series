@@ -111,6 +111,7 @@ This result let us infer that there were differences in audience reception and r
 
 ``` r
 # Save results
+dir.create("output", recursive = TRUE, showWarnings = FALSE) #create dir
 write_csv(polarity, "output/polarity_results.csv")
 ```
 
