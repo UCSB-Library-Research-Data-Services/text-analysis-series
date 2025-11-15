@@ -44,5 +44,5 @@ library(RColorBrewer)
 library(stringr)
 
 # Load Data
-comments <- readr::read_csv("./data/comments_preprocessed.csv")
+comments <- readr::read_csv("./data/clean/comments_preprocessed.csv")
 ```
