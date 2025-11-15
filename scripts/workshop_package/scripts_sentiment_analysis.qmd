@@ -33,9 +33,12 @@ library(stringr)
 
 ```{r}
 # Load Data
-comments <- readr::read_csv("./data/comments_preprocessed.csv")
+comments <- readr::read_csv("./data/clean/comments_preprocessed.csv")
 
 # Compute sentiment per row/case
+
+```{r}
+```
 
 # Add scores and labels to original dataset
 polarity <- comments %>%
@@ -47,10 +50,12 @@ polarity <- comments %>%
          ))
 
 # Check first rows with results
-
+```{r}
+```
 
 # Scores per label
 
+```{r}
 ```
 
 #### Plotting
@@ -79,6 +84,7 @@ ggplot(polarity_seasons, aes(x = score, fill = season)) +
   scale_fill_brewer(palette = "Set1")
 
 # Save results
+dir.create("output", recursive = TRUE, showWarnings = FALSE) #create dir
 write_csv(polarity, "output/polarity_results.csv")
 ```
 
